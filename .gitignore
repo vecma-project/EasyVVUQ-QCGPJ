@@ -1,0 +1,5 @@
+.idea
+.vagrant
+.pytest_cache
+Vagrantfile
+venv
