@@ -16,9 +16,11 @@ url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 author='Bartosz Bosak',
 
 install_requires=[
-'scipy==1.2.1',
-'qcgpilotmanager @ git+https://github.com/vecma-project/QCG-PilotJob.git@master#egg=qcgpilotmanager',
-'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@master#egg=easyvvuq',
+    'pytest',
+    'pytest-pep8',
+    'scipy==1.2.1',
+    'qcgpilotmanager @ git+https://github.com/vecma-project/QCG-PilotJob.git@master#egg=qcgpilotmanager',
+    'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@master#egg=easyvvuq',
 ],
 
 packages=find_packages(),
