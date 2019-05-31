@@ -179,7 +179,7 @@ def test_pce_pj(tmpdir):
 if __name__ == "__main__":
     start_time = time.time()
 
-    stats, per, sobols, dist_out = test_pce_pj_new("/tmp/")
+    stats, per, sobols, dist_out = test_pce_pj("/tmp/")
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
