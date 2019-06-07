@@ -53,7 +53,7 @@ def test_pce_pj(tmpdir):
         encode_job = {
             "name": 'encode_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_encode',
+                "exec": 'easyvvuq_encode',
                 "args": [my_campaign.campaign_dir,
                          key],
                 "wd": cwd
@@ -68,10 +68,10 @@ def test_pce_pj(tmpdir):
         execute_job = {
             "name": 'execute_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_execute',
+                "exec": 'easyvvuq_execute',
                 "args": [my_campaign.campaign_dir,
                          key,
-                         cwd + "/tests/pce_pj/pj_scripts/easyvvuq_app",
+                         'easyvvuq_app',
                          cwd + "/tests/pce_pj/pce/pce_model.py", "pce_in.json"],
                 "wd": cwd
             },
@@ -100,17 +100,14 @@ def test_pce_pj(tmpdir):
     # Skipped code
     # ...
 ```
-As you can see, the biggest part of the code is occupied by the loop over the `runs` stored in the `my_campaign` object. This is a typical way of description of the workflow for QCG Pilot Job - for the reference go to [QCG Pilot Job Manager instructions](https://github.com/vecma-project/QCG-PilotJob). The critical element is here the specification of parameters for execution of particular tasks. The `exec` parameter for the encode_job task takes here `/tests/pce_pj/pj_scripts/easyvvuq_encode`, simillarly `exec` for the execute_job task takes `/tests/pce_pj/pj_scripts/easyvvuq_execute`. There is also an additional script wrapping the actual invocation of the application code `/tests/pce_pj/pj_scripts/easyvvuq_app`. The idea of all these scripts is to simplify execution of encoding and application as separate processes. `easyvvuq_encode` and `easyvvuq_execute` internally start the respective python code for the encoding and execution. All the scripts may be adjusted by a user in lage extent to match the target execution environment. For example, the scirpt for encoding may look as follows:
+As you can see, the biggest part of the code is occupied by the loop over the `runs` stored in the `my_campaign` object. This is a typical way of description of the workflow for QCG Pilot Job - for the reference go to [QCG Pilot Job Manager instructions](https://github.com/vecma-project/QCG-PilotJob). The critical element is here the specification of parameters for execution of particular tasks. The `exec` parameter for the encode_job task takes here `easyvvuq_encode`, simillarly `exec` for the execute_job task takes `easyvvuq_execute`. There is also an additional script wrapping the actual invocation of the application code `easyvvuq_app`. The idea of all these scripts is to simplify execution of encoding and application as separate processes. `easyvvuq_encode` and `easyvvuq_execute` internally start the respective python code for the encoding and execution. All the scripts can source the environment configuration script file specified in the `EASYPJ_CONF` environment variable. This allows to easily adjust the execution environment to specific system. An example such scirpt may look as follows:
 ```bash
 #!/bin/bash
 
-# Custom part
-module load python/3.7.3
+# init virtualenv
 . ~/.virtualenvs/easyvvuq-qcgpj/bin/activate
-
-# Do not change anything below
-python3 -m easypj.easyvvuq_encode $@
 ```
+
 ## Start
 The start of the defined workflow is typical:
 ```bash
