@@ -107,7 +107,7 @@ def test_pce_pj(tmpdir):
         encode_job = {
             "name": 'encode_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_encode',
+                "exec": 'easyvvuq_encode',
                 "args": [my_campaign.campaign_dir,
                          key],
                 "wd": cwd,
@@ -124,10 +124,10 @@ def test_pce_pj(tmpdir):
         execute_job = {
             "name": 'execute_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_execute',
+                "exec": 'easyvvuq_execute',
                 "args": [my_campaign.campaign_dir,
                          key,
-                         cwd + "/tests/pce_pj/pj_scripts/easyvvuq_app",
+                         'easyvvuq_app',
                          cwd + "/tests/pce_pj/pce/pce_model.py", "pce_in.json"],
                 "wd": cwd,
                 "stdout": my_campaign.campaign_dir + '/execute_' + key + '.stdout',

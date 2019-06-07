@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Source the site-specific configuration file
+. $EASYPJ_CONFIG
+
+python3 -m easypj.easyvvuq_execute $@
