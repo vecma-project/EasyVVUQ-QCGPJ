@@ -2,8 +2,11 @@ import json
 import os
 import sys
 import easyvvuq.campaign as cn
+import easyvvuq.db.base as db
 
 # author: Bartosz Bosak
+from easyvvuq.encoders import BaseEncoder
+
 __license__ = "LGPL"
 
 CONF_FILE = "pj_conf.json"
@@ -23,12 +26,23 @@ class PJConfigurator:
 
     def __init__(self, campaign=None):
         if isinstance(campaign, cn.Campaign):
-            self.__app_info = campaign.app_info
+            self.__campaign_name = campaign.campaign_name
+            self.__app = campaign.campaign_db.app(name=self.__campaign_name)
+
+            # Resurrect the app encoder, decoder and collation elements
+            (active_app_encoder,
+             active_app_decoder,
+             active_app_collation) = campaign.campaign_db.resurrect_app(self.__app['name'])
+
             self.__encoder = \
-                type(campaign.encoder).__module__ + "." + type(campaign.encoder).__qualname__
-            self.__conf_file = os.path.join(campaign.app_info['campaign_dir'], CONF_FILE)
-            self.__runs_dir = os.path.join(self.__app_info['campaign_dir'], RUNS_DIR)
-            self.__runs = campaign.runs
+                type(active_app_encoder).__module__ + "." + \
+                type(active_app_encoder).__qualname__
+
+            self.__conf_file = os.path.join(campaign.campaign_dir, CONF_FILE)
+            self.__runs_dir = os.path.join(campaign.campaign_dir, RUNS_DIR)
+            self.__runs = campaign.list_runs()
+
+            self.init_runs_dir(campaign)
 
         if isinstance(campaign, str):
             self.__conf_file = os.path.join(campaign, CONF_FILE)
@@ -42,8 +56,11 @@ class PJConfigurator:
             input_json = json.load(infile)
 
         # Check that it contains an "app" and a "params" block
-        if "app_info" not in input_json:
-            raise RuntimeError("Input does not contain an 'app_info' block")
+        if "campaign_name" not in input_json:
+            raise RuntimeError("Input does not contain an 'campaign_name' block")
+
+        if "app" not in input_json:
+            raise RuntimeError("Input does not contain an 'app' block")
 
         if "encoder" not in input_json:
             raise RuntimeError("Input does not contain an 'encoder' block")
@@ -54,7 +71,8 @@ class PJConfigurator:
         if "runs" not in input_json:
             raise RuntimeError("Input does not contain an 'runs' block")
 
-        pjc.__app_info = input_json["app_info"]
+        pjc.__campaign_name = input_json["campaign_name"]
+        pjc.__app = input_json["app"]
         pjc.__encoder = input_json["encoder"]
         pjc.__runs_dir = input_json["runs_dir"]
         pjc.__runs = input_json["runs"]
@@ -62,7 +80,8 @@ class PJConfigurator:
 
     def save(self):
         output_json = {
-            "app_info": self.__app_info,
+            "campaign_name": self.__campaign_name,
+            "app": self.__app,
             "encoder": self.__encoder,
             "runs_dir": self.__runs_dir,
             "runs": self.__runs,
@@ -72,7 +91,7 @@ class PJConfigurator:
         with open(self.__conf_file, "w") as outfile:
             json.dump(output_json, outfile, indent=4)
 
-    def init_runs_dir(self):
+    def init_runs_dir(self, campaign):
         """Init runs directory for all runs
 
         This just creates a parent directory for runs
@@ -85,8 +104,10 @@ class PJConfigurator:
 
         """
         # Build a temp directory to store run files (unless it already exists)
-        for run_id, run_data in self.__runs.items():
-            run_data['run_dir'] = os.path.join(self.__runs_dir, run_id)
+
+        for run_id, run_info in self.__runs.items():
+            target_dir = os.path.join(self.__runs_dir, run_id)
+            campaign.campaign_db.set_dir_for_run(run_id, target_dir)
 
         runs_dir = self.__runs_dir
         if os.path.exists(runs_dir):
@@ -120,9 +141,12 @@ class PJConfigurator:
         print("CWD: " + cwd)
 
         print(f"Encoding {run_id} using encoder {self.__encoder}")
-        encoder_class = self.get_class(self.__encoder)
-        encoder = encoder_class(self.__app_info)
-        encoder.encode(params=run, target_dir=target_dir)
+
+        encoder = BaseEncoder.deserialize(self.__app['input_encoder'])
+
+#        encoder_class = self.get_class(self.__encoder)
+#        encoder = encoder_class(self.__app_info)
+        encoder.encode(params=run['params'], target_dir=target_dir)
 
     def execute(self, run_id, command):
         """Execute command in run directory

@@ -1,15 +1,14 @@
 import os
 import time
-import numpy as np
 import chaospy as cp
 import easyvvuq as uq
 
-from qcg.appscheduler.api.manager import Manager
 from qcg.appscheduler.api.job import Jobs
 from qcg.appscheduler.api.manager import LocalManager
 from easypj.pj_configurator import PJConfigurator
 
 # author: Jalal Lakhlili / Bartosz Bosak
+
 __license__ = "LGPL"
 
 cwd = os.getcwd()
@@ -31,7 +30,7 @@ def test_pce_pj(tmpdir):
     # switch on debugging (by default in api.log file)
     m = LocalManager(['--nodes', str(cores)], client_conf)
 
-    # This is for execution of the test using a separate (non-local) instance of PJManager
+    # This can be used for execution of the test using a separate (non-local) instance of PJManager
     #
     # get available resources
     # res = m.resources()
@@ -39,41 +38,76 @@ def test_pce_pj(tmpdir):
     # (required when executed using the same QCG-Pilot Job Manager)
     # m.remove(m.list().keys())
 
-    print("available resources:\n%s\n" % str(m.resources()))
+    print("Available resources:\n%s\n" % str(m.resources()))
 
-    # Params for testing
-    input_json = "tests/pce_pj/pce/pce_in.json"
-    output_json = os.path.join(tmpdir, "out_pce.json")
+    print("Initializing Camapign")
 
-    assert(os.path.exists(input_json))
+    # Set up a fresh campaign called "pce"
+    my_campaign = uq.Campaign(name='pce', work_dir=tmpdir)
 
-    # Initialize Campaign object
-    my_campaign = uq.Campaign(state_filename=input_json, workdir=tmpdir)
+    # Define parameter space
+    params = {
+        "kappa": {
+            "type": "real",
+            "min": "0.0",
+            "max": "0.1",
+            "default": "0.025"},
+        "t_env": {
+            "type": "real",
+            "min": "0.0",
+            "max": "40.0",
+            "default": "15.0"},
+        "out_file": {
+            "type": "str",
+            "default": "output.csv"}}
 
-    # Define the parameters dictionary
-    my_campaign.vary_param("kappa", dist=cp.Uniform(0.025, 0.075))
-    my_campaign.vary_param("t_env", dist=cp.Uniform(15, 25))
+    output_filename = params["out_file"]["default"]
+    output_columns = ["te", "ti"]
+
+    # Create an encoder, decoder and collation element for PCE test app
+    encoder = uq.encoders.GenericEncoder(
+        template_fname='tests/pce_pj/pce/pce.template',
+        delimiter='$',
+        target_filename='pce_in.json')
+
+    decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
+                                    output_columns=output_columns,
+                                    header=0)
+    collation = uq.collate.AggregateSamples(average=False)
+
+    # Add the PCE app (automatically set as current app)
+    my_campaign.add_app(name="pce",
+                        params=params,
+                        encoder=encoder,
+                        decoder=decoder,
+                        collation=collation
+                        )
 
     # Create the sampler
-    my_sampler = uq.elements.sampling.PCESampler(
-        my_campaign, polynomial_order=1)
+    vary = {
+        "kappa": cp.Uniform(0.025, 0.075),
+        "t_env": cp.Uniform(15, 25)
+    }
 
-    # Use the sampler
-    my_campaign.add_runs(my_sampler)
+    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
 
-    # Create PJ configurator
-    pjc = PJConfigurator(my_campaign)
-    pjc.init_runs_dir()
+    # Associate the sampler with the campaign
+    my_campaign.set_sampler(my_sampler)
 
-    # Save PJ configuration
-    pjc.save()
+    # Will draw all (of the finite set of samples)
+    my_campaign.draw_samples()
+
+    # Create & save PJ configurator
+    print("Creating configuration for QCG Pilot Job Manager")
+    PJConfigurator(my_campaign).save()
 
     # Execute encode -> execute for each run using QCG-PJ
-    for key, data in my_campaign.runs.items():
+    print("Starting submission of tasks to QCG Pilot Job Manager")
+    for key in my_campaign.list_runs():
         encode_job = {
             "name": 'encode_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_encode',
+                "exec": 'easyvvuq_encode',
                 "args": [my_campaign.campaign_dir,
                          key],
                 "wd": cwd,
@@ -90,10 +124,10 @@ def test_pce_pj(tmpdir):
         execute_job = {
             "name": 'execute_' + key,
             "execution": {
-                "exec": cwd + '/tests/pce_pj/pj_scripts/easyvvuq_execute',
+                "exec": 'easyvvuq_execute',
                 "args": [my_campaign.campaign_dir,
                          key,
-                         cwd + "/tests/pce_pj/pj_scripts/easyvvuq_app",
+                         'easyvvuq_app',
                          cwd + "/tests/pce_pj/pce/pce_model.py", "pce_in.json"],
                 "wd": cwd,
                 "stdout": my_campaign.campaign_dir + '/execute_' + key + '.stdout',
@@ -118,99 +152,34 @@ def test_pce_pj(tmpdir):
     m.stopManager()
     m.cleanup()
 
-    print("encode stdout:")
-    print(open(my_campaign.campaign_dir + "/encode_Run_0.stdout", 'r').read())
-    print("encode stderr:")
-    print(open(my_campaign.campaign_dir + "/encode_Run_0.stderr", 'r').read())
-    print("execute stdout:")
-    print(open(my_campaign.campaign_dir + "/execute_Run_0.stdout", 'r').read())
-    print("execute stderr:")
-    print(open(my_campaign.campaign_dir + "/execute_Run_0.stderr", 'r').read())
+    print("Collating results")
+    my_campaign.collate()
 
-    print("Aggregating the results")
-    # Aggregate the results from all runs.
-    output_filename = my_campaign.params_info["out_file"]["default"]
-    output_columns = ["te", "ti"]
-
-    aggregate = uq.elements.collate.AggregateSamples(
-        my_campaign,
-        output_filename=output_filename,
-        output_columns=output_columns,
-        header=0,
-    )
-
-    aggregate.apply()
-
-    print("aggregated data:")
-    print(open(my_campaign.data['files'][0], 'r').read())
+    # Update after here
 
     # Post-processing analysis
-    print("Making the analysis")
-    analysis = uq.elements.analysis.PCEAnalysis(
-        my_campaign, value_cols=output_columns)
+    print("Making analysis")
+    pce_analysis = uq.analysis.PCEAnalysis(sampler=my_sampler,
+                                           qoi_cols=output_columns)
 
-    stats, corr, sobols = analysis.apply()
+    my_campaign.apply_analysis(pce_analysis)
 
-    print("Done")
-    return stats["te"], sobols["te"]
+    results = my_campaign.get_last_analysis()
+
+    # Get Descriptive Statistics
+    stats = results['statistical_moments']['te']
+    per = results['percentiles']['te']
+    sobols = results['sobol_indices']['te'][1]
+    dist_out = results['output_distributions']['te']
+
+    print("Processing completed")
+    return stats, per, sobols, dist_out
 
 
 if __name__ == "__main__":
     start_time = time.time()
 
-    stats, sobols = test_pce_pj("/tmp/")
+    stats, per, sobols, dist_out = test_pce_pj("/tmp/")
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
-
-    # Plot statistical results
-    __plot = True
-
-    if __plot:
-        import matplotlib.pyplot as plt
-        mean = stats["mean"].to_numpy()
-        std = stats["std"].to_numpy()
-        var = stats["var"].to_numpy()
-
-        s_kappa = sobols["kappa"].to_numpy()
-        s_t_env = sobols["t_env"].to_numpy()
-
-        t = np.linspace(0, 200, 150)
-
-        fig1 = plt.figure()
-
-        ax11 = fig1.add_subplot(111)
-        ax11.plot(t, mean, 'g-', alpha=0.75, label='Mean')
-        ax11.plot(t, mean - std, 'b-', alpha=0.25)
-        ax11.plot(t, mean + std, 'b-', alpha=0.25)
-        ax11.fill_between(
-            t,
-            mean - std,
-            mean + std,
-            alpha=0.25,
-            label=r'Mean $\pm$ deviation')
-        ax11.set_xlabel('Time')
-        ax11.set_ylabel('Temperature', color='b')
-        ax11.tick_params('y', colors='b')
-        ax11.legend()
-
-        ax12 = ax11.twinx()
-        ax12.plot(t, var, 'r-', alpha=0.5)
-        ax12.set_ylabel('Variance', color='r')
-        ax12.tick_params('y', colors='r')
-
-        ax11.grid()
-        ax11.set_title('Statistical moments')
-
-        fig2 = plt.figure()
-        ax2 = fig2.add_subplot(111)
-        ax2.plot(t, s_kappa, 'b-', label=r'$\kappa$')
-        ax2.plot(t, s_t_env, 'g-', label=r'$t_{env}$')
-
-        ax2.set_xlabel('Time')
-        ax2.set_ylabel('Sobol indices')
-        ax2.set_title('First order Sobol indices')
-        ax2.grid()
-        ax2.legend()
-
-        plt.show()

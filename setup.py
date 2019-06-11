@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-name='easyvvuq-qcgpj',
+name='EasyVVUQ-QCGPJ',
 
-version='0.0.1.dev1',
+version='0.0.2.dev1',
 
 description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
 'using the QCG Pilot Job mechanism.',
@@ -11,16 +11,25 @@ description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
 long_description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
 'using the QCG Pilot Job mechanism.',
 
-url='TODO',
+url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 
 author='Bartosz Bosak',
 
 install_requires=[
-'qcgpilotmanager @ git+https://github.com/vecma-project/QCG-PilotJob.git@master#egg=qcgpilotmanager',
-'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@qcgpj_integration#egg=easyvvuq',
+    'pytest',
+    'pytest-pep8',
+    'scipy==1.2.1',
+    'qcgPilotManager==0.4.1',
+    'easyvvuq==0.3dev2'
 ],
 
 packages=find_packages(),
+
+scripts=[
+    'scripts/easyvvuq_app',
+    'scripts/easyvvuq_encode',
+    'scripts/easyvvuq_execute'
+],
 
 include_package_data=True
 )
