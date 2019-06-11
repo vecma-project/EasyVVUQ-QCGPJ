@@ -37,7 +37,7 @@ def test_pce_pj(tmpdir):
 
     # Initializing the Pilot Job Manager
     client_conf = {'log_level': 'DEBUG'}
-    m = LocalManager(['--nodes', str(cores)], client_conf)
+    m = LocalManager([], client_conf)
   
     # Set up a fresh campaign called "pce"
     my_campaign = uq.Campaign(name='pce', work_dir=tmpdir)
