@@ -31,8 +31,7 @@ class PJConfigurator:
 
             # Resurrect the app encoder, decoder and collation elements
             (active_app_encoder,
-             active_app_decoder,
-             active_app_collation) = campaign.campaign_db.resurrect_app(self.__app['name'])
+             active_app_decoder) = campaign.campaign_db.resurrect_app(self.__app['name'])
 
             self.__encoder = \
                 type(active_app_encoder).__module__ + "." + \
