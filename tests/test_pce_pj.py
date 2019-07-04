@@ -171,7 +171,7 @@ def test_pce_pj(tmpdir):
     # Get Descriptive Statistics
     stats = results['statistical_moments']['te']
     per = results['percentiles']['te']
-    sobols = results['sobol_indices']['te'][1]
+    sobols = results['sobols_first']['te']
     dist_out = results['output_distributions']['te']
 
     print("Processing completed")
