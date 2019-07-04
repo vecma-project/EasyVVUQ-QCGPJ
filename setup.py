@@ -20,7 +20,7 @@ install_requires=[
     'pytest-pep8',
     'scipy==1.2.1',
     'qcgPilotManager==0.4.1',
-    'easyvvuq==0.3dev2'
+    'easyvvuq==0.3'
 ],
 
 packages=find_packages(),
