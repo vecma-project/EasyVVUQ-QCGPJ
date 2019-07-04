@@ -73,7 +73,6 @@ def test_pce_pj(tmpdir):
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
                                     output_columns=output_columns,
                                     header=0)
-    collation = uq.collate.AggregateSamples(average=False)
 
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="pce",
@@ -88,6 +87,11 @@ def test_pce_pj(tmpdir):
         "t_env": cp.Uniform(15, 25)
     }
 
+
+    # Create a collation element for this campaign
+    collater = uq.collate.AggregateSamples(average=False)
+    my_campaign.set_collater(collater)
+
     my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
 
     # Associate the sampler with the campaign
@@ -98,11 +102,13 @@ def test_pce_pj(tmpdir):
 
     # Create & save PJ configurator
     print("Creating configuration for QCG Pilot Job Manager")
-    PJConfigurator(my_campaign).save()
+    pjc = PJConfigurator(my_campaign)
+    pjc.save()
 
     # Execute encode -> execute for each run using QCG-PJ
     print("Starting submission of tasks to QCG Pilot Job Manager")
-    for key in my_campaign.list_runs():
+    for run in my_campaign.list_runs():
+        key = run[0]
         encode_job = {
             "name": 'encode_' + key,
             "execution": {
@@ -150,6 +156,10 @@ def test_pce_pj(tmpdir):
     m.finish()
     m.stopManager()
     m.cleanup()
+
+    # Sync state of a campaign with PJConfigurator
+    print("Syncing state of campaign after execution of PJ")
+    pjc.finalize()
 
     print("Collating results")
     my_campaign.collate()

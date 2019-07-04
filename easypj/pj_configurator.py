@@ -5,6 +5,7 @@ import easyvvuq.campaign as cn
 import easyvvuq.db.base as db
 
 # author: Bartosz Bosak
+from easyvvuq.constants import Status
 from easyvvuq.encoders import BaseEncoder
 
 __license__ = "LGPL"
@@ -39,12 +40,18 @@ class PJConfigurator:
 
             self.__conf_file = os.path.join(campaign.campaign_dir, CONF_FILE)
             self.__runs_dir = os.path.join(campaign.campaign_dir, RUNS_DIR)
-            self.__runs = campaign.list_runs()
+            self.__runs = dict(campaign.list_runs())
 
             self.init_runs_dir(campaign)
 
+            self.campaign = campaign
+
         if isinstance(campaign, str):
             self.__conf_file = os.path.join(campaign, CONF_FILE)
+
+    def finalize(self):
+        for run_id, run_info in self.__runs.items():
+            self.campaign.campaign_db.set_run_statuses([run_id], Status.ENCODED)
 
     @staticmethod
     def load(campaign_dir):
@@ -108,6 +115,10 @@ class PJConfigurator:
             target_dir = os.path.join(self.__runs_dir, run_id)
             campaign.campaign_db.set_dir_for_run(run_id, target_dir)
 
+#        for run in self.__runs:
+#            target_dir = os.path.join(self.__runs_dir, run[0])
+#            campaign.campaign_db.set_dir_for_run(run[0], target_dir)
+
         runs_dir = self.__runs_dir
         if os.path.exists(runs_dir):
             raise RuntimeError(f"Cannot create a runs directory to "
@@ -132,6 +143,9 @@ class PJConfigurator:
         -------
 
         """
+        # This may be useful when we left run as a tuple.
+        # r = [item for item in self.__runs if item[0] == "Run_1" ]
+
         run = self.__runs[run_id]
         target_dir = os.path.join(self.__runs_dir, run_id)
         os.makedirs(target_dir)
