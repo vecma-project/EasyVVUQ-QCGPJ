@@ -79,8 +79,7 @@ def test_pce_pj(tmpdir):
     my_campaign.add_app(name="pce",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collation=collation
+                        decoder=decoder
                         )
 
     # Create the sampler
