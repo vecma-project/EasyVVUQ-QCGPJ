@@ -91,7 +91,6 @@ def test_pce_pj(tmpdir):
         "t_env": cp.Uniform(15, 25)
     }
 
-
     # Create a collation element for this campaign
     collater = uq.collate.AggregateSamples(average=False)
     my_campaign.set_collater(collater)
