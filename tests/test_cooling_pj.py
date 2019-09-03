@@ -13,7 +13,7 @@ __license__ = "LGPL"
 cwd = os.getcwd()
 
 
-def test_pce_pj(tmpdir):
+def test_cooling_pj(tmpdir):
 
     print("Running in directory: " + cwd)
 
@@ -41,8 +41,8 @@ def test_pce_pj(tmpdir):
 
     print("Initializing Campaign")
 
-    # Set up a fresh campaign called "pce"
-    my_campaign = uq.Campaign(name='pce', work_dir=tmpdir)
+    # Set up a fresh campaign called "cooling"
+    my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
     # Define parameter space
     params = {
@@ -79,7 +79,7 @@ def test_pce_pj(tmpdir):
                                     header=0)
 
     # Add the PCE app (automatically set as current app)
-    my_campaign.add_app(name="pce",
+    my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
                         decoder=decoder
@@ -118,8 +118,8 @@ def test_pce_pj(tmpdir):
             my_campaign.db_type,
             my_campaign.db_location,
             'FALSE',
-            "pce",
-            "pce",
+            "cooling",
+            "cooling",
             key
         ]
 
@@ -202,7 +202,7 @@ def test_pce_pj(tmpdir):
 if __name__ == "__main__":
     start_time = time.time()
 
-    stats = test_pce_pj("/tmp/")
+    stats = test_cooling_pj("/tmp/")
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
