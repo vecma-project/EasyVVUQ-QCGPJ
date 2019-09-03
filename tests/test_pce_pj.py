@@ -174,6 +174,7 @@ def test_pce_pj(tmpdir):
     m.cleanup()
 
     print("Syncing state of campaign after execution of PJ")
+
     def update_status(run_id, run_data):
         my_campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 

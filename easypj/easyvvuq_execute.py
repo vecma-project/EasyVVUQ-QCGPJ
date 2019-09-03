@@ -19,4 +19,3 @@ if __name__ == "__main__":
     result = os.system(full_cmd)
     if result != 0:
         sys.exit("Non-zero exit code from command '" + full_cmd + "'\n")
-

@@ -43,5 +43,6 @@ ti = -te
 # output csv file
 header = 'te, ti'
 np.savetxt(output_filename, np.c_[te, ti],
-           delimiter=",", comments='',
+           delimiter=",",
+           comments='',
            header=header)

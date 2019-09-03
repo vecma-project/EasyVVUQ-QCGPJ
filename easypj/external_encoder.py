@@ -17,6 +17,7 @@ __copyright__ = """
 """
 __license__ = "LGPL"
 
+
 def encode(params):
     db_type = params[1]
     db_location = params[2]
@@ -40,6 +41,7 @@ def encode(params):
         write_to_db=write_to_db_bool)
 
     worker.encode_runs(run_id_list)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 7:
