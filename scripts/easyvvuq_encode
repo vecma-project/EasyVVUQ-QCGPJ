@@ -3,4 +3,5 @@
 # Source the site-specific configuration file
 . $EASYPJ_CONFIG
 
-python3 -m easypj.easyvvuq_encode $@
+#python3 -m easypj.easyvvuq_encode $@
+python3 -m easypj.external_encoder $@

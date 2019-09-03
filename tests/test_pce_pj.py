@@ -5,7 +5,6 @@ import easyvvuq as uq
 
 from qcg.appscheduler.api.job import Jobs
 from qcg.appscheduler.api.manager import LocalManager
-from easypj.pj_configurator import PJConfigurator
 
 # author: Jalal Lakhlili / Bartosz Bosak
 
@@ -40,25 +39,30 @@ def test_pce_pj(tmpdir):
 
     print("Available resources:\n%s\n" % str(m.resources()))
 
-    print("Initializing Camapign")
+    print("Initializing Campaign")
 
     # Set up a fresh campaign called "pce"
     my_campaign = uq.Campaign(name='pce', work_dir=tmpdir)
 
     # Define parameter space
     params = {
+        "temp_init": {
+            "type": "float",
+            "min": 0.0,
+            "max": 100.0,
+            "default": 95.0},
         "kappa": {
-            "type": "real",
-            "min": "0.0",
-            "max": "0.1",
-            "default": "0.025"},
+            "type": "float",
+            "min": 0.0,
+            "max": 0.1,
+            "default": 0.025},
         "t_env": {
-            "type": "real",
-            "min": "0.0",
-            "max": "40.0",
-            "default": "15.0"},
+            "type": "float",
+            "min": 0.0,
+            "max": 40.0,
+            "default": 15.0},
         "out_file": {
-            "type": "str",
+            "type": "string",
             "default": "output.csv"}}
 
     output_filename = params["out_file"]["default"]
@@ -66,9 +70,9 @@ def test_pce_pj(tmpdir):
 
     # Create an encoder, decoder and collation element for PCE test app
     encoder = uq.encoders.GenericEncoder(
-        template_fname='tests/pce_pj/pce/pce.template',
+        template_fname='tests/cooling/cooling.template',
         delimiter='$',
-        target_filename='pce_in.json')
+        target_filename='cooling_in.json')
 
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
                                     output_columns=output_columns,
@@ -81,21 +85,21 @@ def test_pce_pj(tmpdir):
                         decoder=decoder
                         )
 
-    # Create a collation element for this campaign
-    collater = uq.collate.AggregateSamples(average=False)
-    my_campaign.set_collater(collater)
-
-    # Create the sampler
     vary = {
         "kappa": cp.Uniform(0.025, 0.075),
         "t_env": cp.Uniform(15, 25)
     }
 
+    # Create the sampler
+    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
+
     # Create a collation element for this campaign
     collater = uq.collate.AggregateSamples(average=False)
     my_campaign.set_collater(collater)
 
-    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
+    # Create a collation element for this campaign
+    collater = uq.collate.AggregateSamples(average=False)
+    my_campaign.set_collater(collater)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
@@ -103,21 +107,33 @@ def test_pce_pj(tmpdir):
     # Will draw all (of the finite set of samples)
     my_campaign.draw_samples()
 
-    # Create & save PJ configurator
-    print("Creating configuration for QCG Pilot Job Manager")
-    pjc = PJConfigurator(my_campaign)
-    pjc.save()
-
     # Execute encode -> execute for each run using QCG-PJ
     print("Starting submission of tasks to QCG Pilot Job Manager")
     for run in my_campaign.list_runs():
+
         key = run[0]
+        run_dir = run[1]['run_dir']
+
+        enc_args = [
+            my_campaign.db_type,
+            my_campaign.db_location,
+            'FALSE',
+            "pce",
+            "pce",
+            key
+        ]
+
+        exec_args = [
+            run_dir,
+            'easyvvuq_app',
+            cwd + "/tests/cooling/cooling_model.py", "cooling_in.json"
+        ]
+
         encode_job = {
             "name": 'encode_' + key,
             "execution": {
                 "exec": 'easyvvuq_encode',
-                "args": [my_campaign.campaign_dir,
-                         key],
+                "args": enc_args,
                 "wd": cwd,
                 "stdout": my_campaign.campaign_dir + '/encode_' + key + '.stdout',
                 "stderr": my_campaign.campaign_dir + '/encode_' + key + '.stderr'
@@ -133,10 +149,7 @@ def test_pce_pj(tmpdir):
             "name": 'execute_' + key,
             "execution": {
                 "exec": 'easyvvuq_execute',
-                "args": [my_campaign.campaign_dir,
-                         key,
-                         'easyvvuq_app',
-                         cwd + "/tests/pce_pj/pce/pce_model.py", "pce_in.json"],
+                "args": exec_args,
                 "wd": cwd,
                 "stdout": my_campaign.campaign_dir + '/execute_' + key + '.stdout',
                 "stderr": my_campaign.campaign_dir + '/execute_' + key + '.stderr'
@@ -160,14 +173,14 @@ def test_pce_pj(tmpdir):
     m.stopManager()
     m.cleanup()
 
-    # Sync state of a campaign with PJConfigurator
     print("Syncing state of campaign after execution of PJ")
-    pjc.finalize()
+    def update_status(run_id, run_data):
+        my_campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
+
+    my_campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
 
     print("Collating results")
     my_campaign.collate()
-
-    # Update after here
 
     # Post-processing analysis
     print("Making analysis")
