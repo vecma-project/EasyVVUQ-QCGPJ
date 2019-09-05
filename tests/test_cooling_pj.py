@@ -129,7 +129,7 @@ def test_cooling_pj(tmpdir):
             cwd + "/tests/cooling/cooling_model.py", "cooling_in.json"
         ]
 
-        encode_job = {
+        encode_task = {
             "name": 'encode_' + key,
             "execution": {
                 "exec": 'easyvvuq_encode',
@@ -145,7 +145,7 @@ def test_cooling_pj(tmpdir):
             }
         }
 
-        execute_job = {
+        execute_task = {
             "name": 'execute_' + key,
             "execution": {
                 "exec": 'easyvvuq_execute',
@@ -164,8 +164,8 @@ def test_cooling_pj(tmpdir):
             }
         }
 
-        m.submit(Jobs().addStd(encode_job))
-        m.submit(Jobs().addStd(execute_job))
+        m.submit(Jobs().addStd(encode_task))
+        m.submit(Jobs().addStd(execute_task))
 
     # wait for completion of all PJ tasks and terminate the PJ manager
     m.wait4all()
