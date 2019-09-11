@@ -12,6 +12,7 @@ __license__ = "LGPL"
 
 cwd = os.getcwd()
 
+
 def test_cooling_pj(tmpdir):
 
     print("Running in directory: " + cwd)
