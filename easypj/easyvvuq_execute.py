@@ -4,9 +4,6 @@ import os
 
 if __name__ == "__main__":
 
-    print("EASYPJ EXECUTE: ")
-    print(sys.argv)
-
     if len(sys.argv) < 3:
         sys.exit("Usage: python3 easyvvuq_execute.py RUN_DIR COMMAND")
 

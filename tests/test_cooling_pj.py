@@ -12,7 +12,6 @@ __license__ = "LGPL"
 
 cwd = os.getcwd()
 
-
 def test_cooling_pj(tmpdir):
 
     print("Running in directory: " + cwd)
@@ -126,7 +125,7 @@ def test_cooling_pj(tmpdir):
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            cwd + "/tests/cooling/cooling_model.py", "cooling_in.json"
+            'python3 ' + cwd + "/tests/cooling/cooling_model.py", "cooling_in.json"
         ]
 
         encode_task = {
