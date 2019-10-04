@@ -32,7 +32,7 @@ client_conf = {'log_level': 'DEBUG'}
 #m = LocalManager(['--nodes', str(cores)], client_conf)
 
 # This can be used for execution of the test using a separate (non-local) instance of PJManager
-m = LocalManager(['--log', 'warning'], client_conf)
+m = LocalManager(['--log', 'debug'], client_conf)
 
 # get available resources
 #res = m.resources()
@@ -169,6 +169,7 @@ for run in my_campaign.list_runs():
     m.submit(Jobs().addStd(execute_task))
 
 # wait for completion of all PJ tasks and terminate the PJ manager
+print(">>> Wait for completion of all PJ tasks")
 m.wait4all()
 m.finish()
 m.stopManager()
