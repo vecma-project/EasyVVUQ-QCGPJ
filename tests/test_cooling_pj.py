@@ -96,10 +96,6 @@ def test_cooling_pj(tmpdir):
     # Create the sampler
     my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
 
-    # Create a collation element for this campaign
-    collater = uq.collate.AggregateSamples(average=False)
-    my_campaign.set_collater(collater)
-
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 
