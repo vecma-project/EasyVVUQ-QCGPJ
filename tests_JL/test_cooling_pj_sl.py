@@ -100,8 +100,6 @@ vary = {
 # Create the sampler
 my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
 
-my_campaign.set_collater(collater)
-
 # Associate the sampler with the campaign
 my_campaign.set_sampler(my_sampler)
 
