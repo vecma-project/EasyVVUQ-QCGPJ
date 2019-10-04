@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=00:30:00                   # time limits
+#SBATCH --time=00:05:00                   # time limits
 #SBATCH --nodes=1                         # nodes
 #SBATCH --ntasks-per-node=4               # tasks per node
 ###SBATCH --cpus-per-task=1               # CPU per task
@@ -18,4 +18,4 @@ export CPO_INPUT_DIR=AUG_28906_4/
 
 #module load intel intelmpi mkl fftw 
 
-python3 test_cooling_pj_sl.py > test.log.${SLURM_JOBID}
+python3 test_cooling_pj_sl.py > test-log.${SLURM_JOBID}
