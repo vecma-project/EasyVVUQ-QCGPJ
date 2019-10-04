@@ -19,4 +19,4 @@
 #SBATCH --time=00:30:00
 
 # Run the program in uq folder
-python tests/test_cooling_pj_sl.py > test.log.${SLURM_JOBID}
+python test_cooling_pj_sl.py > test.log.${SLURM_JOBID}
