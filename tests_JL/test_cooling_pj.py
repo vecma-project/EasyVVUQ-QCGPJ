@@ -12,7 +12,9 @@ start_time = time.time()
 
 cwd = os.getcwd()
 
-tmpdir = os.environ['SCRATCH']
+#tmpdir = os.environ['SCRATCH']
+tmpdir = '/tmp/'
+
 
 print("Running in directory: " + cwd)
 
