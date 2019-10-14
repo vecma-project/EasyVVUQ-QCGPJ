@@ -78,14 +78,11 @@ def test_cooling_pj(tmpdir):
                                     output_columns=output_columns,
                                     header=0)
 
-    collater = uq.collate.AggregateSamples(average=False)
-
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater
+                        decoder=decoder
                         )
 
     vary = {
@@ -93,9 +90,12 @@ def test_cooling_pj(tmpdir):
         "t_env": cp.Uniform(15, 25)
     }
 
+    # Create a collation element for this campaign
+    collater = uq.collate.AggregateSamples(average=False)
+    my_campaign.set_collater(collater)
+
     # Create the sampler
     my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
-
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 

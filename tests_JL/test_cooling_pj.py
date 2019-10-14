@@ -8,6 +8,9 @@ from qcg.appscheduler.api.manager import LocalManager
 
 # author: Jalal Lakhlili / Bartosz Bosak
 
+__license__ = "LGPL"
+
+
 start_time = time.time()
 
 cwd = os.getcwd()
@@ -79,20 +82,21 @@ decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
                                 output_columns=output_columns,
                                 header=0)
 
-collater = uq.collate.AggregateSamples(average=False)
-
 # Add the PCE app (automatically set as current app)
 my_campaign.add_app(name="cooling",
                     params=params,
                     encoder=encoder,
-                    decoder=decoder,
-                    collater=collater
+                    decoder=decoder
                     )
 
 vary = {
     "kappa": cp.Uniform(0.025, 0.075),
     "t_env": cp.Uniform(15, 25)
 }
+
+# Create a collation element for this campaign
+collater = uq.collate.AggregateSamples(average=False)
+my_campaign.set_collater(collater)
 
 # Create the sampler
 my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
