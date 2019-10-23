@@ -1,5 +1,7 @@
 import os
 import time
+from tempfile import mkdtemp
+
 import chaospy as cp
 import easyvvuq as uq
 
@@ -21,30 +23,8 @@ def test_cooling_pj(tmpdir):
     print("Job directory: " + jobdir)
     print("Temporary directory: " + tmpdir)
 
-    # establish available resources
-    cores = 4
-
-    # switch on debugging of QCGPJ API (client part)
-    client_conf = {'log_file': tmpdir + '/.qcgpjm/api.log', 'log_level': 'DEBUG'}
-
-    # create local LocalManager (service part)
-    m = LocalManager(['--log', 'debug',
-                      '--nodes', str(cores),
-                      '--wd', tmpdir],
-                     client_conf)
-
-    # This can be used for execution of the test using a separate (non-local) instance of PJManager
-    #
-    # get available resources
-    # res = m.resources()
-    # remove all jobs if they are already in PJM
-    # (required when executed using the same QCG-Pilot Job Manager)
-    # m.remove(m.list().keys())
-
-    print("Available resources:\n%s\n" % str(m.resources()))
-
+    # ---- CAMPAIGN INITIALISATION ---
     print("Initializing Campaign")
-
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
@@ -106,6 +86,33 @@ def test_cooling_pj(tmpdir):
     # Will draw all (of the finite set of samples)
     my_campaign.draw_samples()
 
+    # ---- QCG PILOT JOB INITIALISATION ---
+    # set QCG-PJ temp directory
+    qcgpj_tempdir = mkdtemp(None, ".qcgpj-", my_campaign.campaign_dir)
+
+    # establish available resources
+    cores = 4
+
+    # switch on debugging of QCGPJ API (client part)
+    client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': 'DEBUG'}
+
+    # create local LocalManager (service part)
+    m = LocalManager(['--log', 'debug',
+                      '--nodes', str(cores),
+                      '--wd', qcgpj_tempdir],
+                     client_conf)
+
+    # This can be used for execution of the test using a separate (non-local) instance of PJManager
+    #
+    # get available resources
+    # res = m.resources()
+    # remove all jobs if they are already in PJM
+    # (required when executed using the same QCG-Pilot Job Manager)
+    # m.remove(m.list().keys())
+
+    print("Available resources:\n%s\n" % str(m.resources()))
+
+    # ---- EXECUTION ---
     # Execute encode -> execute for each run using QCG-PJ
     print("Starting submission of tasks to QCG Pilot Job Manager")
     for run in my_campaign.list_runs():
