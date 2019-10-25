@@ -8,7 +8,8 @@ from qcg.appscheduler.api.manager import LocalManager
 class Executor:
     """Integrates EasyVVUQ and QCG Pilot Job manager
 
-    Executor allows to process the most demanding operations of EasyVVUQ in parallel using QCG Pilot Job.
+    Executor allows to process the most demanding operations of EasyVVUQ in parallel
+    using QCG Pilot Job.
 
 
     Parameters
@@ -73,7 +74,6 @@ class Executor:
 
         if encoding_params:
             enc_cores = encoding_params.cores
-
 
         # Execute encode -> execute for each run using QCG-PJ
         print("Starting submission of tasks to QCG Pilot Job Manager")
