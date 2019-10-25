@@ -147,4 +147,3 @@ class Executor:
             campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 
         campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
-
