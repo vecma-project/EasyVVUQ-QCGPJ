@@ -1,6 +1,5 @@
 import sys
 import os
-# from easypj.pj_configurator import PJConfigurator
 
 if __name__ == "__main__":
 
