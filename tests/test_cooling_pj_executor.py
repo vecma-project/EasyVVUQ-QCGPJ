@@ -84,12 +84,15 @@ def test_cooling_pj(tmpdir):
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = easypj.Executor(dir=my_campaign.campaign_dir)
+    qcgpjexec = easypj.Executor()
+    qcgpjexec.create_manager(dir=my_campaign.campaign_dir)
 
     exec_params = easypj.ExecParams(
         app='python3 ' + jobdir + "/tests/cooling/cooling_model.py cooling_in.json")
 
-    qcgpjexec.run(my_campaign, exec_params)
+    qcgpjexec.configure_execution_task(exec_params)
+
+    qcgpjexec.run(my_campaign)
 
     print("Collating results")
     my_campaign.collate()
