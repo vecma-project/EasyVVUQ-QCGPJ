@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import time
 import chaospy as cp
 import easyvvuq as uq
