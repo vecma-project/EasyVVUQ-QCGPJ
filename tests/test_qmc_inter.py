@@ -17,7 +17,11 @@ jobdir = os.getcwd()
 tmpdir = jobdir
 appdir = jobdir
 
-def test_qmc_inter(tmpdir, cores):
+# establish available resources
+#cores = int(sys.argv[1])
+cores = 4
+
+def test_qmc_inter(tmpdir):
     tmpdir = str(tmpdir)
 
     print("Job directory: " + jobdir)
@@ -195,11 +199,7 @@ def test_qmc_inter(tmpdir, cores):
 if __name__ == "__main__":
     start_time = time.time()
 
-    # establish available resources
-    #cores = int(sys.argv[1])
-    cores = 4
-
-    stats = test_qmc_inter("/tmp/", cores)
+    stats = test_qmc_inter("/tmp/")
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
