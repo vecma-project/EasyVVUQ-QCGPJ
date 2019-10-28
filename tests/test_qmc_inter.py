@@ -17,7 +17,8 @@ start_time = time.time()
 cwd = os.getcwd()
 print("Running in directory: " + cwd)
 
-tmpdir = os.environ['SCRATCH']
+#tmpdir = os.environ['SCRATCH']
+tmpdir = '/tmp/'
 
 # establish available resources
 #cores = int(sys.argv[1])
