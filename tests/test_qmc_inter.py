@@ -56,7 +56,7 @@ output_columns = ["te", "ti"]
 
 # Create an encoder, decoder and collation element
 encoder = uq.encoders.GenericEncoder(
-    template_fname='cooling/cooling.template',
+    template_fname=jobdir + '/tests/cooling/cooling.template',
     delimiter='$',
     target_filename='cooling_in.json')
 
