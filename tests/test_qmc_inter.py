@@ -124,7 +124,7 @@ def test_qmc_inter(tmpdir):
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            'python3 ' + jobdir + "/cooling/cooling_model.py", "cooling_in.json"
+            'python3 ' + jobdir + "/tests/cooling/cooling_model.py", "cooling_in.json"
         ]
 
         encode_task = {
