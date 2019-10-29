@@ -192,7 +192,6 @@ def test_qmc_inter(tmpdir):
     # Get Descriptive Statistics
     stats = results['statistical_moments']['te']
 
-
     print("Processing completed")
     return stats
 
