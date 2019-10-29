@@ -18,7 +18,7 @@ tmpdir = jobdir
 appdir = jobdir
 
 # establish available resources
-#cores = int(sys.argv[1])
+# cores = int(sys.argv[1])
 cores = 4
 
 def test_qmc_inter(tmpdir):
