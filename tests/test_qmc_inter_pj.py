@@ -10,7 +10,7 @@ from qcg.appscheduler.api.manager import LocalManager
 
 # author: Jalal Lakhlili / Bartosz Bosak
 # Usage in intercative mode:
-#  python3 test_qmc_inter.py
+#  python3 test_qmc_inter_pj.py
 
 
 jobdir = os.getcwd()
@@ -83,7 +83,7 @@ def test_qmc_inter(tmpdir):
     }
 
     # Create the sampler (total samples = 500*2 = 1000)
-    my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=500)
+    my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
@@ -188,13 +188,13 @@ def test_qmc_inter(tmpdir):
     my_campaign.apply_analysis(qmc_analysis)
 
     results = my_campaign.get_last_analysis()
-    end_time = time.time()
 
     # Get Descriptive Statistics
     stats = results['statistical_moments']['te']
 
     print("Processing completed")
     return stats
+
 
 if __name__ == "__main__":
     start_time = time.time()

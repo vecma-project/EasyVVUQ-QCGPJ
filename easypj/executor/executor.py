@@ -30,8 +30,9 @@ class Executor:
     """
     def __init__(self):
         self._qcgpjm = None
-        self._encoding_params = None
-        self._exec_params = None
+        self._encoding_requirements = None
+        self._exec_requirements = None
+        self._exec_application = None
 
     def set_manager(self, qcgpjm):
         """Sets existing QCG Pilot Job Manager as the Executor's engine
@@ -96,29 +97,34 @@ class Executor:
 
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
-    def configure_encoding_task(self, encoding_params):
+    def configure_encoding_task(self, task_requirements):
         """
         Configures encoding task of EasyVVUQ execution with QCG PJ
 
         Parameters
         ----------
-        encoding_params: encoding_params
-
+        task_requirements: easypj.TaskRequirements
+            Resource requirements of a task. If None, the task will be executed
+            with default settings
 
         Returns
         -------
         None
 
         """
-        self._encoding_params = encoding_params
+        self._encoding_requirements = task_requirements
 
-    def configure_execution_task(self, exec_params):
+    def configure_execution_task(self, task_requirements, application):
         """
         Configures execution task of EasyVVUQ execution with QCG PJ
 
         Parameters
         ----------
-        exec_params: exec_params
+        task_requirements: easypj.TaskRequirements
+            Resource requirements of a task. If None, the task will be executed
+            with default settings
+        application : str
+            the full command to run application
 
 
         Returns
@@ -126,16 +132,12 @@ class Executor:
         None
 
         """
-        self._exec_params = exec_params
+        self._exec_requirements = task_requirements
+        self._exec_application = application
 
     def _get_encoding_task(self, campaign, run):
 
         key = run[0]
-
-        enc_cores = 1
-
-        if self._encoding_params:
-            enc_cores = self._encoding_params.cores
 
         enc_args = [
             campaign.db_type,
@@ -154,20 +156,14 @@ class Executor:
                 "wd": campaign.campaign_dir,
                 "stdout": campaign.campaign_dir + '/encode_' + key + '.stdout',
                 "stderr": campaign.campaign_dir + '/encode_' + key + '.stderr'
-            },
-            "resources": {
-                "numCores": {
-                    "exact": enc_cores
-                }
             }
         }
+
+        encode_task.update(self._encoding_requirements.get_requirements())
 
         return encode_task
 
     def _get_exec_task(self, campaign, run):
-
-        exec_app = self._exec_params.app
-        exec_cores = self._exec_params.cores
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -175,7 +171,7 @@ class Executor:
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            exec_app
+            self._exec_application
         ]
 
         execute_task = {
@@ -187,15 +183,12 @@ class Executor:
                 "stdout": campaign.campaign_dir + '/execute_' + key + '.stdout',
                 "stderr": campaign.campaign_dir + '/execute_' + key + '.stderr'
             },
-            "resources": {
-                "numCores": {
-                    "exact": exec_cores
-                }
-            },
             "dependencies": {
                 "after": ["encode_" + key]
             }
         }
+
+        execute_task.update(self._exec_requirements.get_requirements())
 
         return execute_task
 

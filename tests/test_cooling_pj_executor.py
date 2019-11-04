@@ -6,6 +6,7 @@ import easyvvuq as uq
 import easypj
 
 # author: Jalal Lakhlili / Bartosz Bosak
+from easypj import TaskRequirements
 
 __license__ = "LGPL"
 
@@ -59,21 +60,20 @@ def test_cooling_pj(tmpdir):
                                     output_columns=output_columns,
                                     header=0)
 
+    collater = uq.collate.AggregateSamples(average=False)
+
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder
+                        decoder=decoder,
+                        collater=collater
                         )
 
     vary = {
         "kappa": cp.Uniform(0.025, 0.075),
         "t_env": cp.Uniform(15, 25)
     }
-
-    # Create a collation element for this campaign
-    collater = uq.collate.AggregateSamples(average=False)
-    my_campaign.set_collater(collater)
 
     # Create the sampler
     my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
@@ -87,10 +87,12 @@ def test_cooling_pj(tmpdir):
     qcgpjexec = easypj.Executor()
     qcgpjexec.create_manager(dir=my_campaign.campaign_dir)
 
-    exec_params = easypj.ExecParams(
-        app='python3 ' + jobdir + "/tests/cooling/cooling_model.py cooling_in.json")
+    qcgpjexec.configure_encoding_task(
+        task_requirements=TaskRequirements(cores=1))
 
-    qcgpjexec.configure_execution_task(exec_params)
+    qcgpjexec.configure_execution_task(
+        task_requirements=TaskRequirements(cores=1),
+        application='python3 ' + jobdir + "/tests/cooling/cooling_model.py cooling_in.json")
 
     qcgpjexec.run(my_campaign)
 
