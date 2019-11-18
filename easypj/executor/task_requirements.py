@@ -1,38 +1,116 @@
 class TaskRequirements:
 
-    def __init__(self, cores=None, min_cores=None, max_cores=None):
+    def __init__(self, cores=None, nodes=None):
         """
-        Parameters for Execution task executed within QCG Pilot Job
+        Requirements for a task executed within QCG Pilot Job
 
         Parameters
         ----------
-        cores : int
-            the exact number of cores to use for an exec task
+        cores : Resources
+            the resource requirements for cores
+        nodes : Resources
+            the resource requirements for nodes
         """
 
+        self._resources = {
+            "resources": {}
+        }
+
         if cores:
-            if min_cores or max_cores:
-                raise ValueError("The 'cores' parameter can't be used "
-                                 "together with 'min_cores' or 'max-cores' parameters")
+            self._resources["resources"].update({"numCores": {}})
+            cores_dict = cores.get_dict()
+            self._resources["resources"]["numCores"].update(cores_dict)
 
-        elif min_cores and max_cores:
-            if min_cores >= max_cores:
+        if nodes:
+            self._resources["resources"].update({"numNodes": {}})
+            nodes_dict = nodes.get_dict()
+            self._resources["resources"]["numNodes"].update(nodes_dict)
+
+    def get_resources(self):
+        return self._resources
+
+
+class Resources:
+    """
+    The utility class used to keep typical for QCG-PJ resource requirements.
+
+    Parameters
+    ----------
+    exact: Number
+        The exact number of resources
+    min: Number
+        The minimal acceptable number of resources
+    max: Number
+        The maximal acceptable number of resources
+    split_into: Number
+        The anticipated number of chunks to which the total resources should be split.
+        The minimal number of resources in a chunk will be restricted by the value of 'min'.
+    """
+    def __init__(self, exact=None, min=None, max=None, split_into=None):
+        # Establish settings for resources
+        if not exact and not min and not max:
+            exact = 1
+
+        elif exact:
+            if exact < 1:
+                raise ValueError("The value of 'exact' parameter can't be lower than 1")
+            if min or max:
+                raise ValueError("The value of 'exact' parameter can't be used "
+                                 "together with 'min' or 'max'")
+        elif min:
+            if not max and not split_into:
+                raise ValueError("The value of 'min' parameter "
+                                 "can't be used without 'max' or 'split_into")
+            if max and min > max:
                 raise ValueError(
-                    "The 'min_cores' parameter can't be larger than 'max_cores' parameter")
+                    "The value of 'min' parameter can't be larger "
+                    "than the value of 'max' parameter")
+            if split_into and split_into > min:
+                raise ValueError("The value of 'split_nto' parameter "
+                                 "can't be larger than 'min'")
 
-        if max_cores and max_cores < 1:
-            raise ValueError("The 'max_cores' parameter can't be lower than 1")
+        elif max:
+            raise ValueError("The value of 'max' parameter "
+                             "can't be used without 'min'")
 
-        self._cores = cores
-        self._min_cores = min_cores
-        self._max_cores = max_cores
+        elif split_into:
+            raise ValueError("The value of 'split_into' parameter "
+                             "can't be used without 'min'")
 
-    def get_requirements(self):
-        if self._cores:
-            return {
-                "resources": {
-                    "numCores": {
-                        "exact": self._cores
-                    }
-                }
-            }
+        self._exact = exact
+        self._min = min
+        self._max = max
+        self._split_into = split_into
+
+    def get_dict(self):
+        """
+
+        Returns
+        -------
+        Dict:
+            Dictionary of resource requirements.
+        """
+        _resources = {
+        }
+
+        if self._exact:
+            _resources.update({
+                  "exact": self._exact
+            })
+
+        if self._min:
+            _resources.update({
+                  "min": self._min
+            })
+
+        if self._max:
+            _resources.update({
+                  "max": self._max
+            })
+
+        if self._split_into:
+            _resources.update({
+                  "split-into": self._split_into
+            })
+
+        return _resources

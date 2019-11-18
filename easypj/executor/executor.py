@@ -1,8 +1,48 @@
+from enum import Enum
 from tempfile import mkdtemp
 
 import easyvvuq as uq
 from qcg.appscheduler.api.job import Jobs
 from qcg.appscheduler.api.manager import LocalManager
+
+
+class SubmitOrder(Enum):
+    PHASE_ORIENTED = "Submits specific task (e.g. encoding) for all " \
+                     "runs and then goes to the next task (e.g. execution)"
+    RUN_ORIENTED = "Submits a workflow of tasks for a run " \
+                   "(e.g. encoding -> execution) and then goes to the next run"
+
+
+class TaskType(Enum):
+    ENCODING = "ENCODING"
+    EXECUTION = "EXECUTION"
+    ENCODING_AND_EXECUTION = "ENCODING_AND_EXECUTION"
+    OTHER = "OTHER"
+
+
+class Task:
+
+    def __init__(self, type, requirements, name=None, after=None, **params):
+        self._type = type
+        self._requirements = requirements
+        self._params = params
+        self._name = name if name else type
+        self._after = after
+
+    def get_type(self):
+        return self._type
+
+    def get_requirements(self):
+        return self._requirements
+
+    def get_params(self):
+        return self._params
+
+    def get_name(self):
+        return self._name
+
+    def get_after(self):
+        return self._after
 
 
 class Executor:
@@ -30,9 +70,7 @@ class Executor:
     """
     def __init__(self):
         self._qcgpjm = None
-        self._encoding_requirements = None
-        self._exec_requirements = None
-        self._exec_application = None
+        self._tasks = {}
 
     def set_manager(self, qcgpjm):
         """Sets existing QCG Pilot Job Manager as the Executor's engine
@@ -87,7 +125,8 @@ class Executor:
         args = common_args
 
         if resources:
-            args.append('--nodes', str(resources))
+            args.append('--nodes')
+            args.append(str(resources))
 
         if reserve_core:
             args.append('--system-core')
@@ -97,45 +136,26 @@ class Executor:
 
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
-    def configure_encoding_task(self, task_requirements):
+    def add_task(self, task):
         """
-        Configures encoding task of EasyVVUQ execution with QCG PJ
+        Add a task to execute with QCG PJ
 
         Parameters
         ----------
-        task_requirements: easypj.TaskRequirements
-            Resource requirements of a task. If None, the task will be executed
-            with default settings
+        task: easypj.Task
+            The task that will be added to the workflow
 
         Returns
         -------
         None
 
         """
-        self._encoding_requirements = task_requirements
-
-    def configure_execution_task(self, task_requirements, application):
-        """
-        Configures execution task of EasyVVUQ execution with QCG PJ
-
-        Parameters
-        ----------
-        task_requirements: easypj.TaskRequirements
-            Resource requirements of a task. If None, the task will be executed
-            with default settings
-        application : str
-            the full command to run application
-
-
-        Returns
-        -------
-        None
-
-        """
-        self._exec_requirements = task_requirements
-        self._exec_application = application
+        self._tasks[task.get_name()] = task
 
     def _get_encoding_task(self, campaign, run):
+
+        task = self._tasks.get(TaskType.ENCODING)
+        requirements = task.get_requirements().get_resources()
 
         key = run[0]
 
@@ -159,11 +179,15 @@ class Executor:
             }
         }
 
-        encode_task.update(self._encoding_requirements.get_requirements())
+        encode_task.update(requirements)
 
         return encode_task
 
     def _get_exec_task(self, campaign, run):
+
+        task = self._tasks.get(TaskType.EXECUTION)
+        application = task.get_params().get("application")
+        requirements = task.get_requirements().get_resources()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -171,7 +195,7 @@ class Executor:
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            self._exec_application
+            application
         ]
 
         execute_task = {
@@ -188,25 +212,23 @@ class Executor:
             }
         }
 
-        execute_task.update(self._exec_requirements.get_requirements())
+        execute_task.update(requirements)
 
         return execute_task
 
-    def run(self, campaign):
+    def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG Pilot Job
 
         A user may choose the preferred execution scheme for the given scenario.
 
         campaign : easyvvuq.campaign
             The campaign object that would be processed. It has to be previously initialised.
+        submit_order: easypj.SubmitOrder
+            EasyVVUQ tasks submission order
         """
         # ---- EXECUTION ---
-
         # Execute encode -> execute for each run using QCG-PJ
-        print("Starting submission of tasks to QCG Pilot Job Manager")
-        for run in campaign.list_runs():
-            self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
-            self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+        self.__submit_jobs(campaign, submit_order)
 
         # wait for completion of all PJ tasks and terminate the PJ manager
         self._qcgpjm.wait4all()
@@ -220,3 +242,17 @@ class Executor:
             campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 
         campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
+
+    def __submit_jobs(self, campaign, submit_order):
+
+        print("Starting submission of tasks to QCG Pilot Job Manager")
+        if submit_order == SubmitOrder.RUN_ORIENTED:
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+
+        elif submit_order == SubmitOrder.PHASE_ORIENTED:
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))

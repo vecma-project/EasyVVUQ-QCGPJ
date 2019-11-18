@@ -5,14 +5,19 @@ import chaospy as cp
 import easyvvuq as uq
 import easypj
 
-# author: Jalal Lakhlili / Bartosz Bosak
-from easypj import TaskRequirements
+from easypj import TaskRequirements, Resources
+from easypj import Task, TaskType, SubmitOrder
 
+# author: Jalal Lakhlili / Bartosz Bosak
 __license__ = "LGPL"
 
 jobdir = os.getcwd()
 tmpdir = jobdir
 appdir = jobdir
+
+TEMPLATE = "tests/cooling/cooling.template"
+APPLICATION = "tests/cooling/cooling_model.py"
+ENCODED_FILENAME = "cooling_in.json"
 
 
 def test_cooling_pj(tmpdir):
@@ -52,9 +57,9 @@ def test_cooling_pj(tmpdir):
 
     # Create an encoder, decoder and collation element for PCE test app
     encoder = uq.encoders.GenericEncoder(
-        template_fname=jobdir + '/tests/cooling/cooling.template',
+        template_fname=jobdir + '/' + TEMPLATE,
         delimiter='$',
-        target_filename='cooling_in.json')
+        target_filename=ENCODED_FILENAME)
 
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
                                     output_columns=output_columns,
@@ -85,16 +90,22 @@ def test_cooling_pj(tmpdir):
 
     print("Starting execution")
     qcgpjexec = easypj.Executor()
-    qcgpjexec.create_manager(dir=my_campaign.campaign_dir)
+    qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
-    qcgpjexec.configure_encoding_task(
-        task_requirements=TaskRequirements(cores=1))
+    qcgpjexec.add_task(Task(
+        TaskType.ENCODING,
+        TaskRequirements(cores=Resources(exact=1))
+    ))
 
-    qcgpjexec.configure_execution_task(
-        task_requirements=TaskRequirements(cores=1),
-        application='python3 ' + jobdir + "/tests/cooling/cooling_model.py cooling_in.json")
+    qcgpjexec.add_task(Task(
+        TaskType.EXECUTION,
+        TaskRequirements(cores=Resources(exact=1)),
+        application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
+    ))
 
-    qcgpjexec.run(my_campaign)
+    qcgpjexec.run(
+        campaign=my_campaign,
+        submit_order=SubmitOrder.PHASE_ORIENTED)
 
     print("Collating results")
     my_campaign.collate()
