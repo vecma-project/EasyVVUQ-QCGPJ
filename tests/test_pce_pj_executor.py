@@ -114,6 +114,8 @@ def test_cooling_pj(tmpdir):
         submit_order=SubmitOrder.RUN_ORIENTED)
     #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
+    qcgpjexec.terminate_manager()
+
     print("Collating results")
     my_campaign.collate()
 
