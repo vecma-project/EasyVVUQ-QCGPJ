@@ -4,6 +4,5 @@ python:
 install:
   - pip install .
 script:
-  - python -m pytest tests/
   - py.test --pep8 easypj/
   - py.test --pep8 tests
