@@ -28,7 +28,8 @@ packages=find_packages(),
 scripts=[
     'scripts/easyvvuq_app',
     'scripts/easyvvuq_encode',
-    'scripts/easyvvuq_execute'
+    'scripts/easyvvuq_execute',
+    'scripts/easyvvuq_encode_execute'
 ],
 
 include_package_data=True

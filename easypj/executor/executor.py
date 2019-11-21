@@ -1,3 +1,4 @@
+import time
 from enum import Enum
 from tempfile import mkdtemp
 
@@ -7,10 +8,15 @@ from qcg.appscheduler.api.manager import LocalManager
 
 
 class SubmitOrder(Enum):
-    PHASE_ORIENTED = "Submits specific task (e.g. encoding) for all " \
-                     "runs and then goes to the next task (e.g. execution)"
-    RUN_ORIENTED = "Submits a workflow of tasks for a run " \
+    PHASE_ORIENTED = "Submits specific EasyVVUQ operation (e.g. encoding) " \
+                     "for all runs as a separate QCG PJ tasks" \
+                     "and then goes to the next EasyVVUQ operation (e.g. execution)"
+    RUN_ORIENTED = "Submits a workflow of EasyVVUQ operations as " \
+                   "separate QCG PJ tasks for a run " \
                    "(e.g. encoding -> execution) and then goes to the next run"
+    RUN_ORIENTED_CONDENSED = "Submits all EasyVVUQ operations for a run " \
+                             "as a single QCG PJ task (e.g. encoding -> execution) " \
+                             "and then goes to the next run"
 
 
 class TaskType(Enum):
@@ -216,6 +222,43 @@ class Executor:
 
         return execute_task
 
+    def _get_encoding_and_exec_task(self, campaign, run):
+
+        task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
+        application = task.get_params().get("application")
+        requirements = task.get_requirements().get_resources()
+
+        key = run[0]
+        run_dir = run[1]['run_dir']
+
+        args = [
+            campaign.db_type,
+            campaign.db_location,
+            'FALSE',
+            campaign.campaign_name,
+            campaign._active_app_name,
+            key,
+
+            run_dir,
+            'easyvvuq_app',
+            application
+        ]
+
+        encode_execute_task = {
+            "name": 'encode_execute_' + key,
+            "execution": {
+                "exec": 'easyvvuq_encode_execute',
+                "args": args,
+                "wd": campaign.campaign_dir,
+                "stdout": campaign.campaign_dir + '/encode_execute_' + key + '.stdout',
+                "stderr": campaign.campaign_dir + '/encode_execute_' + key + '.stderr'
+            }
+        }
+
+        encode_execute_task.update(requirements)
+
+        return encode_execute_task
+
     def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG Pilot Job
 
@@ -228,13 +271,15 @@ class Executor:
         """
         # ---- EXECUTION ---
         # Execute encode -> execute for each run using QCG-PJ
+        start_time = time.time()
+
         self.__submit_jobs(campaign, submit_order)
 
-        # wait for completion of all PJ tasks and terminate the PJ manager
+        # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
-        self._qcgpjm.finish()
-        self._qcgpjm.stopManager()
-        self._qcgpjm.cleanup()
+
+        end_time = time.time()
+        print('>>>>> QCG PJ Execution completed, elapsed time = ', end_time - start_time)
 
         print("Syncing state of campaign after execution of PJ")
 
@@ -243,10 +288,19 @@ class Executor:
 
         campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
 
+    def terminate_manager(self):
+        self._qcgpjm.finish()
+        self._qcgpjm.stopManager()
+        self._qcgpjm.cleanup()
+
     def __submit_jobs(self, campaign, submit_order):
 
         print("Starting submission of tasks to QCG Pilot Job Manager")
-        if submit_order == SubmitOrder.RUN_ORIENTED:
+        if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_encoding_and_exec_task(campaign, run)))
+
+        elif submit_order == SubmitOrder.RUN_ORIENTED:
             for run in campaign.list_runs():
                 self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
                 self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))

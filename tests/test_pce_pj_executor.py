@@ -103,23 +103,26 @@ def test_cooling_pj(tmpdir):
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
+    # qcgpjexec.add_task(Task(
+    #     TaskType.ENCODING_AND_EXECUTION,
+    #     TaskRequirements(cores=Resources(exact=1)),
+    #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
+    # ))
+
     qcgpjexec.run(
         campaign=my_campaign,
-        submit_order=SubmitOrder.PHASE_ORIENTED)
+        submit_order=SubmitOrder.RUN_ORIENTED)
+    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
     print("Collating results")
     my_campaign.collate()
 
-    # Post-processing analysis
     print("Making analysis")
     pce_analysis = uq.analysis.PCEAnalysis(sampler=my_sampler,
                                            qoi_cols=output_columns)
-
     my_campaign.apply_analysis(pce_analysis)
 
     results = my_campaign.get_last_analysis()
-
-    # Get Descriptive Statistics
     stats = results['statistical_moments']['te']
 
     print("Processing completed")

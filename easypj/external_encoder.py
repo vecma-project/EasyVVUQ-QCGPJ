@@ -44,6 +44,9 @@ def encode(params):
 
 
 if __name__ == "__main__":
+
+    print(sys.argv)
+
     if len(sys.argv) != 7:
         sys.exit(
             (f"Usage: python3 external_encoder.py db_type db_location "
