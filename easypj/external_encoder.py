@@ -1,5 +1,7 @@
+import os
 import sys
 import easyvvuq as uq
+import importlib
 
 __copyright__ = """
     Copyright 2018 Robin A. Richardson, David W. Wright
@@ -44,6 +46,13 @@ def encode(params):
 
 
 if __name__ == "__main__":
+
+    if 'ENCODER_MODULES' in os.environ:
+        enc_modules = os.environ['ENCODER_MODULES'].split(';')
+        for m in enc_modules:
+            m = m.rstrip()
+            print("Importing module: ", m)
+            importlib.import_module(m)
 
     print(sys.argv)
 
