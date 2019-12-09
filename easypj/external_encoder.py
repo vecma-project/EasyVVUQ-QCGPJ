@@ -51,10 +51,14 @@ if __name__ == "__main__":
         enc_modules = os.environ['ENCODER_MODULES'].split(';')
         for m in enc_modules:
             m = m.rstrip()
-            print("Importing module: ", m)
-            importlib.import_module(m)
+            print("Importing encoder module: ", m)
+            module = importlib.import_module(m)
 
-    print(sys.argv)
+            globals().update(
+                {n: getattr(module, n) for n in module.__all__} if hasattr(module, '__all__')
+                else
+                {k: v for (k, v) in module.__dict__.items() if not k.startswith('_')
+                 })
 
     if len(sys.argv) != 7:
         sys.exit(
