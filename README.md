@@ -171,6 +171,8 @@ In case of the batch execution on clusters, the above line can be put into the j
    EasyPJ supports the following types of Tasks that may be executed by QCG PJ Manager:
    * `ENCODING`: this Task is used for the encoding of a single sample. 
    * `EXECUTION`: this Task is used for the execution of an application for a single sample. 
+     The constructor of this Task requires the `application` parameter to be specified with the value defining 
+     a command to run the application. 
      The `EXECUTION` Task for a given sample depends on the `ENCODING` Task for the same sample. 
    * `ENCODING&EXECUTION`: this Task is used for running both encoding and execution for a single sample.
    
