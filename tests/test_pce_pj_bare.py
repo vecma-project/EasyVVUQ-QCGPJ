@@ -1,5 +1,7 @@
 import os
 import time
+from tempfile import mkdtemp
+
 import chaospy as cp
 import easyvvuq as uq
 
@@ -10,37 +12,19 @@ from qcg.appscheduler.api.manager import LocalManager
 
 __license__ = "LGPL"
 
-cwd = os.getcwd()
+jobdir = os.getcwd()
+tmpdir = jobdir
+appdir = jobdir
 
 
 def test_cooling_pj(tmpdir):
+    tmpdir = str(tmpdir)
 
-    print("Running in directory: " + cwd)
+    print("Job directory: " + jobdir)
+    print("Temporary directory: " + tmpdir)
 
-    # establish available resources
-    cores = 4
-
-    # set location of log file
-    # client_conf = {'log_file': tmpdir.join('api.log'), 'log_level': 'DEBUG'}
-
-    # switch on debugging (by default in api.log file)
-    client_conf = {'log_level': 'DEBUG'}
-
-    # switch on debugging (by default in api.log file)
-    m = LocalManager(['--nodes', str(cores)], client_conf)
-
-    # This can be used for execution of the test using a separate (non-local) instance of PJManager
-    #
-    # get available resources
-    # res = m.resources()
-    # remove all jobs if they are already in PJM
-    # (required when executed using the same QCG-Pilot Job Manager)
-    # m.remove(m.list().keys())
-
-    print("Available resources:\n%s\n" % str(m.resources()))
-
+    # ---- CAMPAIGN INITIALISATION ---
     print("Initializing Campaign")
-
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
@@ -70,7 +54,7 @@ def test_cooling_pj(tmpdir):
 
     # Create an encoder, decoder and collation element for PCE test app
     encoder = uq.encoders.GenericEncoder(
-        template_fname='tests/cooling/cooling.template',
+        template_fname=jobdir + '/tests/cooling/cooling.template',
         delimiter='$',
         target_filename='cooling_in.json')
 
@@ -78,11 +62,14 @@ def test_cooling_pj(tmpdir):
                                     output_columns=output_columns,
                                     header=0)
 
+    collater = uq.collate.AggregateSamples(average=False)
+
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder
+                        decoder=decoder,
+                        collater=collater
                         )
 
     vary = {
@@ -92,21 +79,39 @@ def test_cooling_pj(tmpdir):
 
     # Create the sampler
     my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
-
-    # Create a collation element for this campaign
-    collater = uq.collate.AggregateSamples(average=False)
-    my_campaign.set_collater(collater)
-
-    # Create a collation element for this campaign
-    collater = uq.collate.AggregateSamples(average=False)
-    my_campaign.set_collater(collater)
-
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 
     # Will draw all (of the finite set of samples)
     my_campaign.draw_samples()
 
+    # ---- QCG PILOT JOB INITIALISATION ---
+    # set QCG-PJ temp directory
+    qcgpj_tempdir = mkdtemp(None, ".qcgpj-", my_campaign.campaign_dir)
+
+    # establish available resources
+    cores = 4
+
+    # switch on debugging of QCGPJ API (client part)
+    client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': 'DEBUG'}
+
+    # create local LocalManager (service part)
+    m = LocalManager(['--log', 'debug',
+                      '--nodes', str(cores),
+                      '--wd', qcgpj_tempdir],
+                     client_conf)
+
+    # This can be used for execution of the test using a separate (non-local) instance of PJManager
+    #
+    # get available resources
+    # res = m.resources()
+    # remove all jobs if they are already in PJM
+    # (required when executed using the same QCG-Pilot Job Manager)
+    # m.remove(m.list().keys())
+
+    print("Available resources:\n%s\n" % str(m.resources()))
+
+    # ---- EXECUTION ---
     # Execute encode -> execute for each run using QCG-PJ
     print("Starting submission of tasks to QCG Pilot Job Manager")
     for run in my_campaign.list_runs():
@@ -126,7 +131,7 @@ def test_cooling_pj(tmpdir):
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            'python3 ' + cwd + "/tests/cooling/cooling_model.py", "cooling_in.json"
+            'python3 ' + jobdir + "/tests/cooling/cooling_model.py", "cooling_in.json"
         ]
 
         encode_task = {
@@ -134,7 +139,7 @@ def test_cooling_pj(tmpdir):
             "execution": {
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
-                "wd": cwd,
+                "wd": my_campaign.campaign_dir,
                 "stdout": my_campaign.campaign_dir + '/encode_' + key + '.stdout',
                 "stderr": my_campaign.campaign_dir + '/encode_' + key + '.stderr'
             },
@@ -150,7 +155,7 @@ def test_cooling_pj(tmpdir):
             "execution": {
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": cwd,
+                "wd": my_campaign.campaign_dir,
                 "stdout": my_campaign.campaign_dir + '/execute_' + key + '.stdout',
                 "stderr": my_campaign.campaign_dir + '/execute_' + key + '.stderr'
             },
