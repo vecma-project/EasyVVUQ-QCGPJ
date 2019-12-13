@@ -112,7 +112,7 @@ steer the rest of the process. Below we shortly describe particular elements of 
    The Executor internally uses QCG PJ Manager to submit Tasks. The Pilot Job Manager instance 
    needs to be set up for the Executor. To this end, it is possible to use one of two methods: 
    the presented `create_manager()` or `set_manager()`. More information on this topic 
-   is presented in the section [QCG Pilot Job Manager initialisation](#qcg-pilot-job-manager-initialisation.)
+   is presented in the section [QCG Pilot Job Manager initialisation](#qcg-pilot-job-manager-initialisation).
    
 2. **Declaration of tasks**
    
