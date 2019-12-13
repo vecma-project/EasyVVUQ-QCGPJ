@@ -69,7 +69,8 @@ def test_cooling_pj(tmpdir):
     # Create Executor
     qcgpjexec = easypj.Executor()
     
-    # Create QCG PJ-Manager with 4 cores (if you want to use all available resources remove resources parameter)
+    # Create QCG PJ-Manager with 4 cores 
+    # (if you want to use all available resources remove resources parameter)
     qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
     # Declare tasks, one for encoding and one for execution, providing their resource requirements
