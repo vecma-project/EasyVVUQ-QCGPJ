@@ -90,6 +90,8 @@ def test_cooling_pj(tmpdir):
 
     print("Starting execution")
     qcgpjexec = easypj.Executor()
+
+    # Create QCG PJ-Manager with 4 cores (if you want to use all available resources remove resources parameter)
     qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
     qcgpjexec.add_task(Task(
@@ -99,20 +101,13 @@ def test_cooling_pj(tmpdir):
 
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=1)),
+        TaskRequirements(cores=Resources(exact=4)),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
-
-    # qcgpjexec.add_task(Task(
-    #     TaskType.ENCODING_AND_EXECUTION,
-    #     TaskRequirements(cores=Resources(exact=1)),
-    #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
-    # ))
 
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
-    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
     qcgpjexec.terminate_manager()
 

@@ -26,7 +26,7 @@ def get_custom_template(template_txt, custom_delimiter='$'):
     return CustomTemplate(template_txt)
 
 
-class CustomEncoder(BaseEncoder, encoder_name="custom_generic_template"):
+class CustomEncoder(BaseEncoder, encoder_name="custom_template"):
     """CustomEncoder for substituting values into application template input.
     Parameters
     ----------

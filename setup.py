@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
 name='EasyVVUQ-QCGPJ',
 
-version='0.0.4',
+version='0.1.0',
 
 description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
 'using the QCG Pilot Job mechanism.',

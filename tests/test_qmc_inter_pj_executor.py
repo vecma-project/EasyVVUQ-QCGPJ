@@ -106,16 +106,9 @@ def test_qmc_inter(tmpdir):
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
-    # qcgpjexec.add_task(Task(
-    #     TaskType.ENCODING_AND_EXECUTION,
-    #     TaskRequirements(cores=Resources(exact=1)),
-    #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
-    # ))
-
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
-    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
     qcgpjexec.terminate_manager()
 

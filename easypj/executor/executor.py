@@ -27,13 +27,26 @@ class TaskType(Enum):
 
 
 class Task:
+    """ Represents a piece of work to be executed by QCG Pilot Job Manager
 
-    def __init__(self, type, requirements, name=None, after=None, **params):
+    Parameters
+    ----------
+    type : easypj.TaskType
+        The type of the task. Allowed tasks are: ENCODING, EXECUTION, ENCODING_AND_EXECUTION,
+        and OTHER (currently not supported)
+    requirements : easypj.TaskRequirements
+        The requirements for the Task
+    name : str
+        name of the Task, if not provided the name will take a value of type
+    params: **kwargs
+        additional parameters that may be used by specific Task types
+    """
+
+    def __init__(self, type, requirements, name=None, **params):
         self._type = type
         self._requirements = requirements
         self._params = params
         self._name = name if name else type
-        self._after = after
 
     def get_type(self):
         return self._type
@@ -47,31 +60,12 @@ class Task:
     def get_name(self):
         return self._name
 
-    def get_after(self):
-        return self._after
-
 
 class Executor:
     """Integrates EasyVVUQ and QCG Pilot Job manager
 
     Executor allows to process the most demanding operations of EasyVVUQ in parallel
     using QCG Pilot Job.
-
-
-    Parameters
-    ----------
-    dir : str
-        The path to the directory where Executor should init QCG Pilot Job Manager.
-        Inside dir a subdirectory for workdir of QCG PJ manager will be created
-    resources : str, optional
-        The resources to use. If specified forces usage of Local mode of QCG Pilot Job Manager.
-        The format is compliant with the NODES format of QCG Pilot Job, i.e.:
-        [node_name:]cores_on_node[,node_name2:cores_on_node][,...].
-        Eg. to run on 4 cores regardless the node use `resources="4"`
-        to run on 2 cores of node_1 and on 3 cores of node_2 use `resources="node_1:2,node_2:3"`
-    reserve_core : bool, optional
-        If True reserves a core for QCG Pilot Job manager instance,
-        by default QCG Pilot Job Manager shares a core with computing tasks
 
     """
     def __init__(self):
@@ -84,6 +78,7 @@ class Executor:
         Parameters
         ----------
         qcgpjm : qcg.appscheduler.api.manager.Manager
+            Existing instance of a QCG Pilot Job Manager
 
         Returns
         -------
@@ -149,7 +144,7 @@ class Executor:
         Parameters
         ----------
         task: easypj.Task
-            The task that will be added to the workflow
+            The task that will be added to the execution workflow
 
         Returns
         -------

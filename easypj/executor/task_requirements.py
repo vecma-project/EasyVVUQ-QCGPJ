@@ -1,16 +1,16 @@
 class TaskRequirements:
+    """
+    Requirements for a task executed within QCG Pilot Job
+
+    Parameters
+    ----------
+    cores : easypj.Resources
+        the resource requirements for cores
+    nodes : easypj.Resources
+        the resource requirements for nodes
+    """
 
     def __init__(self, cores=None, nodes=None):
-        """
-        Requirements for a task executed within QCG Pilot Job
-
-        Parameters
-        ----------
-        cores : Resources
-            the resource requirements for cores
-        nodes : Resources
-            the resource requirements for nodes
-        """
 
         self._resources = {
             "resources": {}
@@ -27,12 +27,21 @@ class TaskRequirements:
             self._resources["resources"]["numNodes"].update(nodes_dict)
 
     def get_resources(self):
+        """
+        Allows to get resource requirements in a form of dictionary understandable
+        by QCG Pilot Job Manager
+
+        Returns
+            dict : dictionary with the resource requirements specification
+        -------
+
+        """
         return self._resources
 
 
 class Resources:
     """
-    The utility class used to keep typical for QCG-PJ resource requirements.
+    Stores typical for QCG Pilot Job resource requirements
 
     Parameters
     ----------
