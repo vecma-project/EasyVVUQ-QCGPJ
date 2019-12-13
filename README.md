@@ -3,9 +3,10 @@ This is a lightweight wrapper over [EasyVVUQ](https://github.com/UCL-CCS/EasyVVU
 and [QCG Pilot Job Manager](https://github.com/vecma-project/QCG-PilotJob) that enables efficient execution 
 of critical parts of EasyVVUQ workflows on HPC machines. 
 
-EasyVVUQ-QCGPJ, shortened in the rest of this documentation as EasyPJ, 
-provides an API to configure EasyVVUQ to use QCG Pilot Job (QCG PJ) for execution of demanding 
+EasyVVUQ-QCGPJ provides an API to configure EasyVVUQ to use QCG Pilot Job for execution of demanding 
 parts of EasyVVUQ workflow in parallel. 
+
+In the rest of this documentation EasyVVUQ-QCGPJ is shortened as EasyPJ and QCG Pilot Job as QCG PJ
 
 ## Requirements
 The software requires pip 18.0.1+ for installation and Python 3.6+ for usage.
