@@ -10,7 +10,7 @@ from qcg.appscheduler.api.manager import LocalManager
 
 # author: Jalal Lakhlili / Bartosz Bosak
 # Usage in intercative mode:
-#  python3 test_qmc_inter_pj.py
+#  python3 test_qmc_inter_pj_bare.py
 
 
 jobdir = os.getcwd()
