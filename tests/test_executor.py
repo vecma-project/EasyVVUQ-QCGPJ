@@ -16,13 +16,12 @@ TEMPLATE = "tests/cooling/cooling.template"
 APPLICATION = "tests/cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
-jobdir = os.getcwd()
-uqmethod = 'pce'
-
-if 'SCRATCH' is  os.environ:
-    tmpdir = os.environ['SCRATCH']
+if "SCRATCH" in os.environ:
+    tmpdir = os.environ["SCRATCH"]
 else:
     tmpdir = "/tmp/"
+jobdir = os.getcwd()
+uqmethod = "pce"
 
 
 def test_cooling_pj():

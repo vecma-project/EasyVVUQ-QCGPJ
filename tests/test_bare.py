@@ -12,13 +12,13 @@ from qcg.appscheduler.api.manager import LocalManager
 
 __license__ = "LGPL"
 
-jobdir = os.getcwd()
-uqmethod = 'pce'
 
-if 'SCRATCH' is  os.environ:
-    tmpdir = os.environ['SCRATCH']
+if "SCRATCH" in os.environ:
+tmpdir = os.environ["SCRATCH"]
 else:
-    tmpdir = "/tmp/"
+tmpdir = "/tmp/"
+jobdir = os.getcwd()
+uqmethod = "pce"
 
 
 def test_cooling_pj():
