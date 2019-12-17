@@ -16,7 +16,7 @@ jobdir = os.getcwd()
 uqmethod = 'pce'
 
 if 'SCRATCH' is  os.environ:
-    tmpdir = ['SCRATCH']
+    tmpdir = os.environ['SCRATCH']
 else:
     tmpdir = "/tmp/"
 
