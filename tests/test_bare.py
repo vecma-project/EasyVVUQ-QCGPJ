@@ -14,9 +14,9 @@ __license__ = "LGPL"
 
 
 if "SCRATCH" in os.environ:
-tmpdir = os.environ["SCRATCH"]
+    tmpdir = os.environ["SCRATCH"]
 else:
-tmpdir = "/tmp/"
+    tmpdir = "/tmp/"
 jobdir = os.getcwd()
 uqmethod = "pce"
 
