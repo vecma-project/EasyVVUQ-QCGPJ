@@ -13,11 +13,13 @@ from qcg.appscheduler.api.manager import LocalManager
 __license__ = "LGPL"
 
 jobdir = os.getcwd()
+uqmethod = 'pce'
+tmpdir = os.environ['SCRATCH']
+if tmpdir is None:
+    tmpdir = "/tmp/"
 
 
-def test_cooling_pj(tmpdir, uq_method):
-    tmpdir = str(tmpdir)
-
+def test_cooling_pj():
     print("Job directory: " + jobdir)
     print("Temporary directory: " + tmpdir)
 
@@ -76,9 +78,9 @@ def test_cooling_pj(tmpdir, uq_method):
     }
 
     # Create the sampler
-    if uq_method == 'pce':
+    if uqmethod == 'pce':
         my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
-    if uq_method == 'qmc':
+    else:
         my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
 
     # Associate the sampler with the campaign
@@ -192,9 +194,9 @@ def test_cooling_pj(tmpdir, uq_method):
 
     # Post-processing analysis
     print("Making analysis")
-    if uq_method == 'pce':
+    if uqmethod == 'pce':
         analysis = uq.analysis.PCEAnalysis(sampler=my_sampler, qoi_cols=output_columns)
-    if uq_method == 'qmc':
+    else:
         analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
 
     my_campaign.apply_analysis(analysis)
@@ -211,13 +213,7 @@ def test_cooling_pj(tmpdir, uq_method):
 if __name__ == "__main__":
     start_time = time.time()
 
-    tmp_dir = os.environ['SCRATCH']
-    if tmp_dir is None:
-        tmp_dir = "/tmp/"
-
-    # UQ method: choose between 'pce' and 'qmc'
-    uq_method = 'pce'
-    stats = test_cooling_pj(tmp_dir, uq_method)
+    stats = test_cooling_pj()
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
