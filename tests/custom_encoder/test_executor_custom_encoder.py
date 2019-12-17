@@ -8,21 +8,19 @@ import easypj
 from easypj import TaskRequirements, Resources
 from easypj import Task, TaskType, SubmitOrder
 
-# author: Jalal Lakhlili / Bartosz Bosak
-# Usage in intercative mode:
-#  python3 test_qmc_inter_pj_executor.py
+from custom_encoder import CustomEncoder
 
+# author: Jalal Lakhlili / Bartosz Bosak
+__license__ = "LGPL"
 
 jobdir = os.getcwd()
-tmpdir = jobdir
-appdir = jobdir
 
 TEMPLATE = "tests/cooling/cooling.template"
 APPLICATION = "tests/cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 
-def test_qmc_inter(tmpdir):
+def test_cooling_pj(tmpdir):
     tmpdir = str(tmpdir)
 
     print("Job directory: " + jobdir)
@@ -57,8 +55,9 @@ def test_qmc_inter(tmpdir):
     output_filename = params["out_file"]["default"]
     output_columns = ["te", "ti"]
 
-    # Create an encoder, decoder and collation element
-    encoder = uq.encoders.GenericEncoder(
+    # Create an encoder, decoder and collation element for PCE test app
+    # encoder = uq.encoders.GenericEncoder(
+    encoder = CustomEncoder(
         template_fname=jobdir + '/' + TEMPLATE,
         delimiter='$',
         target_filename=ENCODED_FILENAME)
@@ -82,9 +81,8 @@ def test_qmc_inter(tmpdir):
         "t_env": cp.Uniform(15, 25)
     }
 
-    # Create the sampler (total samples = 500*2 = 1000)
-    my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
-
+    # Create the sampler
+    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 
@@ -106,24 +104,28 @@ def test_qmc_inter(tmpdir):
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
+    # qcgpjexec.add_task(Task(
+    #     TaskType.ENCODING_AND_EXECUTION,
+    #     TaskRequirements(cores=Resources(exact=1)),
+    #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
+    # ))
+
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
+    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
     qcgpjexec.terminate_manager()
 
     print("Collating results")
     my_campaign.collate()
 
-    # Post-processing analysis
     print("Making analysis")
-    qmc_analysis = uq.analysis.QMCAnalysis(sampler=my_sampler,
+    pce_analysis = uq.analysis.PCEAnalysis(sampler=my_sampler,
                                            qoi_cols=output_columns)
-    my_campaign.apply_analysis(qmc_analysis)
+    my_campaign.apply_analysis(pce_analysis)
 
     results = my_campaign.get_last_analysis()
-
-    # Get Descriptive Statistics
     stats = results['statistical_moments']['te']
 
     print("Processing completed")
@@ -132,8 +134,11 @@ def test_qmc_inter(tmpdir):
 
 if __name__ == "__main__":
     start_time = time.time()
+    tmp_dir = os.environ['SCRATCH']
+    if tmp_dir is None:
+        tmp_dir = "/tmp/"
 
-    stats = test_qmc_inter("/tmp/")
+    stats = test_cooling_pj(tmp_dir)
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
