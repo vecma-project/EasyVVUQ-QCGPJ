@@ -134,12 +134,8 @@ def test_cooling_pj(tmpdir):
 
 if __name__ == "__main__":
     start_time = time.time()
-    
-    tmp_dir = os.environ['SCRATCH']
-    if tmp_dir is None:
-        tmp_dir = "/tmp/"
 
-    stats = test_cooling_pj(tmp_dir)
+    stats = test_cooling_pj()
 
     end_time = time.time()
-    print('Elapsed time = ', end_time - start_time)
+    print('>>>>> elapsed time = ', end_time - start_time)
