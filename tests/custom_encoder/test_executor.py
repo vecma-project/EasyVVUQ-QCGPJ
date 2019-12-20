@@ -127,58 +127,19 @@ def test_cooling_pj(tmpdir):
 
     results = my_campaign.get_last_analysis()
     stats = results['statistical_moments']['te']
-    sob1 = results['sobols_first']['te']
 
     print("Processing completed")
-    return stats, sob1
+    return stats
 
 
 if __name__ == "__main__":
     start_time = time.time()
+    
     tmp_dir = os.environ['SCRATCH']
     if tmp_dir is None:
         tmp_dir = "/tmp/"
 
-    stats, sob1 = test_cooling_pj(tmp_dir)
+    stats = test_cooling_pj(tmp_dir)
 
     end_time = time.time()
     print('Elapsed time = ', end_time - start_time)
-
-    _PLOT=False
-    if _PLOT:
-        print("Save results in test_cooling.png plot")
-        import matplotlib.pyplot as plt
-        import numpy as np
-
-        mean = stats["mean"]
-        std = stats["std"]
-
-        s1_kappa = sob1["kappa"]
-        s1_t_env = sob1["t_env"]
-
-        t = np.linspace(0, 200, 150)
-        plt.switch_backend('agg')
-        fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(16,6))
-
-        ax1.plot(t, mean, 'g-', alpha=0.75, label='Mean')
-        ax1.plot(t, mean-std, 'b-', alpha=0.25)
-        ax1.plot(t, mean+std, 'b-', alpha=0.25)
-        ax1.fill_between(t, mean-std, mean+std, alpha=0.25, label=r'Mean $\pm$ deviation')
-        ax1.set_xlabel("time")
-        ax1.set_ylabel("T", color='b')
-        ax1.tick_params('y', colors='b')
-        ax1.grid()
-        ax1.legend()
-        ax1.set_title('Statistical Moments')
-
-        ax2.plot(t, s1_kappa, '-', color ='#248BF2', label=r'$\kappa$')
-        ax2.plot(t, s1_t_env, '-', color ='#9402E8', alpha=0.6,label=r'$T_{env}$')
-        ax2.set_xlabel('Time (min)')
-        ax2.set_ylabel('First-order Sobol indices')
-        ax2.set_title('Sensitivity Analysis')
-        ax2.grid()
-        ax2.legend()
-
-        plt.subplots_adjust(wspace=0.35)
-        fig.savefig("test_cooling")
-        plt.close(fig)
