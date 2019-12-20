@@ -8,23 +8,23 @@ import easypj
 from easypj import TaskRequirements, Resources
 from easypj import Task, TaskType, SubmitOrder
 
-from custom_encoder import CustomEncoder
-
 # author: Jalal Lakhlili / Bartosz Bosak
 __license__ = "LGPL"
 
-jobdir = os.getcwd()
-tmpdir = jobdir
-appdir = jobdir
 
 TEMPLATE = "tests/cooling/cooling.template"
 APPLICATION = "tests/cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
+if "SCRATCH" in os.environ:
+    tmpdir = os.environ["SCRATCH"]
+else:
+    tmpdir = "/tmp/"
+jobdir = os.getcwd()
+uqmethod = "pce"
 
-def test_cooling_pj(tmpdir):
-    tmpdir = str(tmpdir)
 
+def test_cooling_pj():
     print("Job directory: " + jobdir)
     print("Temporary directory: " + tmpdir)
 
@@ -57,9 +57,8 @@ def test_cooling_pj(tmpdir):
     output_filename = params["out_file"]["default"]
     output_columns = ["te", "ti"]
 
-    # Create an encoder, decoder and collation element for PCE test app
-    # encoder = uq.encoders.GenericEncoder(
-    encoder = CustomEncoder(
+    # Create an encoder, decoder and collation element
+    encoder = uq.encoders.GenericEncoder(
         template_fname=jobdir + '/' + TEMPLATE,
         delimiter='$',
         target_filename=ENCODED_FILENAME)
@@ -84,7 +83,11 @@ def test_cooling_pj(tmpdir):
     }
 
     # Create the sampler
-    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=1)
+    if uqmethod == 'pce':
+        my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
+    if uqmethod == 'qmc':
+        my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
+
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 
@@ -93,6 +96,9 @@ def test_cooling_pj(tmpdir):
 
     print("Starting execution")
     qcgpjexec = easypj.Executor()
+
+    # Create QCG PJ-Manager with 4 cores
+    # (if you want to use all available resources remove resources parameter)
     qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
     qcgpjexec.add_task(Task(
@@ -102,20 +108,13 @@ def test_cooling_pj(tmpdir):
 
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=1)),
+        TaskRequirements(cores=Resources(exact=4)),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
-
-    # qcgpjexec.add_task(Task(
-    #     TaskType.ENCODING_AND_EXECUTION,
-    #     TaskRequirements(cores=Resources(exact=1)),
-    #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
-    # ))
 
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
-    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
 
     qcgpjexec.terminate_manager()
 
@@ -123,9 +122,13 @@ def test_cooling_pj(tmpdir):
     my_campaign.collate()
 
     print("Making analysis")
-    pce_analysis = uq.analysis.PCEAnalysis(sampler=my_sampler,
-                                           qoi_cols=output_columns)
-    my_campaign.apply_analysis(pce_analysis)
+
+    if uqmethod == 'pce':
+        analysis = uq.analysis.PCEAnalysis(sampler=my_sampler, qoi_cols=output_columns)
+    if uqmethod == 'qmc':
+        analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
+
+    my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
     stats = results['statistical_moments']['te']
@@ -137,7 +140,7 @@ def test_cooling_pj(tmpdir):
 if __name__ == "__main__":
     start_time = time.time()
 
-    stats = test_cooling_pj("/tmp/")
+    stats = test_cooling_pj()
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
