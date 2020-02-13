@@ -82,7 +82,7 @@ def test_cooling_pj(tmpdir):
 
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=4)),
+        TaskRequirements(cores=Resources(exact=1)),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
