@@ -7,6 +7,27 @@ from qcg.appscheduler.api.job import Jobs
 from qcg.appscheduler.api.manager import LocalManager
 
 
+class ServiceLogLevel(Enum):
+    CRITICAL = "critical",
+    ERROR = "error",
+    WARNING = "warning",
+    INFO = "info",
+    DEBUG = "debug"
+
+    @classmethod
+    def _missing_(cls, value):
+        return ServiceLogLevel.DEBUG
+
+
+class ClientLogLevel(Enum):
+    INFO = "info",
+    DEBUG = "debug"
+
+    @classmethod
+    def _missing_(cls, value):
+        return ClientLogLevel.DEBUG
+
+
 class SubmitOrder(Enum):
     PHASE_ORIENTED = "Submits specific EasyVVUQ operation (e.g. encoding) " \
                      "for all runs as a separate QCG PJ tasks" \
@@ -89,7 +110,10 @@ class Executor:
         self._qcgpjm = qcgpjm
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
-    def create_manager(self, dir=".", resources=None, reserve_core=False):
+    def create_manager(self, dir=".",
+                       resources=None,
+                       reserve_core=False,
+                       log_level='debug'):
         """Creates new QCG Pilot Job Manager and sets is as the Executor's engine
 
         Parameters
@@ -107,20 +131,25 @@ class Executor:
             If True reserves a core for QCG Pilot Job manager instance,
             by default QCG Pilot Job Manager shares a core with computing tasks
             Parameters
+        log_level : str, optional
+            Logging level for QCG Pilot Job Manager (both service and client part).
 
         Returns
         -------
         None
 
         """
+        service_log_level = ServiceLogLevel(log_level.lower()).value
+        client_log_level = ClientLogLevel(log_level.lower()).value
+
         # ---- QCG PILOT JOB INITIALISATION ---
         # set QCG-PJ temp directory
         qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
 
         # switch on debugging of QCGPJ API (client part)
-        client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': 'DEBUG'}
+        client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
 
-        common_args = ['--log', 'debug',
+        common_args = ['--log', service_log_level,
                        '--wd', qcgpj_tempdir]
 
         args = common_args
