@@ -94,7 +94,6 @@ class Executor:
         self._tasks = {}
         self._qcgpj_tempdir = "."
 
-
     def set_manager(self, qcgpjm):
         """Sets existing QCG Pilot Job Manager as the Executor's engine
 
