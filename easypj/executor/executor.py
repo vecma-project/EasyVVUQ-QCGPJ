@@ -92,6 +92,8 @@ class Executor:
     def __init__(self):
         self._qcgpjm = None
         self._tasks = {}
+        self._qcgpj_tempdir = "."
+
 
     def set_manager(self, qcgpjm):
         """Sets existing QCG Pilot Job Manager as the Executor's engine
@@ -132,25 +134,25 @@ class Executor:
             by default QCG Pilot Job Manager shares a core with computing tasks
             Parameters
         log_level : str, optional
-            Logging level for QCG Pilot Job Manager (both service and client part).
+            Logging level for QCG Pilot Job Manager (for both service and client part).
 
         Returns
         -------
         None
 
         """
-        service_log_level = ServiceLogLevel(log_level.lower()).value
-        client_log_level = ClientLogLevel(log_level.lower()).value
 
         # ---- QCG PILOT JOB INITIALISATION ---
         # set QCG-PJ temp directory
-        qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
+        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
 
-        # switch on debugging of QCGPJ API (client part)
-        client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
+        service_log_level = ServiceLogLevel(log_level.lower()).value
+        client_log_level = ClientLogLevel(log_level.lower()).value
+
+        client_conf = {'log_file': self._qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
 
         common_args = ['--log', service_log_level,
-                       '--wd', qcgpj_tempdir]
+                       '--wd', self._qcgpj_tempdir]
 
         args = common_args
 
@@ -203,9 +205,9 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/encode_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/encode_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/encode_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/encode_' + key + '.stderr'
             }
         }
 
@@ -233,9 +235,9 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/execute_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/execute_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/execute_' + key + '.stderr'
             },
             "dependencies": {
                 "after": ["encode_" + key]
@@ -273,9 +275,9 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/encode_execute_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/encode_execute_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/encode_execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/encode_execute_' + key + '.stderr'
             }
         }
 
