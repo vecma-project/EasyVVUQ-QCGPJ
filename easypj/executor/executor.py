@@ -137,13 +137,17 @@ class Executor:
         # set QCG-PJ temp directory
         self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
 
-        service_log_level = ServiceLogLevel(log_level.upper()).vaule \
-            if log_level in ServiceLogLevel \
-            else ServiceLogLevel.DEBUG.value
+        log_level = log_level.upper()
 
-        client_log_level = ClientLogLevel(log_level.upper()).vaule \
-            if log_level in ClientLogLevel \
-            else ClientLogLevel.DEBUG.value
+        try:
+            service_log_level = ServiceLogLevel[log_level].value
+        except KeyError:
+            service_log_level = ServiceLogLevel.DEBUG.value
+
+        try:
+            client_log_level = ClientLogLevel[log_level].value
+        except KeyError:
+            client_log_level = ClientLogLevel.DEBUG.value
 
         client_conf = {'log_file': self._qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
 
