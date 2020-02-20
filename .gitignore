@@ -4,3 +4,9 @@
 .pytest_cache
 Vagrantfile
 venv
+EasyVVUQ_QCGPJ.egg-info/*
+build/*
+dist/*
+easypj/__pycache__/*
+easypj/executor/__pycache__/*
+tests/custom_encoder/__pycache__/*
