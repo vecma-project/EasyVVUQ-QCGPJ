@@ -1,4 +1,3 @@
-import time
 from enum import Enum
 from tempfile import mkdtemp
 
@@ -30,6 +29,8 @@ class SubmitOrder(Enum):
     RUN_ORIENTED_CONDENSED = "Submits all EasyVVUQ operations for a run " \
                              "as a single QCG PJ task (e.g. encoding -> execution) " \
                              "and then goes to the next run"
+    EXEC_ONLY = "Submits a workflow of EasyVVUQ operations as " \
+                "separate QCG PJ tasks for execution only"
 
 
 class TaskType(Enum):
@@ -162,6 +163,7 @@ class Executor:
         # create QCGPJ Manager (service part)
         self._qcgpjm = LocalManager(args, client_conf)
 
+    def print_resources_info(self):
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
     def add_task(self, task):
@@ -281,6 +283,36 @@ class Executor:
 
         return encode_execute_task
 
+    def _get_exec_only_task(self, campaign, run):
+
+        task = self._tasks.get(TaskType.EXECUTION)
+        application = task.get_params().get("application")
+        requirements = task.get_requirements().get_resources()
+
+        key = run[0]
+        run_dir = run[1]['run_dir']
+
+        exec_args = [
+            run_dir,
+            'easyvvuq_app',
+            application
+        ]
+
+        execute_task = {
+            "name": 'execute_' + key,
+            "execution": {
+                "exec": 'easyvvuq_execute',
+                "args": exec_args,
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/execute_' + key + '.stderr'
+            }
+        }
+
+        execute_task.update(requirements)
+
+        return execute_task
+
     def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG Pilot Job
 
@@ -293,15 +325,10 @@ class Executor:
         """
         # ---- EXECUTION ---
         # Execute encode -> execute for each run using QCG-PJ
-        start_time = time.time()
-
         self.__submit_jobs(campaign, submit_order)
 
         # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
-
-        end_time = time.time()
-        print('>>>>> QCG PJ Execution completed, elapsed time = ', end_time - start_time)
 
         print("Syncing state of campaign after execution of PJ")
 
@@ -332,3 +359,7 @@ class Executor:
                 self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
             for run in campaign.list_runs():
                 self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+
+        elif submit_order == SubmitOrder.EXEC_ONLY:
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_exec_only_task(campaign, run)))
