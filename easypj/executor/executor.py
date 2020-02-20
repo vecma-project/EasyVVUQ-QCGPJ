@@ -8,24 +8,16 @@ from qcg.appscheduler.api.manager import LocalManager
 
 
 class ServiceLogLevel(Enum):
-    CRITICAL = "critical",
-    ERROR = "error",
-    WARNING = "warning",
-    INFO = "info",
+    CRITICAL = "critical"
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
     DEBUG = "debug"
-
-    @classmethod
-    def _missing_(cls, value):
-        return ServiceLogLevel.DEBUG
 
 
 class ClientLogLevel(Enum):
-    INFO = "info",
+    INFO = "info"
     DEBUG = "debug"
-
-    @classmethod
-    def _missing_(cls, value):
-        return ClientLogLevel.DEBUG
 
 
 class SubmitOrder(Enum):
@@ -145,8 +137,13 @@ class Executor:
         # set QCG-PJ temp directory
         self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
 
-        service_log_level = ServiceLogLevel(log_level.lower()).value
-        client_log_level = ClientLogLevel(log_level.lower()).value
+        service_log_level = ServiceLogLevel(log_level.upper()).vaule \
+            if log_level in ServiceLogLevel \
+            else ServiceLogLevel.DEBUG.value
+
+        client_log_level = ClientLogLevel(log_level.upper()).vaule \
+            if log_level in ClientLogLevel \
+            else ClientLogLevel.DEBUG.value
 
         client_conf = {'log_file': self._qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
 
