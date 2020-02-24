@@ -70,7 +70,7 @@ def test_cooling_pj(tmpdir):
     ################################
     
     # Create Executor
-    qcgpjexec = easypj.Executor()
+    qcgpjexec = Executor()
     
     # Create QCG PJ-Manager with 4 cores 
     # (if you want to use all available resources remove resources parameter)

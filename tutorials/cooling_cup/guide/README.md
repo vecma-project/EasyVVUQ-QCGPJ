@@ -296,7 +296,7 @@ def test_cooling_pj():
     # ...
     
     # Create EasyVVUQ-QCGPJ Executor that will process the execution
-    qcgpjexec = easypj.Executor()
+    qcgpjexec = Executor()
 
     # Create QCG PJ-Manager with 4 cores (if you want to use all available resources remove the resources parameter)
     # Refer to the documentation for customisation options.

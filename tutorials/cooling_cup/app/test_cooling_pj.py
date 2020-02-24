@@ -3,9 +3,8 @@ import time
 
 import chaospy as cp
 import easyvvuq as uq
-import easypj
 
-from easypj import TaskRequirements, Resources
+from easypj import TaskRequirements, Resources, Executor
 from easypj import Task, TaskType, SubmitOrder
 
 # author: Jalal Lakhlili / Bartosz Bosak
@@ -99,7 +98,7 @@ def test_cooling_pj():
 
     print("Initialising EasyPJ Executor")
     # Create EasyVVUQ-QCGPJ Executor that will process the execution
-    qcgpjexec = easypj.Executor()
+    qcgpjexec = Executor()
 
     # Create QCG PJ-Manager that will utilise all available resources.
     # Refer to the documentation for customisation options.

@@ -3,9 +3,8 @@ import time
 
 import chaospy as cp
 import easyvvuq as uq
-import easypj
 
-from easypj import TaskRequirements, Resources
+from easypj import TaskRequirements, Resources, Executor
 from easypj import Task, TaskType, SubmitOrder
 
 # author: Jalal Lakhlili / Bartosz Bosak
@@ -95,7 +94,7 @@ def test_cooling_pj():
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = easypj.Executor()
+    qcgpjexec = Executor()
 
     # Create QCG PJ-Manager with 4 cores
     # (if you want to use all available resources remove resources parameter)
