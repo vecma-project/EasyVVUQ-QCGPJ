@@ -1,0 +1,13 @@
+#QCG name=easyvvuq_pj_qcg
+#QCG host=eagle
+#QCG walltime=PT10M
+#QCG grant=vecma2020
+#QCG nodes=1:4
+#QCG stage-in-file=../app/test_cooling_pj.py
+#QCG stage-out-dir=. -> results-${JOB_ID}
+#QCG output=output-${JOB_ID}.txt
+#QCG error=error-${JOB_ID}.txt
+
+. ~/tutorials/cooling_cup/app/easypj_config.sh
+
+python3 test_cooling_pj.py

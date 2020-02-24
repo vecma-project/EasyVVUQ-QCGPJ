@@ -8,11 +8,13 @@ from easypj import TaskRequirements, Resources, Executor
 from easypj import Task, TaskType, SubmitOrder
 
 # author: Jalal Lakhlili / Bartosz Bosak
+
 __license__ = "LGPL"
 
+COOLING_APP_DIR = os.environ["COOLING_APP"]
 
-TEMPLATE = "tests/cooling/cooling.template"
-APPLICATION = "tests/cooling/cooling_model.py"
+TEMPLATE = COOLING_APP_DIR + "/cooling.template"
+APPLICATION = COOLING_APP_DIR + "/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:
@@ -58,7 +60,7 @@ def test_cooling_pj():
 
     # Create an encoder, decoder and collation element
     encoder = uq.encoders.GenericEncoder(
-        template_fname=jobdir + '/' + TEMPLATE,
+        template_fname=COOLING_APP_DIR + '/cooling.template',
         delimiter='$',
         target_filename=ENCODED_FILENAME)
 
@@ -90,31 +92,44 @@ def test_cooling_pj():
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
 
-    # Will draw all (of the finite set of samples)
+    print("Generating samples")
+    # Will draw all (of the finite set of) samples
     my_campaign.draw_samples()
 
-    print("Starting execution")
+    print("Initialising EasyPJ Executor")
+    # Create EasyVVUQ-QCGPJ Executor that will process the execution
     qcgpjexec = Executor()
 
-    # Create QCG PJ-Manager with 4 cores
-    # (if you want to use all available resources remove resources parameter)
-    qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4', log_level='debug')
+    # Create QCG PJ-Manager with 4 cores (if you want to use all available resources remove the resources parameter)
+    # Refer to the documentation for customisation options.
+    qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
+    # Define ENCODING task that will be used for execution of encodings using encoders specified by EasyVVUQ.
+    # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 1 core.
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
         TaskRequirements(cores=Resources(exact=1))
     ))
 
+    # Define EXECUTION task that will be used for the actual execution of application.
+    # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 1 core,
+    # but for more advanced parallel applications the resource requirements may be extended to use
+    # many cores or even many resources.
+    # Each task will execute the command provided in the 'application' parameter.
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
         TaskRequirements(cores=Resources(exact=1)),
-        application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
+        application='python3 ' + APPLICATION + " " + ENCODED_FILENAME
     ))
 
+    print("Starting the execution of QCG Pilot Job tasks")
+    # Execute encodings and executions for all generated samples
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
 
+    # Terminate QCG PJ-Manager
+    print("Completing the execution")
     qcgpjexec.terminate_manager()
 
     print("Collating results")
@@ -131,15 +146,24 @@ def test_cooling_pj():
 
     results = my_campaign.get_last_analysis()
     stats = results['statistical_moments']['te']
+    per = results['percentiles']['te']
+    dist_out = results['output_distributions']['te']
+
+    print("Stats: ")
+    print(stats)
+    print("Percentiles: ")
+    print(per)
+    print("Output distribution: ")
+    print(dist_out)
 
     print("Processing completed")
-    return stats
+    return stats, per, dist_out
 
 
 if __name__ == "__main__":
     start_time = time.time()
 
-    stats = test_cooling_pj()
+    stats, per, dist_out = test_cooling_pj()
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)

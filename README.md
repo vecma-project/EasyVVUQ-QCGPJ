@@ -1,4 +1,9 @@
-# EasyVVUQ-QCGPJ
+
+![](docs/easypj-logo.png)
+
+[![Build Status](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ.svg?branch=master)](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/vecma-project/EasyVVUQ-QCGPJ.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vecma-project/EasyVVUQ-QCGPJ/alerts/)
+
 This is a lightweight wrapper over [EasyVVUQ](https://github.com/UCL-CCS/EasyVVUQ) 
 and [QCG Pilot Job Manager](https://github.com/vecma-project/QCG-PilotJob) that enables efficient execution 
 of critical parts of EasyVVUQ workflows on HPC machines. 
@@ -68,7 +73,7 @@ def test_cooling_pj(tmpdir):
     ################################
     
     # Create Executor
-    qcgpjexec = easypj.Executor()
+    qcgpjexec = Executor()
     
     # Create QCG PJ-Manager with 4 cores 
     # (if you want to use all available resources remove resources parameter)
@@ -82,7 +87,7 @@ def test_cooling_pj(tmpdir):
 
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=4)),
+        TaskRequirements(cores=Resources(exact=1)),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 

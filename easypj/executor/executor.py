@@ -1,10 +1,22 @@
-import time
 from enum import Enum
 from tempfile import mkdtemp
 
 import easyvvuq as uq
 from qcg.appscheduler.api.job import Jobs
 from qcg.appscheduler.api.manager import LocalManager
+
+
+class ServiceLogLevel(Enum):
+    CRITICAL = "critical"
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
+    DEBUG = "debug"
+
+
+class ClientLogLevel(Enum):
+    INFO = "info"
+    DEBUG = "debug"
 
 
 class SubmitOrder(Enum):
@@ -17,6 +29,8 @@ class SubmitOrder(Enum):
     RUN_ORIENTED_CONDENSED = "Submits all EasyVVUQ operations for a run " \
                              "as a single QCG PJ task (e.g. encoding -> execution) " \
                              "and then goes to the next run"
+    EXEC_ONLY = "Submits a workflow of EasyVVUQ operations as " \
+                "separate QCG PJ tasks for execution only"
 
 
 class TaskType(Enum):
@@ -71,6 +85,7 @@ class Executor:
     def __init__(self):
         self._qcgpjm = None
         self._tasks = {}
+        self._qcgpj_tempdir = "."
 
     def set_manager(self, qcgpjm):
         """Sets existing QCG Pilot Job Manager as the Executor's engine
@@ -89,7 +104,10 @@ class Executor:
         self._qcgpjm = qcgpjm
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
-    def create_manager(self, dir=".", resources=None, reserve_core=False):
+    def create_manager(self, dir=".",
+                       resources=None,
+                       reserve_core=False,
+                       log_level='debug'):
         """Creates new QCG Pilot Job Manager and sets is as the Executor's engine
 
         Parameters
@@ -107,21 +125,35 @@ class Executor:
             If True reserves a core for QCG Pilot Job manager instance,
             by default QCG Pilot Job Manager shares a core with computing tasks
             Parameters
+        log_level : str, optional
+            Logging level for QCG Pilot Job Manager (for both service and client part).
 
         Returns
         -------
         None
 
         """
+
         # ---- QCG PILOT JOB INITIALISATION ---
         # set QCG-PJ temp directory
-        qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
+        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
 
-        # switch on debugging of QCGPJ API (client part)
-        client_conf = {'log_file': qcgpj_tempdir + '/api.log', 'log_level': 'DEBUG'}
+        log_level = log_level.upper()
 
-        common_args = ['--log', 'debug',
-                       '--wd', qcgpj_tempdir]
+        try:
+            service_log_level = ServiceLogLevel[log_level].value
+        except KeyError:
+            service_log_level = ServiceLogLevel.DEBUG.value
+
+        try:
+            client_log_level = ClientLogLevel[log_level].value
+        except KeyError:
+            client_log_level = ClientLogLevel.DEBUG.value
+
+        client_conf = {'log_file': self._qcgpj_tempdir + '/api.log', 'log_level': client_log_level}
+
+        common_args = ['--log', service_log_level,
+                       '--wd', self._qcgpj_tempdir]
 
         args = common_args
 
@@ -135,6 +167,7 @@ class Executor:
         # create QCGPJ Manager (service part)
         self._qcgpjm = LocalManager(args, client_conf)
 
+    def print_resources_info(self):
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
     def add_task(self, task):
@@ -174,9 +207,9 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/encode_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/encode_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/encode_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/encode_' + key + '.stderr'
             }
         }
 
@@ -204,9 +237,9 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/execute_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/execute_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/execute_' + key + '.stderr'
             },
             "dependencies": {
                 "after": ["encode_" + key]
@@ -244,15 +277,45 @@ class Executor:
             "execution": {
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
-                "wd": campaign.campaign_dir,
-                "stdout": campaign.campaign_dir + '/encode_execute_' + key + '.stdout',
-                "stderr": campaign.campaign_dir + '/encode_execute_' + key + '.stderr'
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/encode_execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/encode_execute_' + key + '.stderr'
             }
         }
 
         encode_execute_task.update(requirements)
 
         return encode_execute_task
+
+    def _get_exec_only_task(self, campaign, run):
+
+        task = self._tasks.get(TaskType.EXECUTION)
+        application = task.get_params().get("application")
+        requirements = task.get_requirements().get_resources()
+
+        key = run[0]
+        run_dir = run[1]['run_dir']
+
+        exec_args = [
+            run_dir,
+            'easyvvuq_app',
+            application
+        ]
+
+        execute_task = {
+            "name": 'execute_' + key,
+            "execution": {
+                "exec": 'easyvvuq_execute',
+                "args": exec_args,
+                "wd": self._qcgpj_tempdir,
+                "stdout": self._qcgpj_tempdir + '/execute_' + key + '.stdout',
+                "stderr": self._qcgpj_tempdir + '/execute_' + key + '.stderr'
+            }
+        }
+
+        execute_task.update(requirements)
+
+        return execute_task
 
     def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG Pilot Job
@@ -266,15 +329,10 @@ class Executor:
         """
         # ---- EXECUTION ---
         # Execute encode -> execute for each run using QCG-PJ
-        start_time = time.time()
-
         self.__submit_jobs(campaign, submit_order)
 
         # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
-
-        end_time = time.time()
-        print('>>>>> QCG PJ Execution completed, elapsed time = ', end_time - start_time)
 
         print("Syncing state of campaign after execution of PJ")
 
@@ -305,3 +363,7 @@ class Executor:
                 self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
             for run in campaign.list_runs():
                 self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+
+        elif submit_order == SubmitOrder.EXEC_ONLY:
+            for run in campaign.list_runs():
+                self._qcgpjm.submit(Jobs().addStd(self._get_exec_only_task(campaign, run)))
