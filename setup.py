@@ -19,7 +19,7 @@ install_requires=[
     'pytest',
     'pytest-pep8',
     'qcgPilotManager @ git+https://github.com/vecma-project/QCG-PilotJob.git@v0.7.1#egg=qcgPilotManager',
-    'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@v0.5.1#egg=easyvvuq'
+    'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@dev#egg=easyvvuq'
 ],
 
 packages=find_packages(),
