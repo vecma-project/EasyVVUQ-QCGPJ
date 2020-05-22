@@ -21,6 +21,7 @@ project = 'EasyVVUQ-QCGPJ'
 copyright = '2020, Bartosz Bosak & Jalal Lakhlili'
 author = 'Bartosz Bosak & Jalal Lakhlili'
 html_logo = 'images/easypj-logo.png'
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
