@@ -1,5 +1,5 @@
 
-![](docs/easypj-logo.png)
+![](docs/images/easypj-logo.png)
 
 [![Build Status](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ.svg?branch=master)](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/vecma-project/EasyVVUQ-QCGPJ.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vecma-project/EasyVVUQ-QCGPJ/alerts/)
