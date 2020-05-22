@@ -18,7 +18,7 @@ author='Bartosz Bosak',
 install_requires=[
     'pytest',
     'pytest-pep8',
-    'easyvvuq >= 5.0.1',
+    'easyvvuq >= 0.5.1',
     'qcgPilotManager @ git+https://github.com/vecma-project/QCG-PilotJob.git@v0.7.1#egg=qcgPilotManager'
 ],
 
