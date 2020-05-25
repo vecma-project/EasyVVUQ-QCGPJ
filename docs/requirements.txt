@@ -1,3 +1,4 @@
+easyvvuq
 sphinx_rtd_theme
 livereload
 sphinxcontrib-apidoc
