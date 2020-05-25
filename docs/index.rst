@@ -29,7 +29,7 @@ In the rest of this documentation EasyVVUQ-QCGPJ is shortened as EasyPJ and QCG 
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Tutorials
 
    tutorials/cooling_cup/guide/tutorial
@@ -37,15 +37,13 @@ In the rest of this documentation EasyVVUQ-QCGPJ is shortened as EasyPJ and QCG 
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: API Docs
 
    source/easypj
-
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`

@@ -41,7 +41,7 @@ extensions = [
 
 apidoc_module_dir = '../easypj'
 apidoc_output_dir = 'source'
-apidoc_separate_modules = False
+apidoc_separate_modules = True
 apidoc_module_first = True
 
 
