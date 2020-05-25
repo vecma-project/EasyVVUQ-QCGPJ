@@ -1,4 +1,3 @@
-###########
 Quick Start
 ###########
 
@@ -25,8 +24,13 @@ Example workflow
 ****************
 
 In order to explain the basic usage of EasyPJ API we will use an
-example. For the full code of this example please look into the
-``/tests/test_pce_pj_executor.py`` test. Here we briefly outlines the
+example.
+
+.. note:: For the full code of this example please look into the test case
+ available at the EasyVVUQ-QCGPJ GitHub (https://github.com/vecma-project/EasyVVUQ-QCGPJ) in the path:
+ ``/tests/test_pce_pj_executor.py``
+
+Here we briefly outlines the
 main parts of that workflow concentrating on the EasyPJ and skipping
 fragments that are common with the standard execution of EasyVVUQ.
 

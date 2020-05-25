@@ -20,14 +20,28 @@ once you realise that the serial execution of EasyVVUQ is no longer sufficient.
 
 In the rest of this documentation EasyVVUQ-QCGPJ is shortened as EasyPJ and QCG Pilot Job as QCG PJ
 
-
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :caption: Basics
 
    installation
    quickstart
    api
+
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Tutorials
+
+   tutorials/cooling_cup/guide/tutorial
+   tutorials/interactive_tutorial
+
+
+.. toctree::
+   :maxdepth: 4
+   :caption: API Docs
+
+   source/easypj
+
 
 Indices and tables
 ==================

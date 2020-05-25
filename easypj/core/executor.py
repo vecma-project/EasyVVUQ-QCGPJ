@@ -47,12 +47,12 @@ class Task:
     ----------
     type : easypj.TaskType
         The type of the task. Allowed tasks are: ENCODING, EXECUTION, ENCODING_AND_EXECUTION,
-        and OTHER (currently not supported)
+         and OTHER (currently not supported)
     requirements : easypj.TaskRequirements
         The requirements for the Task
     name : str
         name of the Task, if not provided the name will take a value of type
-    params: **kwargs
+    params: kwargs
         additional parameters that may be used by specific Task types
     """
 

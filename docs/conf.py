@@ -10,9 +10,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -31,8 +32,18 @@ master_doc = 'index'
 # ones.
 extensions = [
     'sphinx_rtd_theme',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.autodoc',
+    'sphinxcontrib.apidoc'
 ]
+
+
+apidoc_module_dir = '../easypj'
+apidoc_output_dir = 'source'
+apidoc_separate_modules = False
+apidoc_module_first = True
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
