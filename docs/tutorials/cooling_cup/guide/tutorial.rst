@@ -252,7 +252,7 @@ Installation of EasyVVUQ-QCGPJ
       $ . ~/.virtualenvs/easyvvuq-qcgpj/bin/activate
       (easyvvuq-qcgpj) user@e0192:~$ 
 
-7. | Install the *easyvvuq-qcgpj* package using pip3
+7. | Install *EasyVVUQ*, *QCG-PilotJob* and the *EasyVVUQ-QCGPJ* packages using pip3
    | (Note: if you are not able to use pip in your environment you can
      always install all required packages manually as they are publicly
      available, e.g. by cloning repositories for missing packages and
@@ -262,6 +262,8 @@ Installation of EasyVVUQ-QCGPJ
 
    ::
 
+      (easyvvuq-qcgpj)$ pip3 install easyvvuq
+      (easyvvuq-qcgpj)$ pip3 install QCGPilotJobManager
       (easyvvuq-qcgpj)$ pip3 install git+https://github.com/vecma-project/EasyVVUQ-QCGPJ.git@master
 
 Getting the tutorial materials

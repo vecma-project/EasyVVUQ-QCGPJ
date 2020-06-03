@@ -40,7 +40,7 @@ In the rest of this documentation EasyVVUQ-QCGPJ is shortened as EasyPJ and QCG 
    :maxdepth: 1
    :caption: API Docs
 
-   source/easypj
+   api/easypj
 
 Indices and tables
 ==================

@@ -343,7 +343,7 @@ class Executor:
 
     def terminate_manager(self):
         self._qcgpjm.finish()
-        self._qcgpjm.stopManager()
+        self._qcgpjm.stop_manager()
         self._qcgpjm.cleanup()
 
     def __submit_jobs(self, campaign, submit_order):
@@ -355,15 +355,15 @@ class Executor:
 
         elif submit_order == SubmitOrder.RUN_ORIENTED:
             for run in campaign.list_runs():
-                self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
-                self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(campaign, run)))
 
         elif submit_order == SubmitOrder.PHASE_ORIENTED:
             for run in campaign.list_runs():
-                self._qcgpjm.submit(Jobs().addStd(self._get_encoding_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(campaign, run)))
             for run in campaign.list_runs():
-                self._qcgpjm.submit(Jobs().addStd(self._get_exec_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(campaign, run)))
 
         elif submit_order == SubmitOrder.EXEC_ONLY:
             for run in campaign.list_runs():
-                self._qcgpjm.submit(Jobs().addStd(self._get_exec_only_task(campaign, run)))
+                self._qcgpjm.submit(Jobs().add_std(self._get_exec_only_task(campaign, run)))
