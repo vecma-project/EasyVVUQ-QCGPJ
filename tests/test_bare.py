@@ -175,13 +175,13 @@ def test_cooling_pj():
             }
         }
 
-        m.submit(Jobs().addStd(encode_task))
-        m.submit(Jobs().addStd(execute_task))
+        m.submit(Jobs().add_std(encode_task))
+        m.submit(Jobs().add_std(execute_task))
 
     # wait for completion of all PJ tasks and terminate the PJ manager
     m.wait4all()
     m.finish()
-    m.stopManager()
+    m.stop_manager()
     m.cleanup()
 
     print("Syncing state of campaign after execution of PJ")
