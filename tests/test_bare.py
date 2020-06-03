@@ -181,7 +181,7 @@ def test_cooling_pj():
     # wait for completion of all PJ tasks and terminate the PJ manager
     m.wait4all()
     m.finish()
-    m.stop_manager()
+    m.kill_manager_process()
     m.cleanup()
 
     print("Syncing state of campaign after execution of PJ")

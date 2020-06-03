@@ -343,7 +343,7 @@ class Executor:
 
     def terminate_manager(self):
         self._qcgpjm.finish()
-        self._qcgpjm.stop_manager()
+        self._qcgpjm.kill_manager_process()
         self._qcgpjm.cleanup()
 
     def __submit_jobs(self, campaign, submit_order):
