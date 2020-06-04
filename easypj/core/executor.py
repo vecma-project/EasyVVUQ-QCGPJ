@@ -2,84 +2,18 @@ from enum import Enum
 from tempfile import mkdtemp
 
 import easyvvuq as uq
-from qcg.appscheduler.api.job import Jobs
-from qcg.appscheduler.api.manager import LocalManager
+from qcg.pilotjob.api.job import Jobs
+from qcg.pilotjob.api.manager import LocalManager
 
-
-class ServiceLogLevel(Enum):
-    CRITICAL = "critical"
-    ERROR = "error"
-    WARNING = "warning"
-    INFO = "info"
-    DEBUG = "debug"
-
-
-class ClientLogLevel(Enum):
-    INFO = "info"
-    DEBUG = "debug"
-
-
-class SubmitOrder(Enum):
-    PHASE_ORIENTED = "Submits specific EasyVVUQ operation (e.g. encoding) " \
-                     "for all runs as a separate QCG PJ tasks" \
-                     "and then goes to the next EasyVVUQ operation (e.g. execution)"
-    RUN_ORIENTED = "Submits a workflow of EasyVVUQ operations as " \
-                   "separate QCG PJ tasks for a run " \
-                   "(e.g. encoding -> execution) and then goes to the next run"
-    RUN_ORIENTED_CONDENSED = "Submits all EasyVVUQ operations for a run " \
-                             "as a single QCG PJ task (e.g. encoding -> execution) " \
-                             "and then goes to the next run"
-    EXEC_ONLY = "Submits a workflow of EasyVVUQ operations as " \
-                "separate QCG PJ tasks for execution only"
-
-
-class TaskType(Enum):
-    ENCODING = "ENCODING"
-    EXECUTION = "EXECUTION"
-    ENCODING_AND_EXECUTION = "ENCODING_AND_EXECUTION"
-    OTHER = "OTHER"
-
-
-class Task:
-    """ Represents a piece of work to be executed by QCG Pilot Job Manager
-
-    Parameters
-    ----------
-    type : easypj.TaskType
-        The type of the task. Allowed tasks are: ENCODING, EXECUTION, ENCODING_AND_EXECUTION,
-         and OTHER (currently not supported)
-    requirements : easypj.TaskRequirements
-        The requirements for the Task
-    name : str
-        name of the Task, if not provided the name will take a value of type
-    params: kwargs
-        additional parameters that may be used by specific Task types
-    """
-
-    def __init__(self, type, requirements, name=None, **params):
-        self._type = type
-        self._requirements = requirements
-        self._params = params
-        self._name = name if name else type
-
-    def get_type(self):
-        return self._type
-
-    def get_requirements(self):
-        return self._requirements
-
-    def get_params(self):
-        return self._params
-
-    def get_name(self):
-        return self._name
+from easypj.core.task import TaskType
+from easypj.core.submit_order import SubmitOrder
 
 
 class Executor:
-    """Integrates EasyVVUQ and QCG Pilot Job manager
+    """Integrates EasyVVUQ and QCG-PilotJob Manager
 
     Executor allows to process the most demanding operations of EasyVVUQ in parallel
-    using QCG Pilot Job.
+    using QCG-PilotJob.
 
     """
     def __init__(self):
@@ -87,46 +21,29 @@ class Executor:
         self._tasks = {}
         self._qcgpj_tempdir = "."
 
-    def set_manager(self, qcgpjm):
-        """Sets existing QCG Pilot Job Manager as the Executor's engine
-
-        Parameters
-        ----------
-        qcgpjm : qcg.appscheduler.api.manager.Manager
-            Existing instance of a QCG Pilot Job Manager
-
-        Returns
-        -------
-        None
-
-        """
-
-        self._qcgpjm = qcgpjm
-        print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
-
     def create_manager(self, dir=".",
                        resources=None,
                        reserve_core=False,
                        log_level='debug'):
-        """Creates new QCG Pilot Job Manager and sets is as the Executor's engine
+        """Creates new QCG-PilotJob Manager and sets is as the Executor's engine
 
         Parameters
         ----------
         dir : str
-            The path to the directory where Executor should init QCG Pilot Job Manager.
-            Inside dir a subdirectory for workdir of QCG PJ manager will be created
+            The path to the directory where Executor should init QCG-PilotJob Manager.
+            Inside dir a subdirectory for workdir of QCG-PilotJob Manager will be created
         resources : str, optional
-            The resources to use. If specified forces usage of Local mode of QCG Pilot Job Manager.
-            The format is compliant with the NODES format of QCG Pilot Job, i.e.:
+            The resources to use. If specified forces usage of Local mode of QCG-PilotJob Manager.
+            The format is compliant with the NODES format of QCG-PilotJob, i.e.:
             [node_name:]cores_on_node[,node_name2:cores_on_node][,...].
             Eg. to run on 4 cores regardless the node use `resources="4"`
             to run on 2 cores of node_1 and on 3 cores of node_2 use `resources="node_1:2,node_2:3"`
         reserve_core : bool, optional
-            If True reserves a core for QCG Pilot Job manager instance,
-            by default QCG Pilot Job Manager shares a core with computing tasks
+            If True reserves a core for QCG-PilotJob Manager instance,
+            by default QCG-PilotJob Manager shares a core with computing tasks
             Parameters
         log_level : str, optional
-            Logging level for QCG Pilot Job Manager (for both service and client part).
+            Logging level for QCG-PilotJob Manager (for both service and client part).
 
         Returns
         -------
@@ -167,7 +84,21 @@ class Executor:
         # create QCGPJ Manager (service part)
         self._qcgpjm = LocalManager(args, client_conf)
 
-    def print_resources_info(self):
+    def set_manager(self, qcgpjm):
+        """Sets existing QCG-PilotJob Manager as the Executor's engine
+
+        Parameters
+        ----------
+        qcgpjm : qcg.pilotjob.api.manager.Manager
+            Existing instance of a QCG-PilotJob Manager
+
+        Returns
+        -------
+        None
+
+        """
+
+        self._qcgpjm = qcgpjm
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
     def add_task(self, task):
@@ -176,7 +107,7 @@ class Executor:
 
         Parameters
         ----------
-        task: easypj.Task
+        task: Task
             The task that will be added to the execution workflow
 
         Returns
@@ -185,6 +116,49 @@ class Executor:
 
         """
         self._tasks[task.get_name()] = task
+
+    def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
+        """ Executes demanding parts of EasyVVUQ campaign with QCG-PilotJob
+
+        A user may choose the preferred execution scheme for the given scenario.
+
+        Parameters
+        ----------
+        campaign: easyvvuq.Campaign
+            The campaign object that would be processed. It has to be previously initialised.
+        submit_order: SubmitOrder
+            EasyVVUQ tasks submission order
+
+        Returns
+        -------
+        None
+        """
+        # ---- EXECUTION ---
+        # Execute encode -> execute for each run using QCG-PJ
+        self.__submit_jobs(campaign, submit_order)
+
+        # wait for completion of all PJ tasks
+        self._qcgpjm.wait4all()
+
+        print("Syncing state of campaign after execution of PJ")
+
+        def update_status(run_id, run_data):
+            campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
+
+        campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
+
+    def print_resources_info(self):
+        """ Displays resources assigned to QCG-PilotJob Manager
+        """
+        print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
+
+    def terminate_manager(self):
+        """ Terminates QCG-PilotJob Manager
+        """
+
+        self._qcgpjm.finish()
+        self._qcgpjm.kill_manager_process()
+        self._qcgpjm.cleanup()
 
     def _get_encoding_task(self, campaign, run):
 
@@ -317,38 +291,9 @@ class Executor:
 
         return execute_task
 
-    def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
-        """ Executes demanding parts of EasyVVUQ campaign with QCG Pilot Job
-
-        A user may choose the preferred execution scheme for the given scenario.
-
-        campaign : easyvvuq.campaign
-            The campaign object that would be processed. It has to be previously initialised.
-        submit_order: easypj.SubmitOrder
-            EasyVVUQ tasks submission order
-        """
-        # ---- EXECUTION ---
-        # Execute encode -> execute for each run using QCG-PJ
-        self.__submit_jobs(campaign, submit_order)
-
-        # wait for completion of all PJ tasks
-        self._qcgpjm.wait4all()
-
-        print("Syncing state of campaign after execution of PJ")
-
-        def update_status(run_id, run_data):
-            campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
-
-        campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
-
-    def terminate_manager(self):
-        self._qcgpjm.finish()
-        self._qcgpjm.kill_manager_process()
-        self._qcgpjm.cleanup()
-
     def __submit_jobs(self, campaign, submit_order):
 
-        print("Starting submission of tasks to QCG Pilot Job Manager")
+        print("Starting submission of tasks to QCG-PilotJob Manager")
         if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
             for run in campaign.list_runs():
                 self._qcgpjm.submit(Jobs().addStd(self._get_encoding_and_exec_task(campaign, run)))
@@ -367,3 +312,16 @@ class Executor:
         elif submit_order == SubmitOrder.EXEC_ONLY:
             for run in campaign.list_runs():
                 self._qcgpjm.submit(Jobs().add_std(self._get_exec_only_task(campaign, run)))
+
+
+class ServiceLogLevel(Enum):
+    CRITICAL = "critical"
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
+    DEBUG = "debug"
+
+
+class ClientLogLevel(Enum):
+    INFO = "info"
+    DEBUG = "debug"

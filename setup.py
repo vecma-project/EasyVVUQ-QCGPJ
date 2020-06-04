@@ -18,8 +18,8 @@ author='Bartosz Bosak',
 install_requires=[
     'pytest',
     'pytest-pep8',
-    'easyvvuq >= 0.5.1',
-    'qcgPilotManager @ git+https://github.com/vecma-project/QCG-PilotJob.git@issue_62_api_docs#egg=qcgPilotManager'
+    'easyvvuq >= 0.6',
+    'qcg-pilotjob @ git+https://github.com/vecma-project/QCG-PilotJob.git@release24'
 ],
 
 packages=find_packages(),

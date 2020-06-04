@@ -5,8 +5,8 @@ from tempfile import mkdtemp
 import chaospy as cp
 import easyvvuq as uq
 
-from qcg.appscheduler.api.job import Jobs
-from qcg.appscheduler.api.manager import LocalManager
+from qcg.pilotjob.api.job import Jobs
+from qcg.pilotjob.api.manager import LocalManager
 
 # author: Jalal Lakhlili / Bartosz Bosak
 
