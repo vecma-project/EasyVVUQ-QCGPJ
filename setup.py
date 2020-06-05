@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
 name='easyvvuq-qcgpj',
 
-version='0.3rc4',
+version='0.3rc5',
 
 description='A lightweight plugin for EasyVVUQ enabling the execution of VVUQ '
 'using the QCG-PilotJob mechanism.',

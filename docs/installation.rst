@@ -4,12 +4,7 @@ Installation
 Requirements
 ------------
 
-**Basics**
-
-The software requires pip 18.0.1+ for installation and Python 3.6+ for
-usage.
-
-**EasyVVUQ & QCG Pilot Job**
+The software requires requires Python 3.6+ for usage.
 
 Moreover, since EasyVVUQ-QCGPJ is a wrapper over EasyVVUQ and QCG-PilotJob, you need to have
 both these packages available in your environment. You can install them with pip in the following way:
@@ -17,14 +12,27 @@ both these packages available in your environment. You can install them with pip
 ::
 
     $ pip3 install easyvvuq
-    $ pip3 install QCGPilotJobManager
+    $ pip3 install qcg-pilotjob
 
-Installation from GitHub
-------------------------
 
-The software could be installed from github with pip:
+Automatic installation
+----------------------
+
+The software could be easily installed from the PyPi repository:
 
 ::
 
-   $ pip3 install git+https://github.com/vecma-project/EasyVVUQ-QCGPJ.git@master
+   $ pip3 install easyvvq-qcgpj
 
+
+Manual installation
+-------------------
+
+If you wont to be sure that you are using the most recent version of the software, you can get
+it from the the github repository. The procedure is quite typical, e.g.:
+
+::
+   $ git clone https://github.com/vecma-project/EasyVVUQ-QCGPJ.git
+   $ cd EasyVVUQ-QCGPJ
+   $ git checkout some_branch
+   $ pip3 install .
