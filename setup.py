@@ -4,14 +4,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-name='EasyVVUQ-QCGPJ',
+name='easyvvuq-qcgpj',
 
-version='0.3rc1',
+version='0.3rc2',
 
 description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+'using the QCG-PilotJob mechanism.',
 
 long_description=long_description,
+long_description_content_type='text/markdown',
 
 url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 
