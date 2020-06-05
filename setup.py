@@ -19,9 +19,7 @@ author='Bartosz Bosak',
 
 install_requires=[
     'pytest',
-    'pytest-pep8',
-    'easyvvuq >= 0.6',
-    'qcg-pilotjob == 0.8.0rc4'
+    'pytest-pep8'
 ],
 
 packages=find_packages(),
