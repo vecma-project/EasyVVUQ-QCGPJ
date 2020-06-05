@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
 name='EasyVVUQ-QCGPJ',
 
@@ -8,8 +11,7 @@ version='0.3rc1',
 description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
 'using the QCG Pilot Job mechanism.',
 
-long_description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+long_description=long_description,
 
 url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 
