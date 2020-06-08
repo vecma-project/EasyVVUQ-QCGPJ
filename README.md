@@ -1,13 +1,12 @@
+![](docs/images/easypj-logo-h.png)
 
-![](docs/images/easypj-logo.png)
+# EasyVVUQ-QCGPJ - Python API for HPC execution of EasyVVUQ
 
 [![Build Status](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ.svg?branch=master)](https://travis-ci.org/vecma-project/EasyVVUQ-QCGPJ)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/vecma-project/EasyVVUQ-QCGPJ.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vecma-project/EasyVVUQ-QCGPJ/alerts/)
 
-# EasyVVUQ-QCGPJ
-
 EasyVVUQ-QCGPJ is a lightweight plugin for parallelization of EasyVVUQ (https://github.com/UCL-CCS/EasyVVUQ)
-with the QCG Pilot Job system (https://github.com/vecma-project/QCG-PilotJob).
+with the QCG-PilotJob mechanism (https://github.com/vecma-project/QCG-PilotJob).
 
 It is developed as part of VECMA (http://www.vecma.eu), and is part of the VECMA Toolkit (http://www.vecma-toolkit.eu).
 
@@ -33,8 +32,8 @@ The software could be easily installed from the PyPi repository:
 $ pip3 install easyvvq-qcgpj
 ```
 
-Alternatively, if you wont to be sure that you are using the most recent version of the software, you can get
-it from the the github repository. The procedure is quite typical, e.g.:
+Alternatively, if you want to use specific branch of the software, 
+you can get it from the the github repository. The procedure is quite typical, e.g.:
 
 ```
 $ git clone https://github.com/vecma-project/EasyVVUQ-QCGPJ.git

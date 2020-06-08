@@ -1,7 +1,7 @@
 Quick Start
 ###########
 
-The usage of EasyVVUQ with EasyPJ is very similar to the typical usage
+The usage of EasyVVUQ with EasyVVUQ-QCGPJ is very similar to the typical usage
 of EasyVVUQ. In the same way as it is in a regular EasyVVUQ script, the
 user defines the Campaign object and configures it to use specific
 encoders, decoders, samplers. The identical is also the part of
@@ -9,12 +9,12 @@ collating results and analysis. The difference is in the middle, in the
 way how the campaign is executed.
 
 Basically, the code has to be instrumented with a few instructions
-required to configure EasyPJ. This comes down to:
+required to configure EasyVVUQ-QCGPJ. This comes down to:
 
-1. Creation of the EasyPJ Executor object.
-2. Creation of the QCG PJ Manager for the use by the Executor.
+1. Creation of the EasyVVUQ-QCGPJ Executor object.
+2. Creation of the QCG-PilotJob Manager for the use by the Executor.
 3. Configuration of EasyVVUQ Tasks to be executed by the Executor (in
-   practice to be executed by QCG PJ Manager as separate processes).
+   practice to be executed by QCG-PilotJob Manager as separate processes).
 4. Execution of EasyVVUQ workflow consisted of the Tasks using the
    Executor.
 5. Finalization
@@ -23,7 +23,7 @@ required to configure EasyPJ. This comes down to:
 Example workflow
 ****************
 
-In order to explain the basic usage of EasyPJ API we will use an
+In order to explain the basic usage of EasyVVUQ-QCGPJ API we will use an
 example.
 
 .. note:: For the full code of this example please look into the test case
@@ -31,7 +31,7 @@ example.
  ``/tests/test_pce_pj_executor.py``
 
 Here we briefly outlines the
-main parts of that workflow concentrating on the EasyPJ and skipping
+main parts of that workflow concentrating on the EasyVVUQ-QCGPJ and skipping
 fragments that are common with the standard execution of EasyVVUQ.
 
 .. code:: python
@@ -60,13 +60,13 @@ fragments that are common with the standard execution of EasyVVUQ.
        my_campaign.draw_samples()
 
        ################################
-       # START of EasyPJ part #
+       # START of EasyVVUQ-QCGPJ part #
        ################################
 
        # Create Executor
        qcgpjexec = Executor()
 
-       # Create QCG PJ-Manager with 4 cores
+       # Create QCG-PilotJob-Manager with 4 cores
        # (if you want to use all available resources remove resources parameter)
        qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
@@ -91,7 +91,7 @@ fragments that are common with the standard execution of EasyVVUQ.
        qcgpjexec.terminate_manager()
 
        ##############################
-       # END of EasyPJ part #
+       # END of EasyVVUQ-QCGPJ part #
        ##############################
 
        # The rest of typical EasyVVUQ processing
@@ -108,7 +108,7 @@ particular elements of this process:
 
 **1. Instantiation of the QCG Pilot Job Manager**
 
-   The Executor internally uses QCG PJ Manager to submit Tasks. The
+   The Executor internally uses QCG-PilotJob Manager to submit Tasks. The
    Pilot Job Manager instance needs to be set up for the Executor. To
    this end, it is possible to use one of two methods: the presented
    ``create_manager()`` or ``set_manager()``. More information on this
@@ -127,7 +127,7 @@ particular elements of this process:
 
 **3. Execution of tasks**
 
-   The Executor configured with the QCG PJ Manager instance and filled
+   The Executor configured with the QCG-PilotJob Manager instance and filled
    with a set of appropriate Tasks is ready to perform parallel
    processing of encoding and execution steps for all Campaign's samples
    using the ``run()`` method. This method takes two parameters:

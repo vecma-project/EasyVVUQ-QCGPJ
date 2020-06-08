@@ -1,5 +1,5 @@
-Demonstration on efficient, parallel Execution of EasyVVUQ with QCG Pilot Job Manager on local and HPC resources (a step-by-step guide)
-#######################################################################################################################################
+Demonstration on efficient, parallel Execution of EasyVVUQ with QCG-PilotJob Manager on local and HPC resources (a step-by-step guide)
+######################################################################################################################################
 
 Preface
 -------
@@ -17,12 +17,12 @@ will learn about the following VECMA software components:
 -  `EasyVVUQ <https://github.com/UCL-CCS/EasyVVUQ>`__ - a Python3
    library that aims to facilitate verification, validation and
    uncertainty quantification,
--  `QCG Pilot Job <https://wiki.vecma.eu/qcg-pilotjobs>`__ - a Pilot Job
+-  `QCG-PilotJob <https://wiki.vecma.eu/qcg-pilotjobs>`__ - a Pilot Job
    system that allows to execute many subordinate jobs in a single
    scheduling system allocation,
 -  `EasyVVUQ-QCGPJ <https://github.com/vecma-project/easyvvuq-qcgpj>`__
    - a lightweight integration code that simplifies usage of EasyVVUQ
-   with a QCG Pilot Job execution engine,
+   with a QCG-PilotJob execution engine,
 -  `QCG-Client <http://www.qoscosgrid.org/trac/qcg-broker/wiki/client_user_guide>`__
    - a command line client for execution of computing jobs on the
    clusters offered by QCG middleware,
@@ -38,8 +38,7 @@ Contents
    tutorial <#application-model-for-the-tutorial>`__
 -  `Installation of EasyVVUQ-QCGPJ <#installation-of-easyvvuq-qcgpj>`__
 -  `Getting the tutorial materials <#getting-the-tutorial-materials>`__
--  `Execution of EasyVVUQ with QCG Pilot
-   Job <#execution-of-easyvvuq-with-qcg-pilot-job>`__
+-  `Execution of EasyVVUQ with QCG-PilotJob <#execution-of-easyvvuq-with-qcg-pilot-job>`__
 
    -  `EasyVVUQ-QCGPJ workflow <#easyvvuq-qcgpj-workflow>`__
    -  `Common configuration before
@@ -81,16 +80,16 @@ centers. Therefore, more emphasis must be placed on developing the
 appropriate mechanisms and solutions that enable effective execution of
 calculations and yet follow the administrative policies of the resource
 providers. Therefore, to address the requirements of UQ analysis and
-technological concerns we have integrated EasyVVUQ with QCG Pilot Job
+technological concerns we have integrated EasyVVUQ with QCG-PilotJob
 Manager in the VECMAtk to offer users a complete solution for performing
 highly intensive UQ studies on the HPC resources of peta- and in the
 future exa-scales. This solution allows users to submit the entire
 workflow as a single job into a HPC cluster and thus avoids the
 limitations and restrictions imposed by the administrative policies of
 resource providers. Inside the resource allocation created for a single
-job, QCG Pilot Job Manager deals with the execution of a potentially
+job, QCG-PilotJob Manager deals with the execution of a potentially
 very high number of subjobs in an automatic, flexible and efficient way.
-Although QCG Pilot Job Manager is designed to support execution of
+Although QCG-PilotJob Manager is designed to support execution of
 complex computing tasks on HPC clusters, it can also be used on a local
 computer, allowing users to conveniently test their execution scenarios
 prior to the actual production runs using the same programming and
@@ -104,14 +103,14 @@ tools. The tutorial materials download information is also included.
 Next, we provide a glimpse into the structure of EasyVVUQ-QCGPJ
 workflow, followed by instructions into the configuration on
 environment-specific settings. Then, we showcase 4 different approaches
-(local, SLURM, QCG Client, and QCG-Now) you can choose from to execute
-EasyVVUQ on the sample application, all under the management of the QCG
-Pilot Job. For any reader who is interested in learning more about UQ
+(local, SLURM, QCG-Client, and QCG-Now) you can choose from to execute
+EasyVVUQ on the sample application, all under the management of the QCG-PilotJob.
+For any reader who is interested in learning more about UQ
 applied to a multiscale workflow, a section describing the fusion model
 is positioned at the end of the tutorial.
 
 **Notice 1**: The tutorial contains some steps related to the execution
-of EasyVVUQ / QCG Pilot Job task via queuing system and/or QCG access
+of EasyVVUQ / QCG-PilotJob task via queuing system and/or QCG access
 tools. To follow these steps you must have an account with a computing
 cluster controlled by SLURM and if you want to use QCG tools it has to
 be part of the QCG infrastructure. In order to get access to Eagle
@@ -127,9 +126,9 @@ To give readers a sense of how EasyVVUQ-QCGPJ works, we provide a simple
 cooling coffee cup model as a test application throughout the entire
 tutorial. This allows users to quickly grasp the concept behind the
 model so they can put their attention towards the functionality of
-EasyVVUQ with QCG-PJ, and how the toolkit assists users with the process
+EasyVVUQ with QCG-PilotJob, and how the toolkit assists users with the process
 of UQ on their numerical model. In reality, many types of numerical
-codes can also benefit from EasyVVUQ with QCG-PJ. Multiscale fusion
+codes can also benefit from EasyVVUQ with QCG-PilotJob. Multiscale fusion
 modeling, for example, uses the same software to apply UQ. To learn more
 about the multiscale fusion model and how the toolkit helps in
 quantifying uncertanties, please refer to the last section of the
@@ -234,7 +233,7 @@ Installation of EasyVVUQ-QCGPJ
       $ virtualenv --version
       16.6.0
 
-5. Create *virtualenv* for the EasyVVUQ with QCG-PJ support:
+5. Create *virtualenv* for the EasyVVUQ with QCG-PilotJob support:
 
    ::
 
@@ -263,8 +262,8 @@ Installation of EasyVVUQ-QCGPJ
    ::
 
       (easyvvuq-qcgpj)$ pip3 install easyvvuq
-      (easyvvuq-qcgpj)$ pip3 install QCGPilotJobManager
-      (easyvvuq-qcgpj)$ pip3 install git+https://github.com/vecma-project/EasyVVUQ-QCGPJ.git@master
+      (easyvvuq-qcgpj)$ pip3 install qcg-pilotjob
+      (easyvvuq-qcgpj)$ pip3 install easyvvuq-qcgpj
 
 Getting the tutorial materials
 ------------------------------
@@ -287,11 +286,10 @@ Getting the tutorial materials
    After invoking these commands all the tutorial files should be
    available in the ``~/tutorials/cooling_cup`` folder
 
-Execution of EasyVVUQ with QCG Pilot Job
-----------------------------------------
+Execution of EasyVVUQ with QCG-PilotJob
+---------------------------------------
 
-In this tutorial we describe 4 ways to execute EasyVVUQ with QCG Pilot
-Job:
+In this tutorial we describe 4 ways to execute EasyVVUQ with QCG-PilotJob:
 
 1. Local execution
 2. With SLURM
@@ -314,11 +312,11 @@ requirements.
 EasyVVUQ-QCGPJ workflow
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-| The approach we took to integrate EasyVVUQ with QCG Pilot Job Manager
+| The approach we took to integrate EasyVVUQ with QCG-PilotJob Manager
   is considerably non-intrusive. The changes we introduced to the
   EasyVVUQ workflow itself are small and mainly concentrated at the
   encoding and application execution steps, thus the overhead needed to
-  plug-in QCG Pilot Jobs into the basic workflow is negligible. The
+  plug-in QCG-PilotJob into the basic workflow is negligible. The
   integration code provides a generic mechanism that could easily be
   adapted by different application teams to quantify uncertainties of
   their codes. In this section we briefly describe the main parts of a
@@ -348,7 +346,7 @@ Considerably simplified, it looks as follows:
        # Create EasyVVUQ-QCGPJ Executor that will process the execution
        qcgpjexec = Executor()
 
-       # Create QCG PJ-Manager with 4 cores (if you want to use all available resources remove the resources parameter)
+       # Create QCG-PilotJob Manager with 4 cores (if you want to use all available resources remove the resources parameter)
        # Refer to the documentation for customisation options.
        qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
 
@@ -375,7 +373,7 @@ Considerably simplified, it looks as follows:
            campaign=my_campaign,
            submit_order=SubmitOrder.RUN_ORIENTED)
 
-       # Terminate QCG PJ-Manager
+       # Terminate QCG-PilotJob Manager
        qcgpjexec.terminate_manager()
 
        # The rest of typical EasyVVUQ processing (collation, analysis)
@@ -386,18 +384,18 @@ We can distinguish the following key elements from this script:
 
 -  Instantiation of EasyVVUQ-QCGPJ Executor.
 
--  Set up of the QCG PJ Manager instance using the Executor's
+-  Set up of the QCG-PilotJob Manager instance using the Executor's
    ``create_manager`` method.
 
 -  Definition of tasks for Encoding and Execution steps of EasyVVUQ that
-   will be executed as QCG Pilot Job tasks. Each definition of task
+   will be executed as QCG-PilotJob tasks. Each definition of task
    includes the specification of resource requirements that the task
    consume.
 
--  Parallel processing of the encodings and executions with QCG Pilot
-   Job using a predefined scheme of submission (``SubmitOrder``).
+-  Parallel processing of the encodings and executions with QCG-PilotJob
+   using a predefined scheme of submission (``SubmitOrder``).
 
--  Termination of QCG PJ Manager using the Executor's
+-  Termination of QCG-PilotJob Manager using the Executor's
    ``terminate_manager`` method.
 
 -  The collation and analysis made in a typical way, unperturbed from
@@ -450,7 +448,7 @@ Local execution
      version of the core workflow ((not from the ``../app`` folder)) -
      since we may test this workflow on a local computer without the
      queuing system allocation, we define 4 virtual cores to demonstrate
-     how QCG Pilot Job Manager executes tasks in parallel. However, be
+     how QCG-PilotJob Manager executes tasks in parallel. However, be
      aware: when Pilot Job Manager is started as an interactive task in
      the allocation created by Slurm, it will override the settings of
      virtual resources by the actually allocated real resources. Thus,
@@ -535,7 +533,7 @@ Execution with QCG-Client
 
 *This execution can be performed only on a machine with QCG-Client
 installed and configured to execute jobs on a cluster with SLURM queuing
-system. In the tutorial we assume the usage of the QCG Client installed
+system. In the tutorial we assume the usage of the QCG-Client installed
 on qcg.man.poznan.pl and the Eagle cluster, which is a part of the
 PLGrid infrastructure. These two machines share the same $HOME directory
 where both EasyVVUQ-QCGPJ has been configured in the way described in
@@ -627,8 +625,8 @@ During the configuration you should select **VECMA** as a domain and
 then whenever QCG-Now asks about user ID/password you should provide
 your PLGrid credentials.
 
-When installed and configured, the steps to submit an EasyVVUQ / QCG
-Pilot Job task from QCG-Now are as follows:
+When installed and configured, the steps to submit an EasyVVUQ / QCG-PilotJob
+task from QCG-Now are as follows:
 
 1. Get the tutorial files using GIT or download them zipped from
    `https://github.com/vecma-project/EasyVVUQ-QCGPJ/archive/master.zip <https://github.com/vecma-project/EasyVVUQ-QCGPJ/archive/master.zip>`__

@@ -1,14 +1,14 @@
 API description
 ###############
 
-QCG Pilot Job Manager initialisation
-************************************
+QCG-PilotJob Manager initialisation
+***********************************
 
-The EasyPJ Executor needs to be configured to use an instance of QCG PJ
+The EasyVVUQ-QCGPJ Executor needs to be configured to use an instance of QCG-PilotJob
 Manager service. It is possible to do this in two ways:
 
 -  The first and simpler option is to use ``create_manager()`` method
-   that creates QCG PJ Manager in a basic configuration. The method
+   that creates QCG-PilotJob Manager in a basic configuration. The method
    takes three optional parameters:
 
    -  ``dir`` to customise a working directory of the manager (by
@@ -19,7 +19,7 @@ Manager service. It is possible to do this in two ways:
       case of running the Pilot Job inside a queuing system the whole
       allocation will be used. If the parameter is provided, its
       specification should be consisted with the format supported by
-      Local mode of `QCG Pilot Job
+      Local mode of `QCG-PilotJob
       manager <https://github.com/vecma-project/QCG-PilotJob>`__, i.e.
       ``[NODE_NAME]:CORES[,[NODE_NAME]:CORES]...``
    -  ``reserve_core`` to specify if the manager service should run on a
@@ -28,15 +28,15 @@ Manager service. It is possible to do this in two ways:
 
 -  The second and more advanced option is to use ``set_manager()``
    method. This methods takes a single parameter, which is an instance
-   of externally created Pilot Job Manager instance.
+   of externally created QCG-PilotJob Manager instance.
 
-   For the reference go to: `QCG Pilot Job
+   For the reference go to: `QCG-PilotJob
    documentation <https://github.com/vecma-project/QCG-PilotJob>`__.
 
 Task types
 **********
 
-EasyPJ supports the following types of Tasks that may be executed by QCG
+EasyVVUQ-QCGPJ supports the following types of Tasks that may be executed by QCG
 PJ Manager:
 
 -  ``ENCODING``: this Task is used for the encoding of a single sample.
@@ -62,8 +62,8 @@ Task of a given type should be kept in the Executor.
 Tasks requirements
 ******************
 
-Tasks defined for execution by the QCG PJ system need to define their
-resource requirements. In EasyPJ the specification of resource
+Tasks defined for execution by the QCG-PilotJob system need to define their
+resource requirements. In EasyVVUQ-QCGPJ the specification of resource
 requirements for a Task is made directly via the Task's constructor,
 particularly by its second parameter - ``TaskRequirements``. This object
 may be inited with a combination of two parameters: ``nodes`` and
@@ -108,15 +108,15 @@ Example ``TaskRequirements`` specifications:
 
         TaskRequirements(nodes=Resources(exact=2),cores=Resources(min=4,max=6))
 
-The algorithm used to define Task requirements in EasyPJ is inherited
-from the QCG PJ system. Further instruction can be found in the `QCG
+The algorithm used to define Task requirements in EasyVVUQ-QCGPJ is inherited
+from the QCG-PilotJob system. Further instruction can be found in the `QCG
 Pilot Job
 documentation <https://github.com/vecma-project/QCG-PilotJob>`__
 
 Submission schemes
 ******************
 
-EasyPJ allows to submit tasks in a few predefined order schemes. The
+EasyVVUQ-QCGPJ allows to submit tasks in a few predefined order schemes. The
 submission may be ``RUN_ORIENTED``, ``PHASE_ORIENTED``, ``EXECUTION_ONLY`` or
 ``RUN_ORIENTED_CONDENSED``. Depending on a specific usecase the
 efficiency of these schemes may significantly differ.
@@ -165,20 +165,20 @@ The schemes use different task types that need to be added to Executor to execut
 -  The ``RUN_ORIENTED_CONDENSED`` requires ``ENCODING_AND_EXECUTION``
    task.
 
-Passing the execution environment to QCG Pilot Job tasks
-********************************************************
+Passing the execution environment to QCG-PilotJob tasks
+*******************************************************
 
-Since every QCG PJ task is started in a separate process, it needs to be
+Since every QCG-PilotJob task is started in a separate process, it needs to be
 properly configured to run in an environment consistent with the
 requirements of the parent script. On the one hand, EasyVVUQ allows to
 easily recover information about the campaign from the database, but
 some environment settings, such as information about required
 environment modules or virtual environment, have to be passed in a
-different way. To this end, EasyPJ delivers a simple mechanism based on
+different way. To this end, EasyVVUQ-QCGPJ delivers a simple mechanism based on
 an idea of bash script, that is sourced by each task prior to its actual
 execution. The path to this file can be provided in ``EASYPJ_CONFIG``
 environment variable. If this environment variable is available in the
-master script, it is also automatically passed to QCG PJ tasks.
+master script, it is also automatically passed to QCG-PilotJob tasks.
 
 To the large extent the structure of the script provided in
 ``EASYPJ_CONFIG`` is fully custom. In this script a user can load
@@ -201,7 +201,7 @@ works without any issues as long as we are in a single process. However,
 in case we want to execute the encoding in a separate processes, there
 is a need to instruct these processes about the encoder. This
 information is partially available in the Campaign itself and can be
-recovered, but we need to somehow instruct EasyPJ code to import
+recovered, but we need to somehow instruct EasyVVUQ-QCGPJ code to import
 required python modules for the encoder. To this end once again we make
 use of environment variable - this time ``ENCODER_MODULES``. The value
 of this variable should be the semicolon-separated list of the modules
