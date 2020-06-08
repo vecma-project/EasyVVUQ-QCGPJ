@@ -3,15 +3,17 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     readme = fh.read()
 
+long_description = readme.split("\n", 2)[2]
+
 setup(
     name='easyvvuq-qcgpj',
 
-    version='0.3rc9',
+    version='0.3rc10',
 
     description='A lightweight plugin for EasyVVUQ enabling the execution of VVUQ '
                 'using the QCG-PilotJob mechanism.',
 
-    long_description=readme,
+    long_description=long_description,
     long_description_content_type='text/markdown',
 
     url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
