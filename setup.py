@@ -1,15 +1,20 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    readme = fh.read()
+
+long_description = "# EasyVVUQ-QCGPJ\n" + readme.split("\n", 2)[2]
+
 setup(
-name='EasyVVUQ-QCGPJ',
+name='easyvvuq-qcgpj',
 
-version='0.2.1',
+version='0.3rc6',
 
-description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+description='A lightweight plugin for EasyVVUQ enabling the execution of VVUQ '
+'using the QCG-PilotJob mechanism.',
 
-long_description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+long_description=long_description,
+long_description_content_type='text/markdown',
 
 url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 
@@ -17,9 +22,7 @@ author='Bartosz Bosak',
 
 install_requires=[
     'pytest',
-    'pytest-pep8',
-    'qcgPilotManager @ git+https://github.com/vecma-project/QCG-PilotJob.git@v0.7.1#egg=qcgPilotManager',
-    'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@dev#egg=easyvvuq'
+    'pytest-pep8'
 ],
 
 packages=find_packages(),

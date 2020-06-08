@@ -5,8 +5,8 @@ from tempfile import mkdtemp
 import chaospy as cp
 import easyvvuq as uq
 
-from qcg.appscheduler.api.job import Jobs
-from qcg.appscheduler.api.manager import LocalManager
+from qcg.pilotjob.api.job import Jobs
+from qcg.pilotjob.api.manager import LocalManager
 
 # author: Jalal Lakhlili / Bartosz Bosak
 
@@ -175,13 +175,13 @@ def test_cooling_pj():
             }
         }
 
-        m.submit(Jobs().addStd(encode_task))
-        m.submit(Jobs().addStd(execute_task))
+        m.submit(Jobs().add_std(encode_task))
+        m.submit(Jobs().add_std(execute_task))
 
     # wait for completion of all PJ tasks and terminate the PJ manager
     m.wait4all()
     m.finish()
-    m.stopManager()
+    m.kill_manager_process()
     m.cleanup()
 
     print("Syncing state of campaign after execution of PJ")

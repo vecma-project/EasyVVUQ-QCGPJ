@@ -100,7 +100,7 @@ def test_cooling_pj():
     # Create EasyVVUQ-QCGPJ Executor that will process the execution
     qcgpjexec = Executor()
 
-    # Create QCG PJ-Manager that will utilise all available resources.
+    # Create QCG-PilotJob Manager that will utilise all available resources.
     # Refer to the documentation for customisation options.
     qcgpjexec.create_manager(dir=my_campaign.campaign_dir)
 
@@ -122,13 +122,13 @@ def test_cooling_pj():
         application='python3 ' + APPLICATION + " " + ENCODED_FILENAME
     ))
 
-    print("Starting the execution of QCG Pilot Job tasks")
+    print("Starting the execution of QCG-PilotJob tasks")
     # Execute encodings and executions for all generated samples
     qcgpjexec.run(
         campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
 
-    # Terminate QCG PJ-Manager
+    # Terminate QCG-PilotJob Manager
     print("Completing the execution")
     qcgpjexec.terminate_manager()
 

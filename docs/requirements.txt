@@ -1,0 +1,5 @@
+easyvvuq
+qcg-pilotjob
+sphinx_rtd_theme
+livereload
+sphinxcontrib-apidoc
