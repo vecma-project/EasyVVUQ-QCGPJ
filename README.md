@@ -16,6 +16,7 @@ It works regardless if you run your use-case on multi-core laptop or on large HP
 
 
 ## Requirements
+
 The software requires Python 3.6+ for usage.
 
 Moreover, since EasyVVUQ-QCGPJ is a wrapper over EasyVVUQ and QCG-PilotJob, you need to have
@@ -25,7 +26,7 @@ $ pip3 install easyvvuq
 $ pip3 install qcg-pilotjob
 ```
 
-### Installation
+## Installation
 
 The software could be easily installed from the PyPi repository:
 ```
