@@ -32,6 +32,7 @@ If you prefer manual installation or you wont to install specific branch of the 
 you can get it from the the github repository. The procedure is quite typical, e.g.:
 
 ::
+
    $ git clone https://github.com/vecma-project/EasyVVUQ-QCGPJ.git
    $ cd EasyVVUQ-QCGPJ
    $ git checkout some_branch
