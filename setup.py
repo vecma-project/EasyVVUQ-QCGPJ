@@ -1,35 +1,38 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    readme = fh.read()
+
+long_description = readme.split("\n", 2)[2]
+
 setup(
-name='EasyVVUQ-QCGPJ',
+    name='easyvvuq-qcgpj',
 
-version='0.2.0',
+    version='0.3',
 
-description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+    description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures'
+                'using the QCG-PilotJob mechanism.',
 
-long_description='A lightweight wrapper on EasyVVUQ enabling the execution of VVUQ '
-'using the QCG Pilot Job mechanism.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
 
-url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
+    url='https://github.com/vecma-project/EasyVVUQ-QCGPJ',
 
-author='Bartosz Bosak',
+    author='Bartosz Bosak',
 
-install_requires=[
-    'pytest',
-    'pytest-pep8',
-    'qcgPilotManager @ git+https://github.com/vecma-project/QCG-PilotJob.git@v0.7.0#egg=qcgPilotManager',
-    'easyvvuq @ git+https://github.com/UCL-CCS/EasyVVUQ.git@v0.5.1#egg=easyvvuq'
-],
+    install_requires=[
+        'pytest',
+        'pytest-pep8'
+    ],
 
-packages=find_packages(),
+    packages=find_packages(),
 
-scripts=[
-    'scripts/easyvvuq_app',
-    'scripts/easyvvuq_encode',
-    'scripts/easyvvuq_execute',
-    'scripts/easyvvuq_encode_execute'
-],
+    scripts=[
+        'scripts/easyvvuq_app',
+        'scripts/easyvvuq_encode',
+        'scripts/easyvvuq_execute',
+        'scripts/easyvvuq_encode_execute'
+    ],
 
-include_package_data=True
+    include_package_data=True
 )

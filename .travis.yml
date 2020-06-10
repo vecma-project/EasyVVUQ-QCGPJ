@@ -2,8 +2,25 @@ language: python
 python:
   - "3.6.7"
 install:
+  - pip install easyvvuq
+  - pip install qcg-pilotjob
   - pip install .
 script:
   - py.test --pep8 easypj/
   - py.test --pep8 tests
   - source tests/custom_encoder/easypj_sample_config.sh && py.test --pep8 tests/custom_encoder
+
+deploy:
+  - provider: pypi
+    username: $TEST_PYPI_USER
+    password: $TEST_PYPI_PASSWORD
+    server: https://test.pypi.org/legacy/
+    edge: true
+    on:
+      branch: dev
+  - provider: pypi
+    username: $PYPI_USER
+    password: $PYPI_PASSWORD
+    edge: true
+    on:
+      tags: true

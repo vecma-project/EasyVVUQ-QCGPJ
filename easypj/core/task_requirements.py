@@ -32,8 +32,8 @@ class TaskRequirements:
         by QCG Pilot Job Manager
 
         Returns
-            dict : dictionary with the resource requirements specification
         -------
+            dict : dictionary with the resource requirements specification
 
         """
         return self._resources
