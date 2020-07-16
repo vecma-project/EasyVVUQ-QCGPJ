@@ -57,6 +57,7 @@ def setup_app1():
 
     return params, encoder, decoder, collater, sampler, action, stats
 
+
 # The 1st model
 def setup_app2():
     params = {
