@@ -10,8 +10,8 @@ json_input = sys.argv[1]
 with open(json_input, "r") as f:
     inputs = json.load(f)
 
-a0= float(inputs['a0'])
-a1= float(inputs['a1'])
+a0 = float(inputs['a0'])
+a1 = float(inputs['a1'])
 x = np.linspace(0, 1, 101)
 u1 = eqt(x, a0, a1)
 

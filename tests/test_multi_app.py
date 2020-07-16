@@ -3,7 +3,6 @@ import time
 import easyvvuq as uq
 import numpy as np
 import chaospy as cp
-
 import easypj
 from easypj import TaskRequirements, Resources
 from easypj import Task, TaskType, SubmitOrder
@@ -20,7 +19,6 @@ ENCODED_FILENAME_2 = "app2_in.json"
 
 tmpdir = "/tmp/"
 jobdir = os.getcwd()
-
 
 
 # The 1st model
@@ -52,7 +50,6 @@ def setup_app1():
                                     output_columns=output_columns,
                                     header=0)
     collater = uq.collate.AggregateSamples(average=False)
-
 
     sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
     action = uq.actions.ExecuteLocal(APPLICATION_1 + " " + ENCODED_FILENAME_1)
@@ -90,9 +87,7 @@ def setup_app2():
                                     header=0)
     collater = uq.collate.AggregateSamples(average=False)
 
-
     sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
-    #action = uq.actions.ExecuteLocal(APPLICATION_2 + " " + ENCODED_FILENAME_2)
     stats = uq.analysis.PCEAnalysis(sampler=sampler, qoi_cols=output_columns)
 
     return params, encoder, decoder, collater, sampler, stats
@@ -151,7 +146,6 @@ if __name__ == "__main__":
     campaign.set_sampler(sampler2)
     campaign.draw_samples()
     campaign.populate_runs_dir()
-    #campaign.apply_for_each_run_dir(action2)
     # use QCG-PJ for this model
     exec_pj(campaign, '4', APPLICATION_2, ENCODED_FILENAME_2)
 
