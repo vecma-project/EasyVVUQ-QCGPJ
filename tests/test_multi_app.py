@@ -109,8 +109,7 @@ def exec_pj(campaign, cores, app, encoded_filename):
     qcgpjexec.terminate_manager()
 
 
-# Main
-if __name__ == "__main__":
+def test_multi_app_pj():
     # Campaign for mutli-app
     campaign = uq.Campaign(name='multiapp_', work_dir=tmpdir)
 
@@ -155,3 +154,15 @@ if __name__ == "__main__":
     results2 = campaign.get_last_analysis()
 
     stat_2 = results2['statistical_moments']["u2"]
+
+
+# Main
+if __name__ == "__main__":
+    start_time = time.time()
+
+    test_multi_app_pj()
+
+    end_time = time.time()
+    print('>>>>> elapsed time = ', end_time - start_time)
+
+

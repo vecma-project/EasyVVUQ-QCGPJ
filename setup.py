@@ -10,7 +10,7 @@ setup(
 
     version='0.3',
 
-    description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures'
+    description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',
 
     long_description=long_description,
