@@ -295,7 +295,6 @@ class Executor:
 
         sampler = campaign._active_sampler_id
 
-
         print("Starting submission of tasks to QCG-PilotJob Manager")
         if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
             for run in campaign.list_runs(sampler):
