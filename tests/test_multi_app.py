@@ -164,5 +164,3 @@ if __name__ == "__main__":
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
-
-
