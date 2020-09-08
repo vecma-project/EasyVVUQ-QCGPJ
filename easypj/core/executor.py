@@ -164,6 +164,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.ENCODING)
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
 
@@ -179,6 +180,7 @@ class Executor:
         encode_task = {
             "name": 'encode_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
                 "wd": self._qcgpj_tempdir,
@@ -196,6 +198,7 @@ class Executor:
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -209,6 +212,7 @@ class Executor:
         execute_task = {
             "name": 'execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
                 "wd": self._qcgpj_tempdir,
@@ -229,6 +233,7 @@ class Executor:
         task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -247,6 +252,7 @@ class Executor:
         ]
 
         encode_execute_task = {
+            "model": model,
             "name": 'encode_execute_' + key,
             "execution": {
                 "exec": 'easyvvuq_encode_execute',
@@ -266,6 +272,7 @@ class Executor:
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -277,6 +284,7 @@ class Executor:
         ]
 
         execute_task = {
+            "model": model,
             "name": 'execute_' + key,
             "execution": {
                 "exec": 'easyvvuq_execute',
