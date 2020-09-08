@@ -252,9 +252,9 @@ class Executor:
         ]
 
         encode_execute_task = {
-            "model": model,
             "name": 'encode_execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
                 "wd": self._qcgpj_tempdir,
@@ -284,9 +284,9 @@ class Executor:
         ]
 
         execute_task = {
-            "model": model,
             "name": 'execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
                 "wd": self._qcgpj_tempdir,
