@@ -3,7 +3,7 @@ python:
   - "3.6.7"
 install:
   - pip install git+https://github.com/UCL-CCS/EasyVVUQ.git@dev
-  - pip install --force-reinstall --index-url https://test.pypi.org/simple/ --extra-index -url https://pypi.org/simple qcg-pilotjob
+  - pip install --force-reinstall --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple qcg-pilotjob
   - pip install .
 script:
   - py.test --pep8 easypj/
