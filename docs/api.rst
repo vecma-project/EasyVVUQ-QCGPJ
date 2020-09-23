@@ -110,8 +110,17 @@ Example ``TaskRequirements`` specifications:
 
 The algorithm used to define Task requirements in EasyVVUQ-QCGPJ is inherited
 from the QCG-PilotJob system. Further instruction can be found in the `QCG
-Pilot Job
-documentation <https://github.com/vecma-project/QCG-PilotJob>`__
+Pilot Job documentation <https://github.com/vecma-project/QCG-PilotJob>`__
+
+Task execution models
+*********************
+
+The optional parameter of ``Task`` constructor is ``model``. It allows to adjust the way how a task will be
+started by QCG-PilotJob Manager in a parallel environment. At the moment of writing this documentation, the
+following models are available: ``threads``, ``openmpi``, ``intelmpi``, ``srunmpi``, ``default``.
+Since this option comes directly from QCG-PilotJob, the detailed description of the particular models is available
+in the `QCG Pilot Job documentation <https://github.com/vecma-project/QCG-PilotJob>`__
+
 
 Submission schemes
 ******************
