@@ -8,9 +8,9 @@ long_description = readme.split("\n", 2)[2]
 setup(
     name='easyvvuq-qcgpj',
 
-    version='0.3',
+    version='0.4rc3',
 
-    description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures'
+    description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',
 
     long_description=long_description,

@@ -164,6 +164,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.ENCODING)
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
 
@@ -179,6 +180,7 @@ class Executor:
         encode_task = {
             "name": 'encode_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
                 "wd": self._qcgpj_tempdir,
@@ -196,6 +198,7 @@ class Executor:
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -209,6 +212,7 @@ class Executor:
         execute_task = {
             "name": 'execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
                 "wd": self._qcgpj_tempdir,
@@ -229,6 +233,7 @@ class Executor:
         task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -249,6 +254,7 @@ class Executor:
         encode_execute_task = {
             "name": 'encode_execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
                 "wd": self._qcgpj_tempdir,
@@ -266,6 +272,7 @@ class Executor:
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
         requirements = task.get_requirements().get_resources()
+        model = task.get_model()
 
         key = run[0]
         run_dir = run[1]['run_dir']
@@ -279,6 +286,7 @@ class Executor:
         execute_task = {
             "name": 'execute_' + key,
             "execution": {
+                "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
                 "wd": self._qcgpj_tempdir,
@@ -293,24 +301,26 @@ class Executor:
 
     def __submit_jobs(self, campaign, submit_order):
 
+        sampler = campaign._active_sampler_id
+
         print("Starting submission of tasks to QCG-PilotJob Manager")
         if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
-            for run in campaign.list_runs():
+            for run in campaign.list_runs(sampler):
                 self._qcgpjm.submit(Jobs().addStd(self._get_encoding_and_exec_task(campaign, run)))
 
         elif submit_order == SubmitOrder.RUN_ORIENTED:
-            for run in campaign.list_runs():
+            for run in campaign.list_runs(sampler):
                 self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(campaign, run)))
                 self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(campaign, run)))
 
         elif submit_order == SubmitOrder.PHASE_ORIENTED:
-            for run in campaign.list_runs():
+            for run in campaign.list_runs(sampler):
                 self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(campaign, run)))
-            for run in campaign.list_runs():
+            for run in campaign.list_runs(sampler):
                 self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(campaign, run)))
 
         elif submit_order == SubmitOrder.EXEC_ONLY:
-            for run in campaign.list_runs():
+            for run in campaign.list_runs(sampler):
                 self._qcgpjm.submit(Jobs().add_std(self._get_exec_only_task(campaign, run)))
 
 

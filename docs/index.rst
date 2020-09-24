@@ -7,7 +7,8 @@ EasyVVUQ-QCGPJ
 ==============
 **Python API for HPC execution of EasyVVUQ**
 
-EasyVVUQ-QCGPJ is a lightweight plugin for parallelization of EasyVVUQ (https://github.com/UCL-CCS/EasyVVUQ)
+EasyVVUQ-QCGPJ (also known as EasyVVUQ-QCGPJ Integrator - EQI) is a lightweight
+plugin for parallelization of EasyVVUQ (https://github.com/UCL-CCS/EasyVVUQ)
 with the QCG-PilotJob mechanism (https://github.com/vecma-project/QCG-PilotJob).
 
 It is developed as part of VECMA (http://www.vecma.eu), and is part of the VECMA Toolkit (http://www.vecma-toolkit.eu).
