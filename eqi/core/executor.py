@@ -35,7 +35,6 @@ class Executor:
             self._config_file = os.environ['EQI_CONFIG']
             print("EQI config file for tasks (from environment variable): " + self._config_file)
 
-
         """
         Parameters
         ----------
