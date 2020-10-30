@@ -38,10 +38,10 @@ fragments that are common with the standard execution of EasyVVUQ.
 
    # ...
    import easyvvuq as uq
-   import easypj
+   import eqi
 
-   from easypj import TaskRequirements, Resources
-   from easypj import Task, TaskType, SubmitOrder
+   from eqi import TaskRequirements, Resources
+   from eqi import Task, TaskType, SubmitOrder
 
    jobdir = os.getcwd()
    tmpdir = jobdir

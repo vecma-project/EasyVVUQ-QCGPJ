@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Source the site-specific configuration file
-if [[ -f $EASYPJ_CONFIG ]] 
+if [[ -f $EQI_CONFIG ]]
 then
-  echo "Sourcing configuration file: $EASYPJ_CONFIG"
-  . $EASYPJ_CONFIG
+  echo "Sourcing configuration file: $EQI_CONFIG"
+  . $EQI_CONFIG
 fi
 
-#python3 -m easypj.easyvvuq_encode $@
+#python3 -m eqi.easyvvuq_encode $@
 enc_args=${@:1:6}
 exec_args=${@:7}
 
 echo ${enc_args}
 echo ${exec_args}
 
-python3 -m easypj.external_encoder ${enc_args}
-python3 -m easypj.easyvvuq_execute ${exec_args}
+python3 -m eqi.external_encoder ${enc_args}
+python3 -m eqi.easyvvuq_execute ${exec_args}

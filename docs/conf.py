@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'EasyVVUQ-QCGPJ'
 copyright = '2020, Bartosz Bosak & Jalal Lakhlili'
 author = 'Bartosz Bosak & Jalal Lakhlili'
-html_logo = 'images/easypj-logo.png'
+html_logo = 'images/eqi-logo.png'
 master_doc = 'index'
 
 
@@ -39,7 +39,7 @@ extensions = [
 ]
 
 
-apidoc_module_dir = '../easypj'
+apidoc_module_dir = '../eqi'
 apidoc_separate_modules = True
 apidoc_module_first = True
 autodoc_member_order = 'bysource'

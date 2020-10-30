@@ -17,4 +17,4 @@ export COOLING_APP=~/tutorials/cooling_cup/app/cooling
 # Do not change anything below
 
 # Set environment variable for use by EasyVVUQ-QCGPJ integrator
-export EASYPJ_CONFIG="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+export EQI_CONFIG="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"

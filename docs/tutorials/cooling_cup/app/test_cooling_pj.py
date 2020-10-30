@@ -4,8 +4,8 @@ import time
 import chaospy as cp
 import easyvvuq as uq
 
-from easypj import TaskRequirements, Resources, Executor
-from easypj import Task, TaskType, SubmitOrder
+from eqi import TaskRequirements, Resources, Executor
+from eqi import Task, TaskType, SubmitOrder
 
 # author: Jalal Lakhlili / Bartosz Bosak
 

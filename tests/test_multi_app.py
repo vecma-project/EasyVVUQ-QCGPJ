@@ -3,9 +3,9 @@ import time
 import easyvvuq as uq
 import numpy as np
 import chaospy as cp
-import easypj
-from easypj import TaskRequirements, Resources
-from easypj import Task, TaskType, SubmitOrder
+import eqi
+from eqi import TaskRequirements, Resources
+from eqi import Task, TaskType, SubmitOrder
 
 
 # Global params
@@ -95,7 +95,7 @@ def setup_app2():
 
 
 def exec_pj(campaign, cores, app, encoded_filename):
-    qcgpjexec = easypj.Executor(campaign)
+    qcgpjexec = eqi.Executor(campaign)
     qcgpjexec.create_manager(resources=cores, log_level='debug')
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,

@@ -24,6 +24,6 @@
 ## grant
 #SBATCH --account=vecma2020
 
-. ~/tutorials/cooling_cup/app/easypj_config.sh
+. ~/tutorials/cooling_cup/app/eqi_config.sh
 
 python3 ../app/test_cooling_pj.py

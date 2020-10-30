@@ -8,6 +8,6 @@
 #QCG output=output-${JOB_ID}.txt
 #QCG error=error-${JOB_ID}.txt
 
-. ~/tutorials/cooling_cup/app/easypj_config.sh
+. ~/tutorials/cooling_cup/app/eqi_config.sh
 
 python3 test_cooling_pj.py

@@ -3,10 +3,10 @@ import time
 
 import chaospy as cp
 import easyvvuq as uq
-import easypj
+import eqi
 
-from easypj import TaskRequirements, Resources
-from easypj import Task, TaskType, SubmitOrder
+from eqi import TaskRequirements, Resources
+from eqi import Task, TaskType, SubmitOrder
 
 from custom_encoder import CustomEncoder
 
@@ -90,7 +90,7 @@ def test_cooling_pj(tmpdir):
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = easypj.Executor(my_campaign)
+    qcgpjexec = eqi.Executor(my_campaign)
     qcgpjexec.create_manager(resources='4')
 
     qcgpjexec.add_task(Task(

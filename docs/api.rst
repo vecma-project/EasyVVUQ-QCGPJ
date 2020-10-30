@@ -185,16 +185,16 @@ some environment settings, such as information about required
 environment modules or virtual environment, have to be passed in a
 different way. To this end, EasyVVUQ-QCGPJ delivers a simple mechanism based on
 an idea of bash script, that is sourced by each task prior to its actual
-execution. The path to this file can be provided in ``EASYPJ_CONFIG``
+execution. The path to this file can be provided in ``EQI_CONFIG``
 environment variable. If this environment variable is available in the
 master script, it is also automatically passed to QCG-PilotJob tasks.
 
 To the large extent the structure of the script provided in
-``EASYPJ_CONFIG`` is fully custom. In this script a user can load
+``EQI_CONFIG`` is fully custom. In this script a user can load
 modules, set further environment variables or even do simple
 calculations. The content can be all things that are needed by a Task in
 prior of its actual execution. Very basic example of the
-``EASYPJ_CONFIG`` file may look as follows:
+``EQI_CONFIG`` file may look as follows:
 
 .. code:: bash
 
@@ -217,9 +217,9 @@ of this variable should be the semicolon-separated list of the modules
 names, which are required by the custom encoder. The modules will be
 dynamically loaded before the encoder is recovered, what resolves the
 problem. In order to use ``ENCODER_MODULES`` variable we propose to
-define it in the ``EASYPJ_CONFIG``
+define it in the ``EQI_CONFIG``
 
-An example configuration of ``EASYPJ_CONFIG`` that includes
+An example configuration of ``EQI_CONFIG`` that includes
 specification of custom ``ENCODER_MODULES`` may look as follows (for the
 full test case please look in ``tests/custom_encoder``):
 
@@ -236,4 +236,4 @@ full test case please look in ``tests/custom_encoder``):
    export PYTHONPATH
    export ENCODER_MODULES
 
-   export EASYPJ_CONFIG=$this_dir/$this_file
+   export EQI_CONFIG=$this_dir/$this_file

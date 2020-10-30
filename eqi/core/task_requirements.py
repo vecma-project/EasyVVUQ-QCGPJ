@@ -4,9 +4,9 @@ class TaskRequirements:
 
     Parameters
     ----------
-    cores : easypj.Resources
+    cores : eqi.Resources
         the resource requirements for cores
-    nodes : easypj.Resources
+    nodes : eqi.Resources
         the resource requirements for nodes
     """
 

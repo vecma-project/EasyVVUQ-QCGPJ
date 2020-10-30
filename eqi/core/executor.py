@@ -6,8 +6,8 @@ import easyvvuq as uq
 from qcg.pilotjob.api.job import Jobs
 from qcg.pilotjob.api.manager import LocalManager
 
-from easypj.core.task import TaskType
-from easypj.core.submit_order import SubmitOrder
+from eqi.core.task import TaskType
+from eqi.core.submit_order import SubmitOrder
 
 
 class Executor:
@@ -26,8 +26,8 @@ class Executor:
 
         if config_file:
             self._config_file = config_file
-        elif 'EASYPJ_CONFIG' in os.environ:
-            self._config_file = os.environ['EASYPJ_CONFIG']
+        elif 'EQI_CONFIG' in os.environ:
+            self._config_file = os.environ['EQI_CONFIG']
 
         """
         Parameters
@@ -206,7 +206,7 @@ class Executor:
         }
 
         if self._config_file:
-            encode_task["execution"].update({"env": {"EASYPJ_CONFIG": self._config_file}})
+            encode_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
         encode_task.update(requirements)
 
         return encode_task
@@ -243,7 +243,7 @@ class Executor:
         }
 
         if self._config_file:
-            execute_task["execution"].update({"env": {"EASYPJ_CONFIG": self._config_file}})
+            execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
         execute_task.update(requirements)
 
         return execute_task
@@ -284,7 +284,7 @@ class Executor:
         }
 
         if self._config_file:
-            encode_execute_task["execution"].update({"env": {"EASYPJ_CONFIG": self._config_file}})
+            encode_execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
         encode_execute_task.update(requirements)
 
         return encode_execute_task
@@ -318,7 +318,7 @@ class Executor:
         }
 
         if self._config_file:
-            execute_task["execution"].update({"env": {"EASYPJ_CONFIG": self._config_file}})
+            execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
         execute_task.update(requirements)
 
         return execute_task

@@ -1,4 +1,4 @@
-![](docs/images/easypj-logo-h.png)
+![](docs/images/eqi-logo-h.png)
 
 # EasyVVUQ-QCGPJ - Python API for HPC execution of EasyVVUQ (EQI)
 
