@@ -90,8 +90,8 @@ def test_cooling_pj(tmpdir):
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = easypj.Executor()
-    qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
+    qcgpjexec = easypj.Executor(my_campaign)
+    qcgpjexec.create_manager(resources='4')
 
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
@@ -110,11 +110,7 @@ def test_cooling_pj(tmpdir):
     #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     # ))
 
-    qcgpjexec.run(
-        campaign=my_campaign,
-        submit_order=SubmitOrder.RUN_ORIENTED)
-    #    submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED)
-
+    qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
     qcgpjexec.terminate_manager()
 
     print("Collating results")

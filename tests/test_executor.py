@@ -94,11 +94,11 @@ def test_cooling_pj():
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = Executor()
+    qcgpjexec = Executor(my_campaign)
 
     # Create QCG PJ-Manager with 4 cores
     # (if you want to use all available resources remove resources parameter)
-    qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4', log_level='debug')
+    qcgpjexec.create_manager(resources=4, log_level='debug')
 
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
@@ -111,9 +111,7 @@ def test_cooling_pj():
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
-    qcgpjexec.run(
-        campaign=my_campaign,
-        submit_order=SubmitOrder.RUN_ORIENTED)
+    qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
 
     qcgpjexec.terminate_manager()
 

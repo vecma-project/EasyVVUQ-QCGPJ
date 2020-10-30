@@ -95,17 +95,14 @@ def setup_app2():
 
 
 def exec_pj(campaign, cores, app, encoded_filename):
-    qcgpjexec = easypj.Executor()
-    qcgpjexec.create_manager(dir=campaign.campaign_dir, resources=cores, log_level='debug')
+    qcgpjexec = easypj.Executor(campaign)
+    qcgpjexec.create_manager(resources=cores, log_level='debug')
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
         TaskRequirements(cores=Resources(exact=1)),
         application='python3 ' + jobdir + "/" + app + " " + encoded_filename
     ))
-    qcgpjexec.run(
-        campaign=campaign,
-        submit_order=SubmitOrder.EXEC_ONLY
-    )
+    qcgpjexec.run(submit_order=SubmitOrder.EXEC_ONLY)
     qcgpjexec.terminate_manager()
 
 
