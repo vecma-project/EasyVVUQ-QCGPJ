@@ -102,12 +102,12 @@ def test_cooling_pj():
 
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
-        TaskRequirements(cores=Resources(exact=1))
+        TaskRequirements(cores=1)
     ))
 
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=1)),
+        TaskRequirements(cores=1),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 

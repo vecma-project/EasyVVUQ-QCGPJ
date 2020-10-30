@@ -1,45 +1,4 @@
-class TaskRequirements:
-    """
-    Requirements for a task executed within QCG Pilot Job
-
-    Parameters
-    ----------
-    cores : eqi.Resources
-        the resource requirements for cores
-    nodes : eqi.Resources
-        the resource requirements for nodes
-    """
-
-    def __init__(self, cores=None, nodes=None):
-
-        if not cores and not nodes:
-            raise ValueError("At least one of 'cores' or 'nodes' parameters should be specified")
-
-        self._resources = {
-            "resources": {}
-        }
-
-        if cores:
-            self._resources["resources"].update({"numCores": {}})
-            cores_dict = cores.get_dict()
-            self._resources["resources"]["numCores"].update(cores_dict)
-
-        if nodes:
-            self._resources["resources"].update({"numNodes": {}})
-            nodes_dict = nodes.get_dict()
-            self._resources["resources"]["numNodes"].update(nodes_dict)
-
-    def get_resources(self):
-        """
-        Allows to get resource requirements in a form of dictionary understandable
-        by QCG Pilot Job Manager
-
-        Returns
-        -------
-            dict : dictionary with the resource requirements specification
-
-        """
-        return self._resources
+from typing import Union
 
 
 class Resources:
@@ -107,22 +66,74 @@ class Resources:
 
         if self._exact:
             _resources.update({
-                  "exact": self._exact
+                "exact": self._exact
             })
 
         if self._min:
             _resources.update({
-                  "min": self._min
+                "min": self._min
             })
 
         if self._max:
             _resources.update({
-                  "max": self._max
+                "max": self._max
             })
 
         if self._split_into:
             _resources.update({
-                  "split-into": self._split_into
+                "split-into": self._split_into
             })
 
         return _resources
+
+
+class TaskRequirements:
+    """
+    Requirements for a task executed within QCG Pilot Job
+
+    Parameters
+    ----------
+    cores : int or eqi.Resources
+        the resource requirements for cores
+    nodes : int or eqi.Resources
+        the resource requirements for nodes
+    """
+
+    def __init__(self, cores: Union[int, Resources] = None, nodes: Union[int, Resources] = None):
+
+        if not cores and not nodes:
+            raise ValueError("At least one of 'cores' or 'nodes' parameters should be specified")
+
+        if isinstance(cores, int):
+            cores = Resources(exact=cores)
+
+        if isinstance(nodes, int):
+            nodes = Resources(exact=nodes)
+
+        self._resources = {
+            "resources": {}
+        }
+
+        if cores:
+            self._resources["resources"].update({"numCores": {}})
+            cores_dict = cores.get_dict()
+            self._resources["resources"]["numCores"].update(cores_dict)
+
+        if nodes:
+            self._resources["resources"].update({"numNodes": {}})
+            nodes_dict = nodes.get_dict()
+            self._resources["resources"]["numNodes"].update(nodes_dict)
+
+    def get_resources(self):
+        """
+        Allows to get resource requirements in a form of dictionary understandable
+        by QCG Pilot Job Manager
+
+        Returns
+        -------
+            dict : dictionary with the resource requirements specification
+
+        """
+        return self._resources
+
+
