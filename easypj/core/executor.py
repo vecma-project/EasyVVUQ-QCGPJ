@@ -36,7 +36,7 @@ class Executor:
             The campaign object that will be processed by QCG-PilotJob.
             It has to be previously initialised.
         config_file: str, optional
-            The path to config file being sourced in a prelude of each of QCG-PilotJob tasks. 
+            The path to config file being sourced in a prelude of each of QCG-PilotJob tasks.
         """
 
     def create_manager(self,
@@ -52,7 +52,7 @@ class Executor:
             The format is compliant with the NODES format of QCG-PilotJob, i.e.:
             [node_name:]cores_on_node[,node_name2:cores_on_node][,...].
             Eg. to run on 4 cores regardless the node use `resources="4"`
-            to run on 2 cores of node_1 and on 3 cores of node_2 use `resources="node_1:2,node_2:3"`.
+            to run on 2 cores of node_1 and on 3 cores of node_2 use `resources="node_1:2,node_2:3"`
         reserve_core : bool, optional
             If True reserves a core for QCG-PilotJob Manager instance,
             by default QCG-PilotJob Manager shares a core with computing tasks
