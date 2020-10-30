@@ -12,6 +12,9 @@ class TaskRequirements:
 
     def __init__(self, cores=None, nodes=None):
 
+        if not cores and not nodes:
+            raise ValueError("At least one of 'cores' or 'nodes' parameters should be specified")
+
         self._resources = {
             "resources": {}
         }

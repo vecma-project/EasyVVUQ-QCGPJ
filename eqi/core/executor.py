@@ -24,10 +24,17 @@ class Executor:
         self._qcgpj_tempdir = "."
         self._config_file = None
 
+        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", self._campaign.campaign_dir)
+        print("Campaign dir:" + self._campaign.campaign_dir)
+        print("QCG-PJ temp dir:" + self._qcgpj_tempdir)
+
         if config_file:
             self._config_file = config_file
+            print("EQI config file for tasks (from param): " + self._config_file)
         elif 'EQI_CONFIG' in os.environ:
             self._config_file = os.environ['EQI_CONFIG']
+            print("EQI config file for tasks (from environment variable): " + self._config_file)
+
 
         """
         Parameters
@@ -67,9 +74,6 @@ class Executor:
         """
 
         # ---- QCG PILOT JOB INITIALISATION ---
-        # set QCG-PJ temp directory
-        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", self._campaign.campaign_dir)
-
         log_level = log_level.upper()
 
         try:
@@ -112,9 +116,6 @@ class Executor:
         None
 
         """
-        # set QCG-PJ temp directory
-        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", self._campaign.campaign_dir)
-
         self._qcgpjm = qcgpjm
 
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
@@ -179,7 +180,7 @@ class Executor:
     def _get_encoding_task(self, campaign, run):
 
         task = self._tasks.get(TaskType.ENCODING)
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -207,7 +208,9 @@ class Executor:
 
         if self._config_file:
             encode_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
-        encode_task.update(requirements)
+
+        if requirements:
+            encode_task.update(requirements.get_resources())
 
         return encode_task
 
@@ -215,7 +218,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -244,7 +247,9 @@ class Executor:
 
         if self._config_file:
             execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
-        execute_task.update(requirements)
+
+        if requirements:
+            execute_task.update(requirements.get_resources())
 
         return execute_task
 
@@ -252,7 +257,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -285,7 +290,9 @@ class Executor:
 
         if self._config_file:
             encode_execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
-        encode_execute_task.update(requirements)
+
+        if requirements:
+            encode_execute_task.update(requirements.get_resources())
 
         return encode_execute_task
 
@@ -293,7 +300,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -319,7 +326,9 @@ class Executor:
 
         if self._config_file:
             execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
-        execute_task.update(requirements)
+
+        if requirements:
+            execute_task.update(requirements.get_resources())
 
         return execute_task
 
