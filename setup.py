@@ -22,7 +22,7 @@ setup(
 
     install_requires=[
         'pytest',
-        'pytest-pep8'
+        'pytest-flake8'
     ],
 
     packages=find_packages(),

@@ -99,7 +99,8 @@ class TaskRequirements:
         the resource requirements for nodes
     """
 
-    def __init__(self, cores: Union[int, Resources, None] = None, nodes: Union[int, Resources, None] = None):
+    def __init__(self, cores: Union[int, Resources, None] = None,
+                 nodes: Union[int, Resources, None] = None):
 
         if not cores and not nodes:
             raise ValueError("At least one of 'cores' or 'nodes' parameters should be specified")
@@ -135,5 +136,3 @@ class TaskRequirements:
 
         """
         return self._resources
-
-

@@ -1,7 +1,6 @@
 import os
 import time
 import easyvvuq as uq
-import numpy as np
 import chaospy as cp
 import eqi
 from eqi import TaskRequirements, Resources
@@ -126,9 +125,9 @@ def test_multi_app_pj():
     campaign.apply_for_each_run_dir(action1)
     campaign.collate()
     campaign.apply_analysis(stats1)
-    results1 = campaign.get_last_analysis()
+#    results1 = campaign.get_last_analysis()
 
-    stat_1 = results1['statistical_moments']["u1"]
+#    stat_1 = results1['statistical_moments']["u1"]
 
     # 2st application
     (params2, encoder2, decoder2, collater2, sampler2, stats2) = setup_app2()
@@ -148,9 +147,9 @@ def test_multi_app_pj():
 
     campaign.collate()
     campaign.apply_analysis(stats2)
-    results2 = campaign.get_last_analysis()
+#    results2 = campaign.get_last_analysis()
 
-    stat_2 = results2['statistical_moments']["u2"]
+#    stat_2 = results2['statistical_moments']["u2"]
 
 
 # Main
