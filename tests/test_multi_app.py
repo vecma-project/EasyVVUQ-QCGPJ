@@ -1,11 +1,10 @@
 import os
 import time
 import easyvvuq as uq
-import numpy as np
 import chaospy as cp
-import easypj
-from easypj import TaskRequirements, Resources
-from easypj import Task, TaskType, SubmitOrder
+import eqi
+from eqi import TaskRequirements, Resources
+from eqi import Task, TaskType, SubmitOrder
 
 
 # Global params
@@ -95,17 +94,14 @@ def setup_app2():
 
 
 def exec_pj(campaign, cores, app, encoded_filename):
-    qcgpjexec = easypj.Executor()
-    qcgpjexec.create_manager(dir=campaign.campaign_dir, resources=cores, log_level='debug')
+    qcgpjexec = eqi.Executor(campaign)
+    qcgpjexec.create_manager(resources=cores, log_level='debug')
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
         TaskRequirements(cores=Resources(exact=1)),
         application='python3 ' + jobdir + "/" + app + " " + encoded_filename
     ))
-    qcgpjexec.run(
-        campaign=campaign,
-        submit_order=SubmitOrder.EXEC_ONLY
-    )
+    qcgpjexec.run(submit_order=SubmitOrder.EXEC_ONLY)
     qcgpjexec.terminate_manager()
 
 
@@ -129,9 +125,9 @@ def test_multi_app_pj():
     campaign.apply_for_each_run_dir(action1)
     campaign.collate()
     campaign.apply_analysis(stats1)
-    results1 = campaign.get_last_analysis()
+#    results1 = campaign.get_last_analysis()
 
-    stat_1 = results1['statistical_moments']["u1"]
+#    stat_1 = results1['statistical_moments']["u1"]
 
     # 2st application
     (params2, encoder2, decoder2, collater2, sampler2, stats2) = setup_app2()
@@ -151,9 +147,9 @@ def test_multi_app_pj():
 
     campaign.collate()
     campaign.apply_analysis(stats2)
-    results2 = campaign.get_last_analysis()
+#    results2 = campaign.get_last_analysis()
 
-    stat_2 = results2['statistical_moments']["u2"]
+#    stat_2 = results2['statistical_moments']["u2"]
 
 
 # Main

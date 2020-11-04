@@ -6,9 +6,9 @@ install:
   - pip install qcg-pilotjob
   - pip install .
 script:
-  - py.test --pep8 easypj/
-  - py.test --pep8 tests
-  - source tests/custom_encoder/easypj_sample_config.sh && py.test --pep8 tests/custom_encoder
+  - py.test --flake8 eqi/
+  - py.test --flake8 tests
+  - source tests/custom_encoder/eqi_sample_config.sh && py.test --flake8 tests/custom_encoder
 
 deploy:
   - provider: pypi

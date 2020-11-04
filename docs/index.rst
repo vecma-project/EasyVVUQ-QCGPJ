@@ -40,7 +40,7 @@ once you realise that the serial execution of EasyVVUQ is no longer sufficient.
    :maxdepth: 1
    :caption: API Docs
 
-   api/easypj
+   api/eqi
 
 Indices and tables
 ==================

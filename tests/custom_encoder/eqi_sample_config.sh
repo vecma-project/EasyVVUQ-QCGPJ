@@ -9,4 +9,4 @@ ENCODER_MODULES="custom_encoder"
 export PYTHONPATH
 export ENCODER_MODULES
 
-export EASYPJ_CONFIG=$this_dir/$this_file
+export EQI_CONFIG=$this_dir/$this_file

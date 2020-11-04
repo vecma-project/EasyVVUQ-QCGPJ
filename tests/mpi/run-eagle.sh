@@ -40,7 +40,7 @@ export PYTHONPATH=$PYTHONPATH:$HOME/workspace/mfw/ual/usr
 # For QCG-PilotJob usage
 ENCODER_MODULES="mfw.templates.cpo_encoder;mfw.templates.xml_encoder"
 export ENCODER_MODULES
-export EASYPJ_CONFIG=conf.sh
+export EQI_CONFIG=conf.sh
 
 module load python/3.7.3
 module load ifort

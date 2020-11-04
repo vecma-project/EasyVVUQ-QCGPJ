@@ -1,12 +1,13 @@
 from enum import Enum
 from tempfile import mkdtemp
 
+import os
 import easyvvuq as uq
 from qcg.pilotjob.api.job import Jobs
 from qcg.pilotjob.api.manager import LocalManager
 
-from easypj.core.task import TaskType
-from easypj.core.submit_order import SubmitOrder
+from eqi.core.task import TaskType
+from eqi.core.submit_order import SubmitOrder
 
 
 class Executor:
@@ -16,22 +17,42 @@ class Executor:
     using QCG-PilotJob.
 
     """
-    def __init__(self):
+    def __init__(self, campaign, config_file=None):
         self._qcgpjm = None
+        self._campaign = campaign
         self._tasks = {}
         self._qcgpj_tempdir = "."
+        self._config_file = None
 
-    def create_manager(self, dir=".",
+        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", self._campaign.campaign_dir)
+        print("Campaign dir:" + self._campaign.campaign_dir)
+        print("QCG-PJ temp dir:" + self._qcgpj_tempdir)
+
+        if config_file:
+            self._config_file = config_file
+            print("EQI config file for tasks (from param): " + self._config_file)
+        elif 'EQI_CONFIG' in os.environ:
+            self._config_file = os.environ['EQI_CONFIG']
+            print("EQI config file for tasks (from environment variable): " + self._config_file)
+
+        """
+        Parameters
+        ----------
+        campaign: easyvvuq.Campaign
+            The campaign object that will be processed by QCG-PilotJob.
+            It has to be previously initialised.
+        config_file: str, optional
+            The path to config file being sourced in a prelude of each of QCG-PilotJob tasks.
+        """
+
+    def create_manager(self,
                        resources=None,
                        reserve_core=False,
                        log_level='debug'):
-        """Creates new QCG-PilotJob Manager and sets is as the Executor's engine
+        """Creates new QCG-PilotJob Manager and sets is as the Executor's engine.
 
         Parameters
         ----------
-        dir : str
-            The path to the directory where Executor should init QCG-PilotJob Manager.
-            Inside dir a subdirectory for workdir of QCG-PilotJob Manager will be created
         resources : str, optional
             The resources to use. If specified forces usage of Local mode of QCG-PilotJob Manager.
             The format is compliant with the NODES format of QCG-PilotJob, i.e.:
@@ -41,7 +62,7 @@ class Executor:
         reserve_core : bool, optional
             If True reserves a core for QCG-PilotJob Manager instance,
             by default QCG-PilotJob Manager shares a core with computing tasks
-            Parameters
+            Parameters.
         log_level : str, optional
             Logging level for QCG-PilotJob Manager (for both service and client part).
 
@@ -52,9 +73,6 @@ class Executor:
         """
 
         # ---- QCG PILOT JOB INITIALISATION ---
-        # set QCG-PJ temp directory
-        self._qcgpj_tempdir = mkdtemp(None, ".qcgpj-", dir)
-
         log_level = log_level.upper()
 
         try:
@@ -97,8 +115,8 @@ class Executor:
         None
 
         """
-
         self._qcgpjm = qcgpjm
+
         print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
 
     def add_task(self, task):
@@ -117,15 +135,13 @@ class Executor:
         """
         self._tasks[task.get_name()] = task
 
-    def run(self, campaign, submit_order=SubmitOrder.RUN_ORIENTED):
+    def run(self, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG-PilotJob
 
         A user may choose the preferred execution scheme for the given scenario.
 
         Parameters
         ----------
-        campaign: easyvvuq.Campaign
-            The campaign object that would be processed. It has to be previously initialised.
         submit_order: SubmitOrder
             EasyVVUQ tasks submission order
 
@@ -135,7 +151,7 @@ class Executor:
         """
         # ---- EXECUTION ---
         # Execute encode -> execute for each run using QCG-PJ
-        self.__submit_jobs(campaign, submit_order)
+        self.__submit_jobs(self._campaign, submit_order)
 
         # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
@@ -143,9 +159,9 @@ class Executor:
         print("Syncing state of campaign after execution of PJ")
 
         def update_status(run_id, run_data):
-            campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
+            self._campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 
-        campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
+        self._campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
 
     def print_resources_info(self):
         """ Displays resources assigned to QCG-PilotJob Manager
@@ -163,7 +179,7 @@ class Executor:
     def _get_encoding_task(self, campaign, run):
 
         task = self._tasks.get(TaskType.ENCODING)
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -189,7 +205,11 @@ class Executor:
             }
         }
 
-        encode_task.update(requirements)
+        if self._config_file:
+            encode_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
+
+        if requirements:
+            encode_task.update(requirements.get_resources())
 
         return encode_task
 
@@ -197,7 +217,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -224,7 +244,11 @@ class Executor:
             }
         }
 
-        execute_task.update(requirements)
+        if self._config_file:
+            execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
+
+        if requirements:
+            execute_task.update(requirements.get_resources())
 
         return execute_task
 
@@ -232,7 +256,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -263,7 +287,11 @@ class Executor:
             }
         }
 
-        encode_execute_task.update(requirements)
+        if self._config_file:
+            encode_execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
+
+        if requirements:
+            encode_execute_task.update(requirements.get_resources())
 
         return encode_execute_task
 
@@ -271,7 +299,7 @@ class Executor:
 
         task = self._tasks.get(TaskType.EXECUTION)
         application = task.get_params().get("application")
-        requirements = task.get_requirements().get_resources()
+        requirements = task.get_requirements()
         model = task.get_model()
 
         key = run[0]
@@ -295,7 +323,11 @@ class Executor:
             }
         }
 
-        execute_task.update(requirements)
+        if self._config_file:
+            execute_task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
+
+        if requirements:
+            execute_task.update(requirements.get_resources())
 
         return execute_task
 

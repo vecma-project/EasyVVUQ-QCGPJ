@@ -16,7 +16,7 @@ class Task:
     type : TaskType
         The type of the task. Allowed tasks are: ENCODING, EXECUTION, ENCODING_AND_EXECUTION,
          and OTHER (currently not supported)
-    requirements : TaskRequirements
+    requirements : TaskRequirements, optional
         The requirements for the Task
     name : str, optional
         name of the Task, if not provided the name will take a value of type
@@ -28,7 +28,7 @@ class Task:
         additional parameters that may be used by specific Task types
     """
 
-    def __init__(self, type, requirements, name=None, model="default", **params):
+    def __init__(self, type, requirements=None, name=None, model="default", **params):
         self._type = type
         self._requirements = requirements
         self._model = model

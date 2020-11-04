@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Source the site-specific configuration file
-if [[ -f $EASYPJ_CONFIG ]]
+if [[ -f $EQI_CONFIG ]]
 then
-  echo "Sourcing configuration file: $EASYPJ_CONFIG"
-  . $EASYPJ_CONFIG
+  echo "Sourcing configuration file: $EQI_CONFIG"
+  . $EQI_CONFIG
 fi
 
 $@
