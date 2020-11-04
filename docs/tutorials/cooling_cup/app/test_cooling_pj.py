@@ -4,7 +4,7 @@ import time
 import chaospy as cp
 import easyvvuq as uq
 
-from eqi import TaskRequirements, Resources, Executor
+from eqi import TaskRequirements, Executor
 from eqi import Task, TaskType, SubmitOrder
 
 # author: Jalal Lakhlili / Bartosz Bosak
@@ -98,17 +98,17 @@ def test_cooling_pj():
 
     print("Initialising EasyPJ Executor")
     # Create EasyVVUQ-QCGPJ Executor that will process the execution
-    qcgpjexec = Executor()
+    qcgpjexec = Executor(my_campaign)
 
     # Create QCG-PilotJob Manager that will utilise all available resources.
     # Refer to the documentation for customisation options.
-    qcgpjexec.create_manager(dir=my_campaign.campaign_dir)
+    qcgpjexec.create_manager()
 
     # Define ENCODING task that will be used for execution of encodings using encoders specified by EasyVVUQ.
     # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 1 core.
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
-        TaskRequirements(cores=Resources(exact=1))
+        TaskRequirements(cores=1)
     ))
 
     # Define EXECUTION task that will be used for the actual execution of application.
@@ -118,14 +118,13 @@ def test_cooling_pj():
     # Each task will execute the command provided in the 'application' parameter.
     qcgpjexec.add_task(Task(
         TaskType.EXECUTION,
-        TaskRequirements(cores=Resources(exact=1)),
+        TaskRequirements(cores=1),
         application='python3 ' + APPLICATION + " " + ENCODED_FILENAME
     ))
 
     print("Starting the execution of QCG-PilotJob tasks")
     # Execute encodings and executions for all generated samples
     qcgpjexec.run(
-        campaign=my_campaign,
         submit_order=SubmitOrder.RUN_ORIENTED)
 
     # Terminate QCG-PilotJob Manager

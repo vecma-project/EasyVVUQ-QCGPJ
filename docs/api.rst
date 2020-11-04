@@ -1,6 +1,20 @@
 API description
 ###############
 
+EasyVVUQ-QCGPJ Executor
+***********************
+``Executor`` is the main object responsible for steering the configuration
+and parallel execution of selected EasyVVUQ tasks with QCG-PilotJob.
+The object needs to be tied to the already prepared instance of
+the EasyVVUQ campaign and therefore it takes it as the mandatory ``campaign``
+parameter for the constructor.
+
+The second (optional) parameter of the ``Executor``'s constructor is
+``config_file``, which can be used to initialise the environment
+of tasks started by QCG-PilotJob. More information on this topic is presented
+in the section :ref:`Passing the execution environment to QCG-PilotJob tasks`
+
+
 QCG-PilotJob Manager initialisation
 ***********************************
 
@@ -77,9 +91,11 @@ efficiency, for the multicore Tasks it is advised to specify two
 parameters: ``nodes`` and ``cores`` (even if there is only a need to
 take one node).
 
-Both ``nodes`` and ``cores`` parameters are of the ``Resources`` type
-and may be specified in the common way, with the following keyword
-combinations:
+Both ``nodes`` and ``cores`` parameters may be of ``int`` type or of ``Resources`` type.
+In the case when a parameter is of an ``int`` type, the provided value is simply
+mapped to the exact number of required resources. In the case of parameters of ``Resources``
+type, there is much more flexibility in the requirements specification,
+which may be obtained with the following keyword combinations:
 
 -  ``exact`` - the exact number of resources should be used,
 -  ``min`` - ``max`` - the resources number should be larger than
@@ -94,19 +110,19 @@ Example ``TaskRequirements`` specifications:
 
 .. code:: python
 
-        TaskRequirements(cores=Resources(exact=4))
+        TaskRequirements(cores=4)
 
 -  Use 4 cores on a single node
 
 .. code:: python
 
-        TaskRequirements(nodes=Resources(exact=1),cores=Resources(exact=4))
+        TaskRequirements(nodes=1,cores=4)
 
 -  Use from 4 to 6 cores on each of 2 nodes
 
 .. code:: python
 
-        TaskRequirements(nodes=Resources(exact=2),cores=Resources(min=4,max=6))
+        TaskRequirements(nodes=2,cores=Resources(min=4,max=6))
 
 The algorithm used to define Task requirements in EasyVVUQ-QCGPJ is inherited
 from the QCG-PilotJob system. Further instruction can be found in the `QCG
@@ -185,7 +201,7 @@ some environment settings, such as information about required
 environment modules or virtual environment, have to be passed in a
 different way. To this end, EasyVVUQ-QCGPJ delivers a simple mechanism based on
 an idea of bash script, that is sourced by each task prior to its actual
-execution. The path to this file can be provided in ``EQI_CONFIG``
+execution. The path to this file can be provided in the ``EQI_CONFIG``
 environment variable. If this environment variable is available in the
 master script, it is also automatically passed to QCG-PilotJob tasks.
 
@@ -201,6 +217,11 @@ prior of its actual execution. Very basic example of the
    #!/bin/bash
 
    module load openmpi/4.0
+
+.. note::
+    The alternate option to provide the configuration file is to specify
+    its location by the ``config_file`` parameter
+    provided into the constructor of the ``Executor`` object.
 
 External Encoders
 *****************

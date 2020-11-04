@@ -17,7 +17,7 @@ required to configure EasyVVUQ-QCGPJ. This comes down to:
    practice to be executed by QCG-PilotJob Manager as separate processes).
 4. Execution of EasyVVUQ workflow consisted of the Tasks using the
    Executor.
-5. Finalization
+5. Finalization.
 
 
 Example workflow
@@ -40,7 +40,7 @@ fragments that are common with the standard execution of EasyVVUQ.
    import easyvvuq as uq
    import eqi
 
-   from eqi import TaskRequirements, Resources
+   from eqi import TaskRequirements
    from eqi import Task, TaskType, SubmitOrder
 
    jobdir = os.getcwd()
@@ -113,7 +113,7 @@ Below we shortly describe particular elements of this process:
    Pilot Job Manager instance needs to be set up for the Executor. To
    this end, it is possible to use one of two methods: the presented
    ``create_manager()`` or ``set_manager()``. More information on this
-   topic is presented in the section :ref:`QCG Pilot Job Manager initialisation`.
+   topic is presented in the section :ref:`QCG-PilotJob Manager initialisation`.
 
 
 **2. Declaration of tasks**
@@ -152,7 +152,7 @@ The way of starting the defined workflow is typical, e.g.:
 
    Please only be sure that the environment is correct for both, the master
    script and the tasks. More information on this topic is presented in the
-   section :ref:`Passing the execution environment to QCG Pilot Job tasks`.
+   section :ref:`Passing the execution environment to QCG-PilotJob tasks`.
 
 .. note::  It is worth noting that the workflow can be started in a common way on
  both local computer and cluster. In case of the batch execution on
