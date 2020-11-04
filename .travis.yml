@@ -23,4 +23,4 @@ deploy:
     password: $PYPI_PASSWORD
     edge: true
     on:
-      branch: master
+      tags: true
