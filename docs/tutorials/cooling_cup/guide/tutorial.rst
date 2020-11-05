@@ -344,34 +344,32 @@ Considerably simplified, it looks as follows:
        # ...
        
        # Create EasyVVUQ-QCGPJ Executor that will process the execution
-       qcgpjexec = Executor()
+       qcgpjexec = Executor(my_campaign)
 
        # Create QCG-PilotJob Manager with 4 cores (if you want to use all available resources remove the resources parameter)
        # Refer to the documentation for customisation options.
-       qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
+       qcgpjexec.create_manager(resources='4')
 
        # Define ENCODING task that will be used for execution of encodings using encoders specified by EasyVVUQ.
        # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 1 core.
        qcgpjexec.add_task(Task(
            TaskType.ENCODING,
-           TaskRequirements(cores=Resources(exact=1))
+           TaskRequirements(cores=1)
        ))
 
        # Define EXECUTION task that will be used for the actual execution of application.
-       # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 1 core, 
+       # The presented specification of 'TaskRequirements' assumes the execution of each of the tasks on 2 cores,
        # but for more demanding, parallel applications the resources requirements may be extended to many cores or 
        # even many nodes. 
        # Each task will execute the command provided in the 'application' parameter.
        qcgpjexec.add_task(Task(
            TaskType.EXECUTION,
-           TaskRequirements(cores=Resources(exact=4)),
+           TaskRequirements(cores=2),
            application='python3 ' + APPLICATION + " " + ENCODED_FILENAME
        ))
 
        # Execute encodings and executions for all generated samples
-       qcgpjexec.run(
-           campaign=my_campaign,
-           submit_order=SubmitOrder.RUN_ORIENTED)
+       qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
 
        # Terminate QCG-PilotJob Manager
        qcgpjexec.terminate_manager()
@@ -415,7 +413,7 @@ Common configuration before execution
 
 1. Please check and update if needed the content of environment
    configuration file located in:
-   ``~/tutorials/cooling_cup/app/easypj_conf.sh``. This file is used to
+   ``~/tutorials/cooling_cup/app/eqi_conf.sh``. This file is used to
    configure system-specific settings for the developed workflow. Once
    you open this file, make sure the appropriate environment modules are
    loaded and *virtualenv* is activated. Please also check if the
@@ -428,13 +426,13 @@ Common configuration before execution
 
    ::
 
-      $ . ~/tutorials/cooling_cup/app/easypj_config.sh 
+      $ . ~/tutorials/cooling_cup/app/eqi_config.sh
       (easyvvuq-qcgpj)$ 
 
 Local execution
 ~~~~~~~~~~~~~~~
 
-1. Be sure that you have sourced the ``easypj_conf.sh`` file and are in
+1. Be sure that you have sourced the ``eqi_conf.sh`` file and are in
    the proper *virtualenv*.
 
 2. Go into the ``~/tutorials/cooling_cup/local_execution``:
@@ -656,7 +654,7 @@ task from QCG-Now are as follows:
 
    ::
 
-      . ~/tutorials/cooling_cup/app/easypj_config.sh 
+      . ~/tutorials/cooling_cup/app/eqi_config.sh
       python3 test_cooling_pj.py
 
    |image4|

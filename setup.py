@@ -8,7 +8,7 @@ long_description = readme.split("\n", 2)[2]
 setup(
     name='easyvvuq-qcgpj',
 
-    version='0.4',
+    version='0.4.1',
 
     description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',
@@ -22,7 +22,7 @@ setup(
 
     install_requires=[
         'pytest',
-        'pytest-pep8'
+        'pytest-flake8'
     ],
 
     packages=find_packages(),

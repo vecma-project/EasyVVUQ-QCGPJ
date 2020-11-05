@@ -17,7 +17,7 @@ required to configure EasyVVUQ-QCGPJ. This comes down to:
    practice to be executed by QCG-PilotJob Manager as separate processes).
 4. Execution of EasyVVUQ workflow consisted of the Tasks using the
    Executor.
-5. Finalization
+5. Finalization.
 
 
 Example workflow
@@ -38,10 +38,10 @@ fragments that are common with the standard execution of EasyVVUQ.
 
    # ...
    import easyvvuq as uq
-   import easypj
+   import eqi
 
-   from easypj import TaskRequirements, Resources
-   from easypj import Task, TaskType, SubmitOrder
+   from eqi import TaskRequirements
+   from eqi import Task, TaskType, SubmitOrder
 
    jobdir = os.getcwd()
    tmpdir = jobdir
@@ -64,28 +64,26 @@ fragments that are common with the standard execution of EasyVVUQ.
        ################################
 
        # Create Executor
-       qcgpjexec = Executor()
+       qcgpjexec = Executor(my_campaign)
 
        # Create QCG-PilotJob-Manager with 4 cores
        # (if you want to use all available resources remove resources parameter)
-       qcgpjexec.create_manager(dir=my_campaign.campaign_dir, resources='4')
+       qcgpjexec.create_manager(resources='4')
 
        # Declare tasks, one for encoding and one for execution, providing their resource requirements
        qcgpjexec.add_task(Task(
            TaskType.ENCODING,
-           TaskRequirements(cores=Resources(exact=1))
+           TaskRequirements(cores=1)
        ))
 
        qcgpjexec.add_task(Task(
            TaskType.EXECUTION,
-           TaskRequirements(cores=Resources(exact=1)),
+           TaskRequirements(cores=1),
            application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
        ))
 
        # Execute the encoding and execution steps of the campaing using Executor
-       qcgpjexec.run(
-           campaign=my_campaign,
-           submit_order=SubmitOrder.RUN_ORIENTED)
+       qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
 
        # Terminate the created QCG Pilot Job manager
        qcgpjexec.terminate_manager()
@@ -102,9 +100,12 @@ fragments that are common with the standard execution of EasyVVUQ.
 
 As you can see, the code required for parallel encoding and execution of
 the samples stored in an EasyVVUQ campaign is quite concise. The user
-just need to create an Executor object and using the methods of this
-object steer the rest of the process. Below we shortly describe
-particular elements of this process:
+just need to create an Executor object providing the already initialised Campaign
+as an argument (the set of samples should be ready for processing)
+and then, using the methods provided by the object, steer the execution
+from the relatively high level.
+
+Below we shortly describe particular elements of this process:
 
 **1. Instantiation of the QCG Pilot Job Manager**
 
@@ -112,7 +113,7 @@ particular elements of this process:
    Pilot Job Manager instance needs to be set up for the Executor. To
    this end, it is possible to use one of two methods: the presented
    ``create_manager()`` or ``set_manager()``. More information on this
-   topic is presented in the section :ref:`QCG Pilot Job Manager initialisation`.
+   topic is presented in the section :ref:`QCG-PilotJob Manager initialisation`.
 
 
 **2. Declaration of tasks**
@@ -130,10 +131,8 @@ particular elements of this process:
    The Executor configured with the QCG-PilotJob Manager instance and filled
    with a set of appropriate Tasks is ready to perform parallel
    processing of encoding and execution steps for all Campaign's samples
-   using the ``run()`` method. This method takes two parameters:
-   ``campaign`` and ``submit_order``. The first parameter is a campaign
-   object that should be already configured and for which the samples
-   should be generated. The second parameter, ``submit_order`` is used
+   using the ``run()`` method. This method takes ``submit_order`` parameter.
+   The second parameter, ``submit_order`` is used
    to define a type of the scheme for the submission of Tasks in a
    specific order. There are four possibile submission schemes /
    ``submit_order``\ s: ``RUN_ORIENTED``, ``PHASE_ORIENTED``, ``EXEC_ONLY`` and
@@ -153,7 +152,7 @@ The way of starting the defined workflow is typical, e.g.:
 
    Please only be sure that the environment is correct for both, the master
    script and the tasks. More information on this topic is presented in the
-   section :ref:`Passing the execution environment to QCG Pilot Job tasks`.
+   section :ref:`Passing the execution environment to QCG-PilotJob tasks`.
 
 .. note::  It is worth noting that the workflow can be started in a common way on
  both local computer and cluster. In case of the batch execution on
