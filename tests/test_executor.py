@@ -98,7 +98,7 @@ def test_cooling_pj():
 
     # Create QCG PJ-Manager with 4 cores
     # (if you want to use all available resources remove resources parameter)
-    qcgpjexec.create_manager(resources=4, log_level='debug')
+    qcgpjexec.create_manager(resources="4", log_level='debug')
 
     qcgpjexec.add_task(Task(
         TaskType.ENCODING,
