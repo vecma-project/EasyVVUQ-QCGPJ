@@ -21,6 +21,7 @@ else:
     tmpdir = "/tmp/"
 jobdir = os.getcwd()
 
+
 def setup_cooling_app():
     params = {
         "temp_init": {
@@ -192,7 +193,6 @@ def test_iterative_encoding_execution_condensed():
     return stats
 
 
-
 def test_iterative_execution():
     start_time = time.time()
 
@@ -261,4 +261,3 @@ if __name__ == "__main__":
     test_iterative_encoding_execution()
     test_iterative_encoding_execution_condensed()
     test_iterative_execution()
-

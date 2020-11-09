@@ -13,8 +13,8 @@ class SubmitOrder(Enum):
     """
 
     PHASE_ORIENTED = \
-        ("Submits specific EasyVVUQ operation (e.g. encoding) " 
-         "for all runs as a separate QCG PJ tasks" 
+        ("Submits specific EasyVVUQ operation (e.g. encoding) "
+         "for all runs as a separate QCG PJ tasks"
          "and then goes to the next EasyVVUQ operation (e.g. execution)")
     RUN_ORIENTED = \
         ("Submits a workflow of EasyVVUQ operations as "
