@@ -11,8 +11,8 @@ from eqi import Task, TaskType, SubmitOrder
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/cooling/cooling.template"
-APPLICATION = "tests/cooling/cooling_model.py"
+TEMPLATE = "tests/APP_COOLING/cooling.template"
+APPLICATION = "tests/APP_COOLING/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:
@@ -59,7 +59,7 @@ def setup_cooling_app():
         "t_env": cp.Uniform(15, 25)
     }
 
-    cooling_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=3)
+    cooling_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
     cooling_stats = uq.analysis.PCEAnalysis(sampler=cooling_sampler, qoi_cols=output_columns)
 
     return params, encoder, decoder, collater, cooling_sampler, cooling_stats
@@ -121,7 +121,8 @@ def test_iterative_encoding_execution():
     my_campaign.apply_analysis(cooling_stats)
 
     results = my_campaign.get_last_analysis()
-    stats = results['statistical_moments']['te']
+
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
     end_time = time.time()
@@ -183,7 +184,8 @@ def test_iterative_encoding_execution_condensed():
     my_campaign.apply_analysis(cooling_stats)
 
     results = my_campaign.get_last_analysis()
-    stats = results['statistical_moments']['te']
+
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
 
@@ -247,7 +249,8 @@ def test_iterative_execution():
     my_campaign.apply_analysis(cooling_stats)
 
     results = my_campaign.get_last_analysis()
-    stats = results['statistical_moments']['te']
+
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
 

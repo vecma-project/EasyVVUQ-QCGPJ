@@ -11,8 +11,8 @@ from eqi import Task, TaskType, SubmitOrder
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/cooling/cooling.template"
-APPLICATION = "tests/cooling/cooling_model.py"
+TEMPLATE = "tests/APP_COOLING/cooling.template"
+APPLICATION = "tests/APP_COOLING/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:
@@ -128,7 +128,7 @@ def test_cooling_pj():
     my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
-    stats = results['statistical_moments']['te']
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
     return stats

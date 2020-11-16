@@ -56,7 +56,7 @@ def test_cooling_pj():
 
     # Create an encoder, decoder and collation element for PCE test app
     encoder = uq.encoders.GenericEncoder(
-        template_fname=jobdir + '/tests/cooling/cooling.template',
+        template_fname=jobdir + '/tests/APP_COOLING/cooling.template',
         delimiter='$',
         target_filename='cooling_in.json')
 
@@ -137,7 +137,7 @@ def test_cooling_pj():
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            'python3 ' + jobdir + "/tests/cooling/cooling_model.py", "cooling_in.json"
+            'python3 ' + jobdir + "/tests/APP_COOLING/cooling_model.py", "cooling_in.json"
         ]
 
         encode_task = {
@@ -206,7 +206,7 @@ def test_cooling_pj():
     results = my_campaign.get_last_analysis()
 
     # Get Descriptive Statistics
-    stats = results['statistical_moments']['te']
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
     return stats
