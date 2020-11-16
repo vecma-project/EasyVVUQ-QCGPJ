@@ -4,15 +4,14 @@ import time
 import chaospy as cp
 import easyvvuq as uq
 
-from eqi import TaskRequirements, Executor
-from eqi import Task, TaskType, SubmitOrder
+import eqi
 
 # author: Jalal Lakhlili / Bartosz Bosak
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/cooling/cooling.template"
-APPLICATION = "tests/cooling/cooling_model.py"
+TEMPLATE = "tests/APP_COOLING/cooling.template"
+APPLICATION = "tests/APP_COOLING/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:
@@ -26,6 +25,7 @@ uqmethod = "pce"
 def test_cooling_pj():
     print("Job directory: " + jobdir)
     print("Temporary directory: " + tmpdir)
+    print(uq.__version__)
 
     # ---- CAMPAIGN INITIALISATION ---
     print("Initializing Campaign")
@@ -94,24 +94,24 @@ def test_cooling_pj():
     my_campaign.draw_samples()
 
     print("Starting execution")
-    qcgpjexec = Executor(my_campaign)
+    qcgpjexec = eqi.Executor(my_campaign)
 
     # Create QCG PJ-Manager with 4 cores
     # (if you want to use all available resources remove resources parameter)
-    qcgpjexec.create_manager(resources=4, log_level='debug')
+    qcgpjexec.create_manager(resources="4", log_level='debug')
 
-    qcgpjexec.add_task(Task(
-        TaskType.ENCODING,
-        TaskRequirements(cores=1)
+    qcgpjexec.add_task(eqi.Task(
+        eqi.TaskType.ENCODING,
+        eqi.TaskRequirements(cores=1)
     ))
 
-    qcgpjexec.add_task(Task(
-        TaskType.EXECUTION,
-        TaskRequirements(cores=1),
+    qcgpjexec.add_task(eqi.Task(
+        eqi.TaskType.EXECUTION,
+        eqi.TaskRequirements(cores=1),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
-    qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
+    qcgpjexec.run(submit_order=eqi.SubmitOrder.RUN_ORIENTED)
 
     qcgpjexec.terminate_manager()
 
@@ -128,7 +128,7 @@ def test_cooling_pj():
     my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
-    stats = results['statistical_moments']['te']
+    stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
     return stats
@@ -138,6 +138,7 @@ if __name__ == "__main__":
     start_time = time.time()
 
     stats = test_cooling_pj()
+    print(stats)
 
     end_time = time.time()
     print('>>>>> elapsed time = ', end_time - start_time)
