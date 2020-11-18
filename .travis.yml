@@ -3,7 +3,8 @@ python:
   - "3.6.7"
 install:
   - pip install easyvvuq
-  - pip install qcg-pilotjob
+#  - pip install qcg-pilotjob
+  - pip install git+https://github.com/vecma-project/QCG-PilotJob@issue_82
   - pip install .
 script:
   - py.test --flake8 eqi/
