@@ -1,0 +1,8 @@
+{"task": "encode_Run_3", "iteration": null, "state": "SUCCEED"}
+{"task": "encode_Run_2", "iteration": null, "state": "SUCCEED"}
+{"task": "encode_Run_1", "iteration": null, "state": "SUCCEED"}
+{"task": "encode_Run_4", "iteration": null, "state": "SUCCEED"}
+{"task": "execute_Run_3", "iteration": null, "state": "SUCCEED"}
+{"task": "execute_Run_2", "iteration": null, "state": "SUCCEED"}
+{"task": "execute_Run_4", "iteration": null, "state": "SUCCEED"}
+{"task": "execute_Run_1", "iteration": null, "state": "SUCCEED"}
