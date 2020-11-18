@@ -69,8 +69,9 @@ class Executor:
             by default QCG-PilotJob Manager shares a core with computing tasks
             Parameters.
         resume: bool, optional
-            By default EQI will try to resume not completed workflow of QCG-PJ tasks from the point where
-            it was previously stopped. If this is not intended this parameter should be set to False.
+            By default EQI will try to resume not completed workflow of QCG-PJ tasks from
+            the point where it was previously stopped. If this is not intended
+            this parameter should be set to False.
         log_level : str, optional
             Logging level for QCG-PilotJob Manager (for both service and client part).
 
@@ -478,7 +479,8 @@ class Executor:
             print("No EQI directory found - can't resume")
             return False
 
-        if 'submitted' in self.__get_from_state_file():  # jobs need to be submitted in order to resume
+        # jobs need to be submitted in order to resume
+        if 'submitted' in self.__get_from_state_file():
             print("Resume directory ready for use")
             return True
         else:
@@ -494,7 +496,8 @@ class Executor:
 
     def __submit_jobs(self, submit_order):
 
-        print("Starting submission of tasks to QCG-PilotJob Manager in a submit order: " + submit_order.name)
+        print("Starting submission of tasks to QCG-PilotJob Manager "
+              "in a submit order: " + submit_order.name)
         if submit_order.is_iterative():
             self.__submit_iterative_jobs(submit_order)
         else:
@@ -553,8 +556,6 @@ class Executor:
                 self._get_exec_only_task_iterative(self._campaign, max_run, min_run)))
 
     def __wait_and_sync(self):
-
-        # TODO: mark that tasks have been submitted
 
         # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
