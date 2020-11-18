@@ -5,6 +5,7 @@ import chaospy as cp
 import easyvvuq as uq
 
 import eqi
+from qcg.pilotjob.api.errors import ConnectionError
 
 # author: Jalal Lakhlili / Bartosz Bosak
 __license__ = "LGPL"
@@ -13,6 +14,9 @@ __license__ = "LGPL"
 TEMPLATE = "tests/APP_COOLING/cooling.template"
 APPLICATION = "tests/APP_COOLING/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
+CAMPAIGN_STATE_FILE = "state_before_eqi"
+
+campaign_dir = None
 
 if "SCRATCH" in os.environ:
     tmpdir = os.environ["SCRATCH"]
@@ -22,7 +26,7 @@ else:
 jobdir = os.getcwd()
 
 
-def test_cooling_pj():
+def _init():
     print("Job directory: " + jobdir)
     print("Temporary directory: " + tmpdir)
 
@@ -90,7 +94,10 @@ def test_cooling_pj():
     my_campaign.draw_samples()
 
     # Safe state of a campaign to state_file
-    my_campaign.save_state(my_campaign.campaign_dir + "/state_before_eqi")
+    my_campaign.save_state(my_campaign.campaign_dir + "/" + CAMPAIGN_STATE_FILE)
+
+    global campaign_dir
+    campaign_dir = my_campaign.campaign_dir
 
     print("Starting execution")
     qcgpjexec = eqi.Executor(my_campaign)
@@ -110,7 +117,40 @@ def test_cooling_pj():
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
+    from threading import Timer
+
+    def terminate_run():
+        qcgpjexec.terminate_manager()
+
+    # terminate executor in 5 seconds
+    t = Timer(5.0, terminate_run)
+    t.start()
+
     qcgpjexec.run(submit_order=eqi.SubmitOrder.RUN_ORIENTED)
+
+
+def test_cooling_pj():
+    print("Job directory: " + jobdir)
+    print("Temporary directory: " + tmpdir)
+
+    try:
+        _init()
+    except ConnectionError:
+        print("Code interrupted")
+
+    # ---- CAMPAIGN RE-INITIALISATION ---
+    print("Loading Campaign")
+    # Set up a fresh campaign called "cooling"
+    my_campaign = uq.Campaign(
+        state_file=f'{campaign_dir}/{CAMPAIGN_STATE_FILE}',
+        work_dir=tmpdir)
+
+    print("Starting execution")
+    qcgpjexec = eqi.Executor(my_campaign)
+
+    # Create QCG PJ-Manager with 4 cores
+    # (if you want to use all available resources remove resources parameter)
+    qcgpjexec.create_manager(resources="4", log_level='debug')
 
     qcgpjexec.terminate_manager()
 
@@ -118,6 +158,9 @@ def test_cooling_pj():
     my_campaign.collate()
 
     print("Making analysis")
+
+    my_sampler = my_campaign.get_active_sampler()
+    output_columns = ["te", "ti"]
 
     analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
 

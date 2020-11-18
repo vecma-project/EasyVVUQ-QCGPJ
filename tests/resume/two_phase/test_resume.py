@@ -68,7 +68,7 @@ def test_cooling_pj():
 
 def __prepare_data():
     shutil.rmtree(f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}', ignore_errors=True)
-    shutil.copytree(f'tests/resume/uncompleted_data/{UNCOMPLETED_CAMPAIGN_DIR}', f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}')
+    shutil.copytree(f'tests/resume/two_phase/uncompleted_data/{UNCOMPLETED_CAMPAIGN_DIR}', f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}')
 
 
 if __name__ == "__main__":
