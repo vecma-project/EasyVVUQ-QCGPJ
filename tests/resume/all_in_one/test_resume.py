@@ -27,9 +27,6 @@ jobdir = os.getcwd()
 
 
 def _init():
-    print("Job directory: " + jobdir)
-    print("Temporary directory: " + tmpdir)
-
     # ---- CAMPAIGN INITIALISATION ---
     print("Initializing Campaign")
     # Set up a fresh campaign called "cooling"

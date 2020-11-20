@@ -1,4 +1,6 @@
+import logging
 from enum import Enum
+from os.path import exists, dirname, abspath
 from tempfile import mkdtemp
 from glob import glob
 
@@ -23,21 +25,34 @@ class Executor:
 
     """
 
-    def __init__(self, campaign, config_file=None):
+    def __init__(self, campaign, config_file=None, resume=True, log_level='debug'):
         self._qcgpjm = None
         self._campaign = campaign
         self._tasks = {}
         self._eqi_dir = "."
         self._config_file = None
+        self._resume = False
 
-        print("Campaign dir: " + self._campaign.campaign_dir)
+        print("EQI initialisation for the campaign: " + self._campaign.campaign_dir)
+
+        if resume:
+            self._resume = self.__try_to_prepare_resume()
+
+        if self._resume:
+            print("EQI resuming in dir: " + self._eqi_dir)
+        else:
+            self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
+            print("EQI starting in dir: " + self._eqi_dir)
+
+        self.logger = self.__setup_eqi_logging(log_level)
 
         if config_file:
             self._config_file = config_file
-            print("EQI config file for tasks (from param): " + self._config_file)
+            self.logger.debug("EQI config file for tasks (from param): " + self._config_file)
         elif 'EQI_CONFIG' in os.environ:
             self._config_file = os.environ['EQI_CONFIG']
-            print("EQI config file for tasks (from environment variable): " + self._config_file)
+            self.logger.debug("EQI config file for tasks (from environment variable): "
+                              + self._config_file)
 
         """
         Parameters
@@ -47,12 +62,17 @@ class Executor:
             It has to be previously initialised.
         config_file: str, optional
             The path to config file being sourced in a prelude of each of QCG-PilotJob tasks.
+        resume: bool, optional
+            By default EQI will try to resume not completed workflow of QCG-PJ tasks from
+            the point where it was previously stopped. If this is not intended
+            this parameter should be set to False.
+        log_level : str, optional
+            Logging level for EQI.
         """
 
     def create_manager(self,
                        resources=None,
                        reserve_core=False,
-                       resume=True,
                        log_level='debug'):
         """Creates new QCG-PilotJob Manager and sets is as the Executor's engine.
 
@@ -68,10 +88,6 @@ class Executor:
             If True reserves a core for QCG-PilotJob Manager instance,
             by default QCG-PilotJob Manager shares a core with computing tasks
             Parameters.
-        resume: bool, optional
-            By default EQI will try to resume not completed workflow of QCG-PJ tasks from
-            the point where it was previously stopped. If this is not intended
-            this parameter should be set to False.
         log_level : str, optional
             Logging level for QCG-PilotJob Manager (for both service and client part).
 
@@ -83,27 +99,8 @@ class Executor:
 
         # ---- QCG PILOT JOB INITIALISATION ---
 
-        if resume:
-            resume = self.__try_to_prepare_resume()
-
-        if resume:
-            print("EQI resuming in dir: " + self._eqi_dir)
-        else:
-            self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
-            print("EQI starting in dir: " + self._eqi_dir)
-
         # Establish logging levels
-        log_level = log_level.upper()
-
-        try:
-            service_log_level = ServiceLogLevel[log_level].value
-        except KeyError:
-            service_log_level = ServiceLogLevel.DEBUG.value
-
-        try:
-            client_log_level = ClientLogLevel[log_level].value
-        except KeyError:
-            client_log_level = ClientLogLevel.DEBUG.value
+        service_log_level, client_log_level = self.__setup_qcgpj_logging(log_level)
 
         # Prepare input arguments for QCG-PJM
         client_conf = {'log_file': self._eqi_dir + '/api.log', 'log_level': client_log_level}
@@ -120,16 +117,21 @@ class Executor:
         if reserve_core:
             args.append('--system-core')
 
-        if resume:
+        if self._resume:
             args.append('--resume')
             args.append(self._eqi_dir)
+
+        self.logger.info(f'Starting QCG-PJ Manager with arguments: {args}')
 
         # create QCGPJ Manager (service part)
         self._qcgpjm = LocalManager(args, client_conf)
 
+        self.logger.info(f"QCG-PJ Manager created - available resources: "
+                         f"{self._qcgpjm.resources()}")
+
         # if we resuming QCG-PJM, we need to wait for completion of previously submitted tasks
-        if resume:
-            print("Waiting on completion of resumed workflow")
+        if self._resume:
+            self.logger.info("Waiting on completion of resumed workflow")
             self.__wait_and_sync()
 
     def set_manager(self, qcgpjm):
@@ -147,7 +149,8 @@ class Executor:
         """
         self._qcgpjm = qcgpjm
 
-        print("Available resources:\n%s\n" % str(self._qcgpjm.resources()))
+        self.logger.info(f"QCG-PJ Manager set - available resources: "
+                         f"{self._qcgpjm.resources()}")
 
     def add_task(self, task):
         """
@@ -164,6 +167,7 @@ class Executor:
 
         """
         self._tasks[task.get_name()] = task
+        self.logger.debug(f"New task added: {task.get_name()}")
 
     def run(self, submit_order=SubmitOrder.RUN_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG-PilotJob
@@ -468,6 +472,44 @@ class Executor:
         self.__fill_task_with_common_params(execute_task, task.get_requirements())
         return execute_task
 
+    def __setup_eqi_logging(self, log_level):
+        log_level = log_level.upper()
+
+        eqi_log_file = f'{self._eqi_dir}/eqi.log'
+        print(f'EQI log file set to {eqi_log_file}')
+
+        if not exists(dirname(abspath(eqi_log_file))):
+            os.makedirs(dirname(abspath(eqi_log_file)))
+#        elif exists(eqi_log_file):
+#            os.remove(eqi_log_file)
+
+        _logger = logging.getLogger(__name__)
+
+        if _logger.hasHandlers():
+            _logger.handlers.clear()
+
+        _log_handler = logging.FileHandler(filename=eqi_log_file, mode='a', delay=False)
+        _log_handler.setFormatter(logging.Formatter('%(asctime)-15s: %(message)s'))
+        _logger.addHandler(_log_handler)
+        _logger.setLevel(log_level)
+
+        return _logger
+
+    def __setup_qcgpj_logging(self, log_level):
+        log_level = log_level.upper()
+
+        try:
+            service_log_level = ServiceLogLevel[log_level].value
+        except KeyError:
+            service_log_level = ServiceLogLevel.DEBUG.value
+
+        try:
+            client_log_level = ClientLogLevel[log_level].value
+        except KeyError:
+            client_log_level = ClientLogLevel.DEBUG.value
+
+        return service_log_level, client_log_level
+
     def __try_to_prepare_resume(self):
         eqi_dirs = glob(f'{self._campaign.campaign_dir}/.eqi-*')
 
@@ -496,13 +538,13 @@ class Executor:
 
     def __submit_jobs(self, submit_order):
 
-        print("Starting submission of tasks to QCG-PilotJob Manager "
-              "in a submit order: " + submit_order.name)
+        self.logger.info("Starting submission of tasks to QCG-PilotJob Manager "
+                         "in a submit order: " + submit_order.name)
         if submit_order.is_iterative():
             self.__submit_iterative_jobs(submit_order)
         else:
             self.__submit_separate_jobs(submit_order)
-        print("Jobs submitted")
+        self.logger.info("Tasks submitted")
 
         # Store information to the state file that the jobs has been already submitted
         self.__write_to_state_file({'submitted': True})
@@ -560,14 +602,15 @@ class Executor:
         # wait for completion of all PJ tasks
         self._qcgpjm.wait4all()
 
-        print("Syncing state of campaign after execution of PJ")
+        self.logger.info("Tasks execution completed")
+        self.logger.debug("Syncing state of campaign")
 
         def update_status(run_id, run_data):
             self._campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 
         self._campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
         self.__write_to_state_file({'completed': True})
-        print("Campaign synced")
+        self.logger.info("Campaign synced")
 
     def __write_to_state_file(self, data):
 
