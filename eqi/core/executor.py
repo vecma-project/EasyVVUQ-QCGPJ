@@ -12,6 +12,7 @@ from qcg.pilotjob.api.job import Jobs
 from qcg.pilotjob.api.manager import LocalManager
 
 from eqi.core.task import TaskType
+from eqi.core.tasks_manager import TasksManager
 from eqi.core.submit_order import SubmitOrder
 
 EQI_STATE_FILE_NAME = '.eqi_state.json'
@@ -28,15 +29,15 @@ class Executor:
     def __init__(self, campaign, config_file=None, resume=True, log_level='debug'):
         self._qcgpjm = None
         self._campaign = campaign
-        self._tasks = {}
         self._eqi_dir = "."
         self._config_file = None
         self._resume = False
+        self._tasks_manager = None
 
         print("EQI initialisation for the campaign: " + self._campaign.campaign_dir)
 
         if resume:
-            self._resume = self.__try_to_prepare_resume()
+            self._resume = self._try_to_prepare_resume()
 
         if self._resume:
             print("EQI resuming in dir: " + self._eqi_dir)
@@ -44,7 +45,7 @@ class Executor:
             self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
             print("EQI starting in dir: " + self._eqi_dir)
 
-        self.logger = self.__setup_eqi_logging(log_level)
+        self.logger = self._setup_eqi_logging(log_level)
 
         if config_file:
             self._config_file = config_file
@@ -53,6 +54,8 @@ class Executor:
             self._config_file = os.environ['EQI_CONFIG']
             self.logger.debug("EQI config file for tasks (from environment variable): "
                               + self._config_file)
+
+        self._tasks_manager = TasksManager(self._campaign, self._eqi_dir, self._config_file)
 
         """
         Parameters
@@ -100,7 +103,7 @@ class Executor:
         # ---- QCG PILOT JOB INITIALISATION ---
 
         # Establish logging levels
-        service_log_level, client_log_level = self.__setup_qcgpj_logging(log_level)
+        service_log_level, client_log_level = self._setup_qcgpj_logging(log_level)
 
         # Prepare input arguments for QCG-PJM
         client_conf = {'log_file': self._eqi_dir + '/api.log', 'log_level': client_log_level}
@@ -166,7 +169,8 @@ class Executor:
         None
 
         """
-        self._tasks[task.get_name()] = task
+
+        self._tasks_manager.add_task(task)
         self.logger.debug(f"New task added: {task.get_name()}")
 
     def run(self, submit_order=SubmitOrder.RUN_ORIENTED):
@@ -184,7 +188,7 @@ class Executor:
         None
         """
         # ---- EXECUTION ---
-        self.__submit_jobs(submit_order)
+        self._submit_jobs(submit_order)
         self.__wait_and_sync()
 
     def print_resources_info(self):
@@ -200,279 +204,7 @@ class Executor:
         self._qcgpjm.kill_manager_process()
         self._qcgpjm.cleanup()
 
-    def _get_encoding_task(self, campaign, run):
-
-        task = self._tasks.get(TaskType.ENCODING)
-        model = task.get_model()
-
-        key = run[0]
-
-        enc_args = [
-            campaign.db_type,
-            campaign.db_location,
-            'FALSE',
-            campaign.campaign_name,
-            campaign._active_app_name,
-            key
-        ]
-
-        encode_task = {
-            "name": 'encode_' + key,
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_encode',
-                "args": enc_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/encode_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/encode_' + key + '.stderr'
-            }
-        }
-
-        self.__fill_task_with_common_params(encode_task, task.get_requirements())
-
-        return encode_task
-
-    def _get_encoding_task_iterative(self, campaign, run_max, run_min=0):
-
-        task = self._tasks.get(TaskType.ENCODING)
-        model = task.get_model()
-
-        key = "Run_${it}"
-
-        enc_args = [
-            campaign.db_type,
-            campaign.db_location,
-            'FALSE',
-            campaign.campaign_name,
-            campaign._active_app_name,
-            key
-        ]
-
-        encode_task = {
-            "name": "encode",
-            "iteration": {"stop": run_max + 1, "start": run_min},
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_encode',
-                "args": enc_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/encode_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/encode_{key}.stderr"
-            }
-        }
-
-        self.__fill_task_with_common_params(encode_task, task.get_requirements())
-
-        return encode_task
-
-    def _get_exec_task(self, campaign, run):
-
-        task = self._tasks.get(TaskType.EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = run[0]
-        run_dir = run[1]['run_dir']
-
-        exec_args = [
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        execute_task = {
-            "name": 'execute_' + key,
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_execute',
-                "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/execute_' + key + '.stderr'
-            },
-            "dependencies": {
-                "after": ["encode_" + key]
-            }
-        }
-
-        self.__fill_task_with_common_params(execute_task, task.get_requirements())
-
-        return execute_task
-
-    def _get_exec_task_iterative(self, campaign, run_max, run_min=0):
-
-        task = self._tasks.get(TaskType.EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = "Run_${it}"
-        run_dir = f"{campaign.campaign_dir}/runs/{key}"
-
-        exec_args = [
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        execute_task = {
-            "name": "execute",
-            "iteration": {"stop": run_max + 1, "start": run_min},
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_execute',
-                "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/execute_{key}.stderr"
-            },
-            "dependencies": {
-                "after": ["encode"]
-            }
-        }
-
-        self.__fill_task_with_common_params(execute_task, task.get_requirements())
-
-        return execute_task
-
-    def _get_encoding_and_exec_task(self, campaign, run):
-
-        task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = run[0]
-        run_dir = run[1]['run_dir']
-
-        args = [
-            campaign.db_type,
-            campaign.db_location,
-            'FALSE',
-            campaign.campaign_name,
-            campaign._active_app_name,
-            key,
-
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        encode_execute_task = {
-            "name": 'encode_execute_' + key,
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_encode_execute',
-                "args": args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/encode_execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/encode_execute_' + key + '.stderr'
-            }
-        }
-
-        self.__fill_task_with_common_params(encode_execute_task, task.get_requirements())
-
-        return encode_execute_task
-
-    def _get_encoding_and_exec_task_iterative(self, campaign, run_max, run_min=0):
-
-        task = self._tasks.get(TaskType.ENCODING_AND_EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = "Run_${it}"
-        run_dir = f"{campaign.campaign_dir}/runs/{key}"
-
-        args = [
-            campaign.db_type,
-            campaign.db_location,
-            'FALSE',
-            campaign.campaign_name,
-            campaign._active_app_name,
-            key,
-
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        encode_execute_task = {
-            "name": 'encode_execute',
-            "iteration": {"stop": run_max + 1, "start": run_min},
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_encode_execute',
-                "args": args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/encode_execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/encode_execute_{key}.stderr"
-            }
-        }
-
-        self.__fill_task_with_common_params(encode_execute_task, task.get_requirements())
-
-        return encode_execute_task
-
-    def _get_exec_only_task(self, campaign, run):
-
-        task = self._tasks.get(TaskType.EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = run[0]
-        run_dir = run[1]['run_dir']
-
-        exec_args = [
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        execute_task = {
-            "name": 'execute_' + key,
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_execute',
-                "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/execute_' + key + '.stderr'
-            }
-        }
-
-        self.__fill_task_with_common_params(execute_task, task.get_requirements())
-        return execute_task
-
-    def _get_exec_only_task_iterative(self, campaign, run_max, run_min=0):
-
-        task = self._tasks.get(TaskType.EXECUTION)
-        application = task.get_params().get("application")
-        model = task.get_model()
-
-        key = "Run_${it}"
-        run_dir = f"{campaign.campaign_dir}/runs/{key}"
-
-        exec_args = [
-            run_dir,
-            'easyvvuq_app',
-            application
-        ]
-
-        execute_task = {
-            "name": 'execute',
-            "iteration": {"stop": run_max + 1, "start": run_min},
-            "execution": {
-                "model": model,
-                "exec": 'easyvvuq_execute',
-                "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/execute_{key}.stderr"
-            }
-        }
-
-        self.__fill_task_with_common_params(execute_task, task.get_requirements())
-        return execute_task
-
-    def __setup_eqi_logging(self, log_level):
+    def _setup_eqi_logging(self, log_level):
         log_level = log_level.upper()
 
         eqi_log_file = f'{self._eqi_dir}/eqi.log'
@@ -495,7 +227,7 @@ class Executor:
 
         return _logger
 
-    def __setup_qcgpj_logging(self, log_level):
+    def _setup_qcgpj_logging(self, log_level):
         log_level = log_level.upper()
 
         try:
@@ -510,7 +242,7 @@ class Executor:
 
         return service_log_level, client_log_level
 
-    def __try_to_prepare_resume(self):
+    def _try_to_prepare_resume(self):
         eqi_dirs = glob(f'{self._campaign.campaign_dir}/.eqi-*')
 
         if eqi_dirs.__len__() > 0:
@@ -529,51 +261,56 @@ class Executor:
             print("The EQI not in the submitted state - can't resume")
             return False
 
-    def __fill_task_with_common_params(self, task, requirements):
-
-        if requirements:
-            task.update(requirements.get_resources())
-        if self._config_file:
-            task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
-
-    def __submit_jobs(self, submit_order):
+    def _submit_jobs(self, submit_order):
 
         self.logger.info("Starting submission of tasks to QCG-PilotJob Manager "
                          "in a submit order: " + submit_order.name)
         if submit_order.is_iterative():
-            self.__submit_iterative_jobs(submit_order)
+            self._submit_iterative_jobs(submit_order)
         else:
-            self.__submit_separate_jobs(submit_order)
+            self._submit_separate_jobs(submit_order)
         self.logger.info("Tasks submitted")
 
         # Store information to the state file that the jobs has been already submitted
         self.__write_to_state_file({'submitted': True})
 
-    def __submit_separate_jobs(self, submit_order):
+    def _submit_separate_jobs(self, submit_order):
 
         sampler = self._campaign._active_sampler_id
 
         if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
             for run in self._campaign.list_runs(sampler):
-                self._qcgpjm.submit(Jobs().add_std(
-                    self._get_encoding_and_exec_task(self._campaign, run)))
+                t = self._tasks_manager.get_task(TaskType.ENCODING_AND_EXECUTION, key=run[0])
+                self._qcgpjm.submit(Jobs().add_std(t))
 
         elif submit_order == SubmitOrder.RUN_ORIENTED:
             for run in self._campaign.list_runs(sampler):
-                self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(self._campaign, run)))
-                self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(self._campaign, run)))
+                t1 = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
+                t2 = self._tasks_manager.get_task(
+                    TaskType.EXECUTION, key=run[0], after=(t1['name'],))
+                self._qcgpjm.submit(Jobs().add_std(t1))
+                self._qcgpjm.submit(Jobs().add_std(t2))
 
         elif submit_order == SubmitOrder.PHASE_ORIENTED:
+            wait_list = []
             for run in self._campaign.list_runs(sampler):
-                self._qcgpjm.submit(Jobs().add_std(self._get_encoding_task(self._campaign, run)))
+                t = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
+                self._qcgpjm.submit(Jobs().add_std(t))
+                wait_list.append(t['name'])
+
+            i = 0
             for run in self._campaign.list_runs(sampler):
-                self._qcgpjm.submit(Jobs().add_std(self._get_exec_task(self._campaign, run)))
+                t = self._tasks_manager.get_task(
+                    TaskType.EXECUTION, key=run[0], after=(wait_list[i],))
+                self._qcgpjm.submit(Jobs().add_std(t))
+                i += 1
 
         elif submit_order == SubmitOrder.EXEC_ONLY:
             for run in self._campaign.list_runs(sampler):
-                self._qcgpjm.submit(Jobs().add_std(self._get_exec_only_task(self._campaign, run)))
+                t = self._tasks_manager.get_task(TaskType.EXECUTION, key=run[0])
+                self._qcgpjm.submit(Jobs().add_std(t))
 
-    def __submit_iterative_jobs(self, submit_order):
+    def _submit_iterative_jobs(self, submit_order):
 
         sampler = self._campaign._active_sampler_id
 
@@ -586,16 +323,22 @@ class Executor:
                              "The iterative SubmitOrder can't be applied")
 
         if submit_order == SubmitOrder.PHASE_ORIENTED_ITERATIVE:
-            self._qcgpjm.submit(Jobs().add_std(
-                self._get_encoding_task_iterative(self._campaign, max_run, min_run)))
-            self._qcgpjm.submit(Jobs().add_std(
-                self._get_exec_task_iterative(self._campaign, max_run, min_run)))
+            t1 = self._tasks_manager.get_task(
+                TaskType.ENCODING, key_min=min_run, key_max=max_run)
+            t2 = self._tasks_manager.get_task(
+                TaskType.EXECUTION, key_min=min_run, key_max=max_run, after=(t1['name'],))
+            self._qcgpjm.submit(Jobs().add_std(t1))
+            self._qcgpjm.submit(Jobs().add_std(t2))
+
         elif submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED_ITERATIVE:
-            self._qcgpjm.submit(Jobs().add_std(
-                self._get_encoding_and_exec_task_iterative(self._campaign, max_run, min_run)))
+            t = self._tasks_manager.get_task(
+                TaskType.ENCODING_AND_EXECUTION, key_min=min_run, key_max=max_run)
+            self._qcgpjm.submit(Jobs().add_std(t))
+
         elif submit_order == SubmitOrder.EXEC_ONLY_ITERATIVE:
-            self._qcgpjm.submit(Jobs().add_std(
-                self._get_exec_only_task_iterative(self._campaign, max_run, min_run)))
+            t = self._tasks_manager.get_task(
+                TaskType.EXECUTION, key_min=min_run, key_max=max_run)
+            self._qcgpjm.submit(Jobs().add_std(t))
 
     def __wait_and_sync(self):
 
