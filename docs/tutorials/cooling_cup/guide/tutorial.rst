@@ -369,7 +369,7 @@ Considerably simplified, it looks as follows:
        ))
 
        # Execute encodings and executions for all generated samples
-       qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
+       qcgpjexec.run(processing_scheme=ProcessingScheme.SAMPLE_ORIENTED)
 
        # Terminate QCG-PilotJob Manager
        qcgpjexec.terminate_manager()
@@ -391,7 +391,7 @@ We can distinguish the following key elements from this script:
    consume.
 
 -  Parallel processing of the encodings and executions with QCG-PilotJob
-   using a predefined scheme of submission (``SubmitOrder``).
+   using a predefined scheme of processing (``ProcessingScheme``).
 
 -  Termination of QCG-PilotJob Manager using the Executor's
    ``terminate_manager`` method.
@@ -405,8 +405,8 @@ applications can either use the presented code directly, or make small
 adjustments according to the specific needs of use cases. For example,
 we can imagine that for some applications all encoding steps have to be
 executed before the first execution step begins. In that case, the only
-required modification is to change the value of ``SubmitOrder`` from
-``SubmitOrder.RUN_ORIENTED`` to ``SubmitOrder.PHASE_ORIENTED``.
+required modification is to change the value of ``ProcessingScheme`` from
+``ProcessingScheme.SAMPLE_ORIENTED`` to ``ProcessingScheme.STEP_ORIENTED``.
 
 Common configuration before execution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

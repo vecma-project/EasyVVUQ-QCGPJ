@@ -63,18 +63,13 @@ def _init():
         target_filename=ENCODED_FILENAME)
 
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
-                                    output_columns=output_columns,
-                                    header=0)
+                                    output_columns=output_columns)
 
-    collater = uq.collate.AggregateSamples(average=False)
-
-    # Add the PCE app (automatically set as current app)
+    # Add the app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater
-                        )
+                        decoder=decoder)
 
     vary = {
         "kappa": cp.Uniform(0.025, 0.075),
@@ -82,7 +77,8 @@ def _init():
     }
 
     # Create the sampler
-    my_sampler = uq.sampling.QMCSampler(vary=vary, n_mc_samples=5)
+    my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=3)
+#    my_sampler = uq.sampling.QMCSampler(vary=vary, n_mc_samples=5)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
@@ -123,7 +119,7 @@ def _init():
     t = Timer(10.0, terminate_run)
     t.start()
 
-    qcgpjexec.run(submit_order=eqi.SubmitOrder.RUN_ORIENTED)
+    qcgpjexec.run(processing_scheme=eqi.ProcessingScheme.SAMPLE_ORIENTED)
 
 
 def test_cooling_pj():
@@ -159,14 +155,20 @@ def test_cooling_pj():
     my_sampler = my_campaign.get_active_sampler()
     output_columns = ["te", "ti"]
 
-    analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
+    analysis = uq.analysis.PCEAnalysis(sampler=my_sampler, qoi_cols=output_columns)
+#    analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
 
     my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
+
+#    data_frame = results.describe()
+#    data_frame.to_pickle("/tmp/qmc.pkl")
+
     stats = results.describe()['te']['mean'], results.describe()['te']['std']
 
     print("Processing completed")
+
     return stats
 
 

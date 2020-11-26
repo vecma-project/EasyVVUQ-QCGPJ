@@ -1,0 +1,20 @@
+{
+    "db_location": "sqlite:////tmp/coolingjzakgf8j/campaign.db",
+    "db_type": "sql",
+    "active_app": "cooling",
+    "campaign_name": "cooling",
+    "campaign_dir": "coolingjzakgf8j",
+    "log": [
+        {
+            "element": {
+                "name": "PCE_sampler",
+                "version": "0.5",
+                "category": "sampling"
+            },
+            "info": {
+                "num_added": 16,
+                "replicas": 1
+            }
+        }
+    ]
+}

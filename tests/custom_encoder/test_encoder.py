@@ -6,7 +6,7 @@ import easyvvuq as uq
 import eqi
 
 from eqi import TaskRequirements, Resources
-from eqi import Task, TaskType, SubmitOrder
+from eqi import Task, TaskType, ProcessingScheme
 
 from custom_encoder import CustomEncoder
 
@@ -63,17 +63,13 @@ def test_cooling_pj(tmpdir):
         target_filename=ENCODED_FILENAME)
 
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
-                                    output_columns=output_columns,
-                                    header=0)
-
-    collater = uq.collate.AggregateSamples(average=False)
+                                    output_columns=output_columns)
 
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater
+                        decoder=decoder
                         )
 
     vary = {
@@ -110,7 +106,7 @@ def test_cooling_pj(tmpdir):
     #     application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     # ))
 
-    qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
+    qcgpjexec.run(processing_scheme=ProcessingScheme.SAMPLE_ORIENTED)
     qcgpjexec.terminate_manager()
 
     print("Collating results")

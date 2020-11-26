@@ -1,0 +1,782 @@
+2020-11-26 11:07:25,767: service LAPTOP-KSE8RORF.6950 version issue_62_api_docs started 2020-11-26 11:07:25.766990 @ LAPTOP-KSE8RORF (with tags LAPTOP-KSE8RORF.6950)
+2020-11-26 11:07:25,768: log level set to: DEBUG
+2020-11-26 11:07:25,768: service arguments Namespace(disable_nl=False, envschema='auto', file=False, file_path=None, governor=False, id=None, log='debug', net=True, net_port=None, net_port_max=9999, net_port_min=2222, nodes='4', parent=None, report_file='jobs.report', report_format='text', resources='auto', resume=None, show_progress=False, slurm_limit_nodes_range_begin=None, slurm_limit_nodes_range_end=None, slurm_partition_nodes=None, system_core=False, tags=None, wd='/tmp/coolingjzakgf8j/.eqi-ch5lopof')
+2020-11-26 11:07:25,769: initializing TEXT job report
+2020-11-26 11:07:25,769: checking event loop
+2020-11-26 11:07:25,770: Using selector: EpollSelector
+2020-11-26 11:07:25,771: initializing tracer ...
+2020-11-26 11:07:25,771: tracer - status file set to /tmp/coolingjzakgf8j/.eqi-ch5lopof/.qcgpjm-service-LAPTOP-KSE8RORF.6950/track.reqs, /tmp/coolingjzakgf8j/.eqi-ch5lopof/.qcgpjm-service-LAPTOP-KSE8RORF.6950/track.states
+2020-11-26 11:07:25,779: ZMQ interface configured (address tcp://*) @ tcp://0.0.0.0:5174, external address @ tcp://127.0.1.1:5174
+2020-11-26 11:07:25,779: starting direct manager (with parent manager address None)...
+2020-11-26 11:07:25,783: source of information about available resources: auto
+2020-11-26 11:07:25,784: determining source of information about available resources ...
+2020-11-26 11:07:25,784: selected local resources information
+2020-11-26 11:07:25,784: available resources: 4 (0 used) cores on 1 nodes, options (binding=False)
+n0 4 (0 used)
+2020-11-26 11:07:25,785: executor base working directory set to /tmp/coolingjzakgf8j/.eqi-ch5lopof
+2020-11-26 11:07:25,785: job' environment contains {<class 'qcg.pilotjob.environment.CommonEnvironment'>} elements
+2020-11-26 11:07:25,785: initializing COMMON environment
+2020-11-26 11:07:25,785: custom launching method (node launcher) disabled
+2020-11-26 11:07:25,786: address interface written to the /tmp/coolingjzakgf8j/.eqi-ch5lopof/.qcgpjm-service-LAPTOP-KSE8RORF.6950/address file...
+2020-11-26 11:07:25,790: starting receiver ...
+2020-11-26 11:07:25,790: Starting listener on interface ZMQInterface
+2020-11-26 11:07:25,791: Successfully initialized 1 interfaces
+2020-11-26 11:07:25,791: finishing intialization of managers ...
+2020-11-26 11:07:25,791: no parent manager set
+2020-11-26 11:07:25,791: waiting for stopped interfaces ...
+2020-11-26 11:07:25,791: receiver - interface ZMQInterface activated (1 active)
+2020-11-26 11:07:25,791: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,795: ZMQ interface received request ...
+2020-11-26 11:07:25,796: Interface ZMQInterface received request: {'request': 'resourcesInfo'}
+2020-11-26 11:07:25,796: Handling ResourcesInfoReq request from ZMQInterface interface
+2020-11-26 11:07:25,796: sending response: {'code': 0, 'data': {'total_nodes': 1, 'total_cores': 4, 'used_cores': 0, 'free_cores': 4}}
+2020-11-26 11:07:25,797: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,805: ZMQ interface received request ...
+2020-11-26 11:07:25,806: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_1', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_1'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_1.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_1.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:25,806: request data contains 1 jobs
+2020-11-26 11:07:25,806: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,806: job encode_Run_1 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,807: tracer - registering new submit request
+2020-11-26 11:07:25,808: minimum # of cores for job encode_Run_1 is 1
+2020-11-26 11:07:25,808: solving 1 iterations in job encode_Run_1
+2020-11-26 11:07:25,808: 1 currently iterations solved in job encode_Run_1
+2020-11-26 11:07:25,808: scheduling loop with 1 jobs in queue
+2020-11-26 11:07:25,808: #0 dependency (True feasible) jobs after update of job encode_Run_1
+2020-11-26 11:07:25,808: job encode_Run_1 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,808: job encode_Run_1 is ready
+2020-11-26 11:07:25,808: iteration encode_Run_1 processed - removing from list
+2020-11-26 11:07:25,808: found resources for job encode_Run_1
+2020-11-26 11:07:25,809: job encode_Run_1 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:25,809: notifies callbacks about encode_Run_1 job status change JobState.SCHEDULED
+2020-11-26 11:07:25,809: job encode_Run_1 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,809: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_1']}}
+2020-11-26 11:07:25,809: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,810: updating common environment
+2020-11-26 11:07:25,810: job encode_Run_1 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:25,810: notifies callbacks about encode_Run_1 job status change JobState.EXECUTING
+2020-11-26 11:07:25,811: launching job encode_Run_1: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_1']
+2020-11-26 11:07:25,845: ZMQ interface received request ...
+2020-11-26 11:07:25,845: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_1', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_1', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_1.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_1.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_1']}}]}
+2020-11-26 11:07:25,846: request data contains 1 jobs
+2020-11-26 11:07:25,846: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,847: job execute_Run_1 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,847: tracer - registering new submit request
+2020-11-26 11:07:25,847: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,848: minimum # of cores for job execute_Run_1 is 1
+2020-11-26 11:07:25,848: solving 1 iterations in job execute_Run_1
+2020-11-26 11:07:25,848: 1 currently iterations solved in job execute_Run_1
+2020-11-26 11:07:25,848: scheduling loop with 1 jobs in queue
+2020-11-26 11:07:25,848: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,848: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,849: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_1']}}
+2020-11-26 11:07:25,849: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,849: local process 6992 for job encode_Run_1 launched
+2020-11-26 11:07:25,850: ZMQ interface received request ...
+2020-11-26 11:07:25,850: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_2', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_2'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_2.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_2.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:25,851: request data contains 1 jobs
+2020-11-26 11:07:25,851: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,851: job encode_Run_2 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,851: tracer - registering new submit request
+2020-11-26 11:07:25,851: minimum # of cores for job encode_Run_2 is 1
+2020-11-26 11:07:25,851: solving 1 iterations in job encode_Run_2
+2020-11-26 11:07:25,852: 1 currently iterations solved in job encode_Run_2
+2020-11-26 11:07:25,852: scheduling loop with 2 jobs in queue
+2020-11-26 11:07:25,852: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,852: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,852: #0 dependency (True feasible) jobs after update of job encode_Run_2
+2020-11-26 11:07:25,852: job encode_Run_2 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,852: job encode_Run_2 is ready
+2020-11-26 11:07:25,852: iteration encode_Run_2 processed - removing from list
+2020-11-26 11:07:25,852: found resources for job encode_Run_2
+2020-11-26 11:07:25,852: job encode_Run_2 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:25,853: notifies callbacks about encode_Run_2 job status change JobState.SCHEDULED
+2020-11-26 11:07:25,853: job encode_Run_2 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,853: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_2']}}
+2020-11-26 11:07:25,853: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,854: updating common environment
+2020-11-26 11:07:25,854: job encode_Run_2 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:25,854: notifies callbacks about encode_Run_2 job status change JobState.EXECUTING
+2020-11-26 11:07:25,855: launching job encode_Run_2: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_2']
+2020-11-26 11:07:25,888: ZMQ interface received request ...
+2020-11-26 11:07:25,889: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_2', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_2', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_2.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_2.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_2']}}]}
+2020-11-26 11:07:25,890: request data contains 1 jobs
+2020-11-26 11:07:25,890: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,891: job execute_Run_2 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,892: tracer - registering new submit request
+2020-11-26 11:07:25,892: #1 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:25,892: minimum # of cores for job execute_Run_2 is 1
+2020-11-26 11:07:25,892: solving 1 iterations in job execute_Run_2
+2020-11-26 11:07:25,893: 1 currently iterations solved in job execute_Run_2
+2020-11-26 11:07:25,893: scheduling loop with 2 jobs in queue
+2020-11-26 11:07:25,893: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,893: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,893: #1 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:25,893: Job execute_Run_2 preserved in scheduling queue
+2020-11-26 11:07:25,893: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_2']}}
+2020-11-26 11:07:25,893: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,894: local process 6994 for job encode_Run_2 launched
+2020-11-26 11:07:25,895: ZMQ interface received request ...
+2020-11-26 11:07:25,895: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_3', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_3'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_3.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_3.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:25,895: request data contains 1 jobs
+2020-11-26 11:07:25,895: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,896: job encode_Run_3 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,896: tracer - registering new submit request
+2020-11-26 11:07:25,896: minimum # of cores for job encode_Run_3 is 1
+2020-11-26 11:07:25,896: solving 1 iterations in job encode_Run_3
+2020-11-26 11:07:25,896: 1 currently iterations solved in job encode_Run_3
+2020-11-26 11:07:25,896: scheduling loop with 3 jobs in queue
+2020-11-26 11:07:25,897: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,897: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,897: #1 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:25,897: Job execute_Run_2 preserved in scheduling queue
+2020-11-26 11:07:25,897: #0 dependency (True feasible) jobs after update of job encode_Run_3
+2020-11-26 11:07:25,897: job encode_Run_3 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,898: job encode_Run_3 is ready
+2020-11-26 11:07:25,898: iteration encode_Run_3 processed - removing from list
+2020-11-26 11:07:25,898: found resources for job encode_Run_3
+2020-11-26 11:07:25,898: job encode_Run_3 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:25,898: notifies callbacks about encode_Run_3 job status change JobState.SCHEDULED
+2020-11-26 11:07:25,898: job encode_Run_3 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,898: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_3']}}
+2020-11-26 11:07:25,899: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,899: updating common environment
+2020-11-26 11:07:25,899: job encode_Run_3 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:25,900: notifies callbacks about encode_Run_3 job status change JobState.EXECUTING
+2020-11-26 11:07:25,901: launching job encode_Run_3: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_3']
+2020-11-26 11:07:25,947: ZMQ interface received request ...
+2020-11-26 11:07:25,948: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_3', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_3', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_3.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_3.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_3']}}]}
+2020-11-26 11:07:25,949: request data contains 1 jobs
+2020-11-26 11:07:25,949: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,950: job execute_Run_3 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,951: tracer - registering new submit request
+2020-11-26 11:07:25,951: #1 dependency (True feasible) jobs after update of job execute_Run_3
+2020-11-26 11:07:25,952: minimum # of cores for job execute_Run_3 is 1
+2020-11-26 11:07:25,952: solving 1 iterations in job execute_Run_3
+2020-11-26 11:07:25,952: 1 currently iterations solved in job execute_Run_3
+2020-11-26 11:07:25,952: scheduling loop with 3 jobs in queue
+2020-11-26 11:07:25,952: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,952: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,953: #1 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:25,953: Job execute_Run_2 preserved in scheduling queue
+2020-11-26 11:07:25,953: #1 dependency (True feasible) jobs after update of job execute_Run_3
+2020-11-26 11:07:25,953: Job execute_Run_3 preserved in scheduling queue
+2020-11-26 11:07:25,953: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_3']}}
+2020-11-26 11:07:25,954: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,954: local process 6996 for job encode_Run_3 launched
+2020-11-26 11:07:25,955: ZMQ interface received request ...
+2020-11-26 11:07:25,955: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_4', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_4'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_4.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_4.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:25,955: request data contains 1 jobs
+2020-11-26 11:07:25,955: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:25,956: job encode_Run_4 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:25,956: tracer - registering new submit request
+2020-11-26 11:07:25,956: minimum # of cores for job encode_Run_4 is 1
+2020-11-26 11:07:25,956: solving 1 iterations in job encode_Run_4
+2020-11-26 11:07:25,956: 1 currently iterations solved in job encode_Run_4
+2020-11-26 11:07:25,957: scheduling loop with 4 jobs in queue
+2020-11-26 11:07:25,957: #1 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:25,957: Job execute_Run_1 preserved in scheduling queue
+2020-11-26 11:07:25,957: #1 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:25,957: Job execute_Run_2 preserved in scheduling queue
+2020-11-26 11:07:25,957: #1 dependency (True feasible) jobs after update of job execute_Run_3
+2020-11-26 11:07:25,957: Job execute_Run_3 preserved in scheduling queue
+2020-11-26 11:07:25,957: #0 dependency (True feasible) jobs after update of job encode_Run_4
+2020-11-26 11:07:25,957: job encode_Run_4 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:25,958: job encode_Run_4 is ready
+2020-11-26 11:07:25,958: iteration encode_Run_4 processed - removing from list
+2020-11-26 11:07:25,958: found resources for job encode_Run_4
+2020-11-26 11:07:25,958: job encode_Run_4 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:25,958: notifies callbacks about encode_Run_4 job status change JobState.SCHEDULED
+2020-11-26 11:07:25,958: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_4']}}
+2020-11-26 11:07:25,959: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:25,959: updating common environment
+2020-11-26 11:07:25,960: job encode_Run_4 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:25,960: notifies callbacks about encode_Run_4 job status change JobState.EXECUTING
+2020-11-26 11:07:25,961: launching job encode_Run_4: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_4']
+2020-11-26 11:07:26,012: ZMQ interface received request ...
+2020-11-26 11:07:26,013: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_4', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_4', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_4.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_4.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_4']}}]}
+2020-11-26 11:07:26,013: request data contains 1 jobs
+2020-11-26 11:07:26,014: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,015: job execute_Run_4 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,015: tracer - registering new submit request
+2020-11-26 11:07:26,016: #1 dependency (True feasible) jobs after update of job execute_Run_4
+2020-11-26 11:07:26,016: minimum # of cores for job execute_Run_4 is 1
+2020-11-26 11:07:26,016: solving 1 iterations in job execute_Run_4
+2020-11-26 11:07:26,017: 1 currently iterations solved in job execute_Run_4
+2020-11-26 11:07:26,017: scheduling loop with 4 jobs in queue
+2020-11-26 11:07:26,017: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_4']}}
+2020-11-26 11:07:26,017: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,018: local process 6998 for job encode_Run_4 launched
+2020-11-26 11:07:26,019: ZMQ interface received request ...
+2020-11-26 11:07:26,019: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_5', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_5'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_5.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_5.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,019: request data contains 1 jobs
+2020-11-26 11:07:26,020: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,020: job encode_Run_5 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,020: tracer - registering new submit request
+2020-11-26 11:07:26,020: minimum # of cores for job encode_Run_5 is 1
+2020-11-26 11:07:26,021: solving 1 iterations in job encode_Run_5
+2020-11-26 11:07:26,021: 1 currently iterations solved in job encode_Run_5
+2020-11-26 11:07:26,021: scheduling loop with 5 jobs in queue
+2020-11-26 11:07:26,021: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_5']}}
+2020-11-26 11:07:26,021: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,022: ZMQ interface received request ...
+2020-11-26 11:07:26,023: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_5', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_5', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_5.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_5.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_5']}}]}
+2020-11-26 11:07:26,023: request data contains 1 jobs
+2020-11-26 11:07:26,023: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,024: job execute_Run_5 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,024: tracer - registering new submit request
+2020-11-26 11:07:26,025: #1 dependency (True feasible) jobs after update of job execute_Run_5
+2020-11-26 11:07:26,025: minimum # of cores for job execute_Run_5 is 1
+2020-11-26 11:07:26,025: solving 1 iterations in job execute_Run_5
+2020-11-26 11:07:26,025: 1 currently iterations solved in job execute_Run_5
+2020-11-26 11:07:26,026: scheduling loop with 6 jobs in queue
+2020-11-26 11:07:26,026: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_5']}}
+2020-11-26 11:07:26,026: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,027: ZMQ interface received request ...
+2020-11-26 11:07:26,028: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_6', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_6'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_6.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_6.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,028: request data contains 1 jobs
+2020-11-26 11:07:26,028: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,029: job encode_Run_6 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,029: tracer - registering new submit request
+2020-11-26 11:07:26,029: minimum # of cores for job encode_Run_6 is 1
+2020-11-26 11:07:26,030: solving 1 iterations in job encode_Run_6
+2020-11-26 11:07:26,030: 1 currently iterations solved in job encode_Run_6
+2020-11-26 11:07:26,030: scheduling loop with 7 jobs in queue
+2020-11-26 11:07:26,030: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_6']}}
+2020-11-26 11:07:26,031: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,032: ZMQ interface received request ...
+2020-11-26 11:07:26,032: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_6', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_6', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_6.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_6.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_6']}}]}
+2020-11-26 11:07:26,032: request data contains 1 jobs
+2020-11-26 11:07:26,033: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,033: job execute_Run_6 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,033: tracer - registering new submit request
+2020-11-26 11:07:26,034: #1 dependency (True feasible) jobs after update of job execute_Run_6
+2020-11-26 11:07:26,034: minimum # of cores for job execute_Run_6 is 1
+2020-11-26 11:07:26,034: solving 1 iterations in job execute_Run_6
+2020-11-26 11:07:26,034: 1 currently iterations solved in job execute_Run_6
+2020-11-26 11:07:26,034: scheduling loop with 8 jobs in queue
+2020-11-26 11:07:26,034: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_6']}}
+2020-11-26 11:07:26,034: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,036: ZMQ interface received request ...
+2020-11-26 11:07:26,036: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_7', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_7'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_7.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_7.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,036: request data contains 1 jobs
+2020-11-26 11:07:26,036: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,037: job encode_Run_7 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,037: tracer - registering new submit request
+2020-11-26 11:07:26,037: minimum # of cores for job encode_Run_7 is 1
+2020-11-26 11:07:26,037: solving 1 iterations in job encode_Run_7
+2020-11-26 11:07:26,038: 1 currently iterations solved in job encode_Run_7
+2020-11-26 11:07:26,038: scheduling loop with 9 jobs in queue
+2020-11-26 11:07:26,038: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_7']}}
+2020-11-26 11:07:26,038: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,039: ZMQ interface received request ...
+2020-11-26 11:07:26,040: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_7', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_7', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_7.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_7.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_7']}}]}
+2020-11-26 11:07:26,040: request data contains 1 jobs
+2020-11-26 11:07:26,040: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,041: job execute_Run_7 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,041: tracer - registering new submit request
+2020-11-26 11:07:26,042: #1 dependency (True feasible) jobs after update of job execute_Run_7
+2020-11-26 11:07:26,042: minimum # of cores for job execute_Run_7 is 1
+2020-11-26 11:07:26,042: solving 1 iterations in job execute_Run_7
+2020-11-26 11:07:26,042: 1 currently iterations solved in job execute_Run_7
+2020-11-26 11:07:26,043: scheduling loop with 10 jobs in queue
+2020-11-26 11:07:26,043: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_7']}}
+2020-11-26 11:07:26,043: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,044: ZMQ interface received request ...
+2020-11-26 11:07:26,045: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_8', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_8'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_8.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_8.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,045: request data contains 1 jobs
+2020-11-26 11:07:26,045: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,046: job encode_Run_8 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,046: tracer - registering new submit request
+2020-11-26 11:07:26,046: minimum # of cores for job encode_Run_8 is 1
+2020-11-26 11:07:26,047: solving 1 iterations in job encode_Run_8
+2020-11-26 11:07:26,047: 1 currently iterations solved in job encode_Run_8
+2020-11-26 11:07:26,047: scheduling loop with 11 jobs in queue
+2020-11-26 11:07:26,047: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_8']}}
+2020-11-26 11:07:26,048: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,049: ZMQ interface received request ...
+2020-11-26 11:07:26,049: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_8', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_8', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_8.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_8.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_8']}}]}
+2020-11-26 11:07:26,049: request data contains 1 jobs
+2020-11-26 11:07:26,049: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,050: job execute_Run_8 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,050: tracer - registering new submit request
+2020-11-26 11:07:26,051: #1 dependency (True feasible) jobs after update of job execute_Run_8
+2020-11-26 11:07:26,051: minimum # of cores for job execute_Run_8 is 1
+2020-11-26 11:07:26,051: solving 1 iterations in job execute_Run_8
+2020-11-26 11:07:26,051: 1 currently iterations solved in job execute_Run_8
+2020-11-26 11:07:26,052: scheduling loop with 12 jobs in queue
+2020-11-26 11:07:26,052: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_8']}}
+2020-11-26 11:07:26,052: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,053: ZMQ interface received request ...
+2020-11-26 11:07:26,054: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_9', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_9'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_9.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_9.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,054: request data contains 1 jobs
+2020-11-26 11:07:26,054: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,055: job encode_Run_9 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,055: tracer - registering new submit request
+2020-11-26 11:07:26,056: minimum # of cores for job encode_Run_9 is 1
+2020-11-26 11:07:26,056: solving 1 iterations in job encode_Run_9
+2020-11-26 11:07:26,056: 1 currently iterations solved in job encode_Run_9
+2020-11-26 11:07:26,056: scheduling loop with 13 jobs in queue
+2020-11-26 11:07:26,057: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_9']}}
+2020-11-26 11:07:26,057: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,058: ZMQ interface received request ...
+2020-11-26 11:07:26,058: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_9', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_9', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_9.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_9.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_9']}}]}
+2020-11-26 11:07:26,059: request data contains 1 jobs
+2020-11-26 11:07:26,059: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,059: job execute_Run_9 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,059: tracer - registering new submit request
+2020-11-26 11:07:26,060: #1 dependency (True feasible) jobs after update of job execute_Run_9
+2020-11-26 11:07:26,060: minimum # of cores for job execute_Run_9 is 1
+2020-11-26 11:07:26,060: solving 1 iterations in job execute_Run_9
+2020-11-26 11:07:26,060: 1 currently iterations solved in job execute_Run_9
+2020-11-26 11:07:26,060: scheduling loop with 14 jobs in queue
+2020-11-26 11:07:26,060: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_9']}}
+2020-11-26 11:07:26,061: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,062: ZMQ interface received request ...
+2020-11-26 11:07:26,062: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_10', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_10'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_10.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_10.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,062: request data contains 1 jobs
+2020-11-26 11:07:26,062: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,063: job encode_Run_10 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,063: tracer - registering new submit request
+2020-11-26 11:07:26,063: minimum # of cores for job encode_Run_10 is 1
+2020-11-26 11:07:26,063: solving 1 iterations in job encode_Run_10
+2020-11-26 11:07:26,063: 1 currently iterations solved in job encode_Run_10
+2020-11-26 11:07:26,064: scheduling loop with 15 jobs in queue
+2020-11-26 11:07:26,064: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_10']}}
+2020-11-26 11:07:26,064: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,065: ZMQ interface received request ...
+2020-11-26 11:07:26,065: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_10', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_10', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_10.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_10.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_10']}}]}
+2020-11-26 11:07:26,066: request data contains 1 jobs
+2020-11-26 11:07:26,066: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,066: job execute_Run_10 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,066: tracer - registering new submit request
+2020-11-26 11:07:26,067: #1 dependency (True feasible) jobs after update of job execute_Run_10
+2020-11-26 11:07:26,067: minimum # of cores for job execute_Run_10 is 1
+2020-11-26 11:07:26,067: solving 1 iterations in job execute_Run_10
+2020-11-26 11:07:26,068: 1 currently iterations solved in job execute_Run_10
+2020-11-26 11:07:26,068: scheduling loop with 16 jobs in queue
+2020-11-26 11:07:26,068: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_10']}}
+2020-11-26 11:07:26,068: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,069: ZMQ interface received request ...
+2020-11-26 11:07:26,069: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_11', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_11'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_11.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_11.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,069: request data contains 1 jobs
+2020-11-26 11:07:26,070: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,070: job encode_Run_11 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,070: tracer - registering new submit request
+2020-11-26 11:07:26,070: minimum # of cores for job encode_Run_11 is 1
+2020-11-26 11:07:26,071: solving 1 iterations in job encode_Run_11
+2020-11-26 11:07:26,071: 1 currently iterations solved in job encode_Run_11
+2020-11-26 11:07:26,071: scheduling loop with 17 jobs in queue
+2020-11-26 11:07:26,071: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_11']}}
+2020-11-26 11:07:26,071: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,073: ZMQ interface received request ...
+2020-11-26 11:07:26,073: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_11', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_11', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_11.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_11.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_11']}}]}
+2020-11-26 11:07:26,073: request data contains 1 jobs
+2020-11-26 11:07:26,073: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,073: job execute_Run_11 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,074: tracer - registering new submit request
+2020-11-26 11:07:26,074: #1 dependency (True feasible) jobs after update of job execute_Run_11
+2020-11-26 11:07:26,074: minimum # of cores for job execute_Run_11 is 1
+2020-11-26 11:07:26,074: solving 1 iterations in job execute_Run_11
+2020-11-26 11:07:26,074: 1 currently iterations solved in job execute_Run_11
+2020-11-26 11:07:26,074: scheduling loop with 18 jobs in queue
+2020-11-26 11:07:26,075: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_11']}}
+2020-11-26 11:07:26,075: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,076: ZMQ interface received request ...
+2020-11-26 11:07:26,076: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_12', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_12'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_12.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_12.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,077: request data contains 1 jobs
+2020-11-26 11:07:26,077: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,077: job encode_Run_12 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,077: tracer - registering new submit request
+2020-11-26 11:07:26,078: minimum # of cores for job encode_Run_12 is 1
+2020-11-26 11:07:26,078: solving 1 iterations in job encode_Run_12
+2020-11-26 11:07:26,078: 1 currently iterations solved in job encode_Run_12
+2020-11-26 11:07:26,079: scheduling loop with 19 jobs in queue
+2020-11-26 11:07:26,079: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_12']}}
+2020-11-26 11:07:26,079: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,080: ZMQ interface received request ...
+2020-11-26 11:07:26,081: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_12', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_12', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_12.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_12.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_12']}}]}
+2020-11-26 11:07:26,081: request data contains 1 jobs
+2020-11-26 11:07:26,081: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,082: job execute_Run_12 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,082: tracer - registering new submit request
+2020-11-26 11:07:26,083: #1 dependency (True feasible) jobs after update of job execute_Run_12
+2020-11-26 11:07:26,083: minimum # of cores for job execute_Run_12 is 1
+2020-11-26 11:07:26,083: solving 1 iterations in job execute_Run_12
+2020-11-26 11:07:26,083: 1 currently iterations solved in job execute_Run_12
+2020-11-26 11:07:26,083: scheduling loop with 20 jobs in queue
+2020-11-26 11:07:26,084: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_12']}}
+2020-11-26 11:07:26,084: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,085: ZMQ interface received request ...
+2020-11-26 11:07:26,086: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_13', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_13'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_13.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_13.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,086: request data contains 1 jobs
+2020-11-26 11:07:26,086: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,086: job encode_Run_13 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,087: tracer - registering new submit request
+2020-11-26 11:07:26,087: minimum # of cores for job encode_Run_13 is 1
+2020-11-26 11:07:26,088: solving 1 iterations in job encode_Run_13
+2020-11-26 11:07:26,088: 1 currently iterations solved in job encode_Run_13
+2020-11-26 11:07:26,088: scheduling loop with 21 jobs in queue
+2020-11-26 11:07:26,088: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_13']}}
+2020-11-26 11:07:26,089: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,090: ZMQ interface received request ...
+2020-11-26 11:07:26,090: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_13', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_13', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_13.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_13.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_13']}}]}
+2020-11-26 11:07:26,090: request data contains 1 jobs
+2020-11-26 11:07:26,091: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,091: job execute_Run_13 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,091: tracer - registering new submit request
+2020-11-26 11:07:26,092: #1 dependency (True feasible) jobs after update of job execute_Run_13
+2020-11-26 11:07:26,092: minimum # of cores for job execute_Run_13 is 1
+2020-11-26 11:07:26,092: solving 1 iterations in job execute_Run_13
+2020-11-26 11:07:26,093: 1 currently iterations solved in job execute_Run_13
+2020-11-26 11:07:26,093: scheduling loop with 22 jobs in queue
+2020-11-26 11:07:26,093: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_13']}}
+2020-11-26 11:07:26,093: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,095: ZMQ interface received request ...
+2020-11-26 11:07:26,095: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_14', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_14'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_14.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_14.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,096: request data contains 1 jobs
+2020-11-26 11:07:26,096: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,096: job encode_Run_14 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,097: tracer - registering new submit request
+2020-11-26 11:07:26,097: minimum # of cores for job encode_Run_14 is 1
+2020-11-26 11:07:26,098: solving 1 iterations in job encode_Run_14
+2020-11-26 11:07:26,098: 1 currently iterations solved in job encode_Run_14
+2020-11-26 11:07:26,098: scheduling loop with 23 jobs in queue
+2020-11-26 11:07:26,098: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_14']}}
+2020-11-26 11:07:26,099: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,109: ZMQ interface received request ...
+2020-11-26 11:07:26,110: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_14', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_14', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_14.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_14.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_14']}}]}
+2020-11-26 11:07:26,110: request data contains 1 jobs
+2020-11-26 11:07:26,110: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,111: job execute_Run_14 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,111: tracer - registering new submit request
+2020-11-26 11:07:26,112: #1 dependency (True feasible) jobs after update of job execute_Run_14
+2020-11-26 11:07:26,112: minimum # of cores for job execute_Run_14 is 1
+2020-11-26 11:07:26,112: solving 1 iterations in job execute_Run_14
+2020-11-26 11:07:26,112: 1 currently iterations solved in job execute_Run_14
+2020-11-26 11:07:26,112: scheduling loop with 24 jobs in queue
+2020-11-26 11:07:26,113: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_14']}}
+2020-11-26 11:07:26,113: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,127: ZMQ interface received request ...
+2020-11-26 11:07:26,127: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_15', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_15'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_15.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_15.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,128: request data contains 1 jobs
+2020-11-26 11:07:26,128: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,128: job encode_Run_15 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,129: tracer - registering new submit request
+2020-11-26 11:07:26,129: minimum # of cores for job encode_Run_15 is 1
+2020-11-26 11:07:26,130: solving 1 iterations in job encode_Run_15
+2020-11-26 11:07:26,130: 1 currently iterations solved in job encode_Run_15
+2020-11-26 11:07:26,130: scheduling loop with 25 jobs in queue
+2020-11-26 11:07:26,130: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_15']}}
+2020-11-26 11:07:26,131: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,160: ZMQ interface received request ...
+2020-11-26 11:07:26,160: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_15', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_15', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_15.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_15.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_15']}}]}
+2020-11-26 11:07:26,161: request data contains 1 jobs
+2020-11-26 11:07:26,161: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,161: job execute_Run_15 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,162: tracer - registering new submit request
+2020-11-26 11:07:26,162: #1 dependency (True feasible) jobs after update of job execute_Run_15
+2020-11-26 11:07:26,163: minimum # of cores for job execute_Run_15 is 1
+2020-11-26 11:07:26,163: solving 1 iterations in job execute_Run_15
+2020-11-26 11:07:26,163: 1 currently iterations solved in job execute_Run_15
+2020-11-26 11:07:26,163: scheduling loop with 26 jobs in queue
+2020-11-26 11:07:26,164: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_15']}}
+2020-11-26 11:07:26,164: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,201: ZMQ interface received request ...
+2020-11-26 11:07:26,202: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'encode_Run_16', 'execution': {'model': 'default', 'exec': 'easyvvuq_encode', 'args': ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_16'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_16.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/encode_Run_16.stderr'}, 'resources': {'numCores': {'exact': 1}}}]}
+2020-11-26 11:07:26,202: request data contains 1 jobs
+2020-11-26 11:07:26,202: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,203: job encode_Run_16 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,203: tracer - registering new submit request
+2020-11-26 11:07:26,204: minimum # of cores for job encode_Run_16 is 1
+2020-11-26 11:07:26,204: solving 1 iterations in job encode_Run_16
+2020-11-26 11:07:26,204: 1 currently iterations solved in job encode_Run_16
+2020-11-26 11:07:26,204: scheduling loop with 27 jobs in queue
+2020-11-26 11:07:26,205: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['encode_Run_16']}}
+2020-11-26 11:07:26,205: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,245: ZMQ interface received request ...
+2020-11-26 11:07:26,246: Interface ZMQInterface received request: {'request': 'submit', 'jobs': [{'name': 'execute_Run_16', 'execution': {'model': 'default', 'exec': 'easyvvuq_execute', 'args': ['/tmp/coolingjzakgf8j/runs/Run_16', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json'], 'wd': '/tmp/coolingjzakgf8j/.eqi-ch5lopof', 'stdout': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_16.stdout', 'stderr': '/tmp/coolingjzakgf8j/.eqi-ch5lopof/execute_Run_16.stderr'}, 'resources': {'numCores': {'exact': 1}}, 'dependencies': {'after': ['encode_Run_16']}}]}
+2020-11-26 11:07:26,246: request data contains 1 jobs
+2020-11-26 11:07:26,246: Handling SubmitReq request from ZMQInterface interface
+2020-11-26 11:07:26,247: job execute_Run_16 iteration None status changed to QUEUED (final ? False)
+2020-11-26 11:07:26,247: tracer - registering new submit request
+2020-11-26 11:07:26,248: #1 dependency (True feasible) jobs after update of job execute_Run_16
+2020-11-26 11:07:26,248: minimum # of cores for job execute_Run_16 is 1
+2020-11-26 11:07:26,248: solving 1 iterations in job execute_Run_16
+2020-11-26 11:07:26,248: 1 currently iterations solved in job execute_Run_16
+2020-11-26 11:07:26,249: scheduling loop with 28 jobs in queue
+2020-11-26 11:07:26,249: sending response: {'code': 0, 'message': '1 jobs submitted', 'data': {'submitted': 1, 'jobs': ['execute_Run_16']}}
+2020-11-26 11:07:26,249: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,267: ZMQ interface received request ...
+2020-11-26 11:07:26,267: Interface ZMQInterface received request: {'request': 'listJobs'}
+2020-11-26 11:07:26,268: Handling ListJobsReq request from ZMQInterface interface
+2020-11-26 11:07:26,268: got 32 jobs from list
+2020-11-26 11:07:26,268: sending response: {'code': 0, 'data': {'length': 32, 'jobs': {'encode_Run_1': {'status': 'EXECUTING', 'inQueue': 0}, 'execute_Run_1': {'status': 'QUEUED', 'inQueue': 0}, 'encode_Run_2': {'status': 'EXECUTING', 'inQueue': 1}, 'execute_Run_2': {'status': 'QUEUED', 'inQueue': 1}, 'encode_Run_3': {'status': 'EXECUTING', 'inQueue': 2}, 'execute_Run_3': {'status': 'QUEUED', 'inQueue': 2}, 'encode_Run_4': {'status': 'EXECUTING', 'inQueue': 3}, 'execute_Run_4': {'status': 'QUEUED', 'inQueue': 3}, 'encode_Run_5': {'status': 'QUEUED', 'inQueue': 4}, 'execute_Run_5': {'status': 'QUEUED', 'inQueue': 5}, 'encode_Run_6': {'status': 'QUEUED', 'inQueue': 6}, 'execute_Run_6': {'status': 'QUEUED', 'inQueue': 7}, 'encode_Run_7': {'status': 'QUEUED', 'inQueue': 8}, 'execute_Run_7': {'status': 'QUEUED', 'inQueue': 9}, 'encode_Run_8': {'status': 'QUEUED', 'inQueue': 10}, 'execute_Run_8': {'status': 'QUEUED', 'inQueue': 11}, 'encode_Run_9': {'status': 'QUEUED', 'inQueue': 12}, 'execute_Run_9': {'status': 'QUEUED', 'inQueue': 13}, 'encode_Run_10': {'status': 'QUEUED', 'inQueue': 14}, 'execute_Run_10': {'status': 'QUEUED', 'inQueue': 15}, 'encode_Run_11': {'status': 'QUEUED', 'inQueue': 16}, 'execute_Run_11': {'status': 'QUEUED', 'inQueue': 17}, 'encode_Run_12': {'status': 'QUEUED', 'inQueue': 18}, 'execute_Run_12': {'status': 'QUEUED', 'inQueue': 19}, 'encode_Run_13': {'status': 'QUEUED', 'inQueue': 20}, 'execute_Run_13': {'status': 'QUEUED', 'inQueue': 21}, 'encode_Run_14': {'status': 'QUEUED', 'inQueue': 22}, 'execute_Run_14': {'status': 'QUEUED', 'inQueue': 23}, 'encode_Run_15': {'status': 'QUEUED', 'inQueue': 24}, 'execute_Run_15': {'status': 'QUEUED', 'inQueue': 25}, 'encode_Run_16': {'status': 'QUEUED', 'inQueue': 26}, 'execute_Run_16': {'status': 'QUEUED', 'inQueue': 27}}}}
+2020-11-26 11:07:26,269: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:26,273: ZMQ interface received request ...
+2020-11-26 11:07:26,274: Interface ZMQInterface received request: {'request': 'jobStatus', 'jobNames': ['encode_Run_1', 'execute_Run_1', 'encode_Run_2', 'execute_Run_2', 'encode_Run_3', 'execute_Run_3', 'encode_Run_4', 'execute_Run_4', 'encode_Run_5', 'execute_Run_5', 'encode_Run_6', 'execute_Run_6', 'encode_Run_7', 'execute_Run_7', 'encode_Run_8', 'execute_Run_8', 'encode_Run_9', 'execute_Run_9', 'encode_Run_10', 'execute_Run_10', 'encode_Run_11', 'execute_Run_11', 'encode_Run_12', 'execute_Run_12', 'encode_Run_13', 'execute_Run_13', 'encode_Run_14', 'execute_Run_14', 'encode_Run_15', 'execute_Run_15', 'encode_Run_16', 'execute_Run_16']}
+2020-11-26 11:07:26,274: Handling JobStatusReq request from ZMQInterface interface
+2020-11-26 11:07:26,275: sending response: {'code': 0, 'data': {'jobs': {'encode_Run_1': {'status': 0, 'data': {'jobName': 'encode_Run_1', 'status': 'EXECUTING'}}, 'execute_Run_1': {'status': 0, 'data': {'jobName': 'execute_Run_1', 'status': 'QUEUED'}}, 'encode_Run_2': {'status': 0, 'data': {'jobName': 'encode_Run_2', 'status': 'EXECUTING'}}, 'execute_Run_2': {'status': 0, 'data': {'jobName': 'execute_Run_2', 'status': 'QUEUED'}}, 'encode_Run_3': {'status': 0, 'data': {'jobName': 'encode_Run_3', 'status': 'EXECUTING'}}, 'execute_Run_3': {'status': 0, 'data': {'jobName': 'execute_Run_3', 'status': 'QUEUED'}}, 'encode_Run_4': {'status': 0, 'data': {'jobName': 'encode_Run_4', 'status': 'EXECUTING'}}, 'execute_Run_4': {'status': 0, 'data': {'jobName': 'execute_Run_4', 'status': 'QUEUED'}}, 'encode_Run_5': {'status': 0, 'data': {'jobName': 'encode_Run_5', 'status': 'QUEUED'}}, 'execute_Run_5': {'status': 0, 'data': {'jobName': 'execute_Run_5', 'status': 'QUEUED'}}, 'encode_Run_6': {'status': 0, 'data': {'jobName': 'encode_Run_6', 'status': 'QUEUED'}}, 'execute_Run_6': {'status': 0, 'data': {'jobName': 'execute_Run_6', 'status': 'QUEUED'}}, 'encode_Run_7': {'status': 0, 'data': {'jobName': 'encode_Run_7', 'status': 'QUEUED'}}, 'execute_Run_7': {'status': 0, 'data': {'jobName': 'execute_Run_7', 'status': 'QUEUED'}}, 'encode_Run_8': {'status': 0, 'data': {'jobName': 'encode_Run_8', 'status': 'QUEUED'}}, 'execute_Run_8': {'status': 0, 'data': {'jobName': 'execute_Run_8', 'status': 'QUEUED'}}, 'encode_Run_9': {'status': 0, 'data': {'jobName': 'encode_Run_9', 'status': 'QUEUED'}}, 'execute_Run_9': {'status': 0, 'data': {'jobName': 'execute_Run_9', 'status': 'QUEUED'}}, 'encode_Run_10': {'status': 0, 'data': {'jobName': 'encode_Run_10', 'status': 'QUEUED'}}, 'execute_Run_10': {'status': 0, 'data': {'jobName': 'execute_Run_10', 'status': 'QUEUED'}}, 'encode_Run_11': {'status': 0, 'data': {'jobName': 'encode_Run_11', 'status': 'QUEUED'}}, 'execute_Run_11': {'status': 0, 'data': {'jobName': 'execute_Run_11', 'status': 'QUEUED'}}, 'encode_Run_12': {'status': 0, 'data': {'jobName': 'encode_Run_12', 'status': 'QUEUED'}}, 'execute_Run_12': {'status': 0, 'data': {'jobName': 'execute_Run_12', 'status': 'QUEUED'}}, 'encode_Run_13': {'status': 0, 'data': {'jobName': 'encode_Run_13', 'status': 'QUEUED'}}, 'execute_Run_13': {'status': 0, 'data': {'jobName': 'execute_Run_13', 'status': 'QUEUED'}}, 'encode_Run_14': {'status': 0, 'data': {'jobName': 'encode_Run_14', 'status': 'QUEUED'}}, 'execute_Run_14': {'status': 0, 'data': {'jobName': 'execute_Run_14', 'status': 'QUEUED'}}, 'encode_Run_15': {'status': 0, 'data': {'jobName': 'encode_Run_15', 'status': 'QUEUED'}}, 'execute_Run_15': {'status': 0, 'data': {'jobName': 'execute_Run_15', 'status': 'QUEUED'}}, 'encode_Run_16': {'status': 0, 'data': {'jobName': 'encode_Run_16', 'status': 'QUEUED'}}, 'execute_Run_16': {'status': 0, 'data': {'jobName': 'execute_Run_16', 'status': 'QUEUED'}}}}}
+2020-11-26 11:07:26,276: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:28,279: ZMQ interface received request ...
+2020-11-26 11:07:28,280: Interface ZMQInterface received request: {'request': 'jobStatus', 'jobNames': ['encode_Run_1', 'execute_Run_1', 'encode_Run_2', 'execute_Run_2', 'encode_Run_3', 'execute_Run_3', 'encode_Run_4', 'execute_Run_4', 'encode_Run_5', 'execute_Run_5', 'encode_Run_6', 'execute_Run_6', 'encode_Run_7', 'execute_Run_7', 'encode_Run_8', 'execute_Run_8', 'encode_Run_9', 'execute_Run_9', 'encode_Run_10', 'execute_Run_10', 'encode_Run_11', 'execute_Run_11', 'encode_Run_12', 'execute_Run_12', 'encode_Run_13', 'execute_Run_13', 'encode_Run_14', 'execute_Run_14', 'encode_Run_15', 'execute_Run_15', 'encode_Run_16', 'execute_Run_16']}
+2020-11-26 11:07:28,280: Handling JobStatusReq request from ZMQInterface interface
+2020-11-26 11:07:28,280: sending response: {'code': 0, 'data': {'jobs': {'encode_Run_1': {'status': 0, 'data': {'jobName': 'encode_Run_1', 'status': 'EXECUTING'}}, 'execute_Run_1': {'status': 0, 'data': {'jobName': 'execute_Run_1', 'status': 'QUEUED'}}, 'encode_Run_2': {'status': 0, 'data': {'jobName': 'encode_Run_2', 'status': 'EXECUTING'}}, 'execute_Run_2': {'status': 0, 'data': {'jobName': 'execute_Run_2', 'status': 'QUEUED'}}, 'encode_Run_3': {'status': 0, 'data': {'jobName': 'encode_Run_3', 'status': 'EXECUTING'}}, 'execute_Run_3': {'status': 0, 'data': {'jobName': 'execute_Run_3', 'status': 'QUEUED'}}, 'encode_Run_4': {'status': 0, 'data': {'jobName': 'encode_Run_4', 'status': 'EXECUTING'}}, 'execute_Run_4': {'status': 0, 'data': {'jobName': 'execute_Run_4', 'status': 'QUEUED'}}, 'encode_Run_5': {'status': 0, 'data': {'jobName': 'encode_Run_5', 'status': 'QUEUED'}}, 'execute_Run_5': {'status': 0, 'data': {'jobName': 'execute_Run_5', 'status': 'QUEUED'}}, 'encode_Run_6': {'status': 0, 'data': {'jobName': 'encode_Run_6', 'status': 'QUEUED'}}, 'execute_Run_6': {'status': 0, 'data': {'jobName': 'execute_Run_6', 'status': 'QUEUED'}}, 'encode_Run_7': {'status': 0, 'data': {'jobName': 'encode_Run_7', 'status': 'QUEUED'}}, 'execute_Run_7': {'status': 0, 'data': {'jobName': 'execute_Run_7', 'status': 'QUEUED'}}, 'encode_Run_8': {'status': 0, 'data': {'jobName': 'encode_Run_8', 'status': 'QUEUED'}}, 'execute_Run_8': {'status': 0, 'data': {'jobName': 'execute_Run_8', 'status': 'QUEUED'}}, 'encode_Run_9': {'status': 0, 'data': {'jobName': 'encode_Run_9', 'status': 'QUEUED'}}, 'execute_Run_9': {'status': 0, 'data': {'jobName': 'execute_Run_9', 'status': 'QUEUED'}}, 'encode_Run_10': {'status': 0, 'data': {'jobName': 'encode_Run_10', 'status': 'QUEUED'}}, 'execute_Run_10': {'status': 0, 'data': {'jobName': 'execute_Run_10', 'status': 'QUEUED'}}, 'encode_Run_11': {'status': 0, 'data': {'jobName': 'encode_Run_11', 'status': 'QUEUED'}}, 'execute_Run_11': {'status': 0, 'data': {'jobName': 'execute_Run_11', 'status': 'QUEUED'}}, 'encode_Run_12': {'status': 0, 'data': {'jobName': 'encode_Run_12', 'status': 'QUEUED'}}, 'execute_Run_12': {'status': 0, 'data': {'jobName': 'execute_Run_12', 'status': 'QUEUED'}}, 'encode_Run_13': {'status': 0, 'data': {'jobName': 'encode_Run_13', 'status': 'QUEUED'}}, 'execute_Run_13': {'status': 0, 'data': {'jobName': 'execute_Run_13', 'status': 'QUEUED'}}, 'encode_Run_14': {'status': 0, 'data': {'jobName': 'encode_Run_14', 'status': 'QUEUED'}}, 'execute_Run_14': {'status': 0, 'data': {'jobName': 'execute_Run_14', 'status': 'QUEUED'}}, 'encode_Run_15': {'status': 0, 'data': {'jobName': 'encode_Run_15', 'status': 'QUEUED'}}, 'execute_Run_15': {'status': 0, 'data': {'jobName': 'execute_Run_15', 'status': 'QUEUED'}}, 'encode_Run_16': {'status': 0, 'data': {'jobName': 'encode_Run_16', 'status': 'QUEUED'}}, 'execute_Run_16': {'status': 0, 'data': {'jobName': 'execute_Run_16', 'status': 'QUEUED'}}}}}
+2020-11-26 11:07:28,282: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:30,284: ZMQ interface received request ...
+2020-11-26 11:07:30,285: Interface ZMQInterface received request: {'request': 'jobStatus', 'jobNames': ['encode_Run_1', 'execute_Run_1', 'encode_Run_2', 'execute_Run_2', 'encode_Run_3', 'execute_Run_3', 'encode_Run_4', 'execute_Run_4', 'encode_Run_5', 'execute_Run_5', 'encode_Run_6', 'execute_Run_6', 'encode_Run_7', 'execute_Run_7', 'encode_Run_8', 'execute_Run_8', 'encode_Run_9', 'execute_Run_9', 'encode_Run_10', 'execute_Run_10', 'encode_Run_11', 'execute_Run_11', 'encode_Run_12', 'execute_Run_12', 'encode_Run_13', 'execute_Run_13', 'encode_Run_14', 'execute_Run_14', 'encode_Run_15', 'execute_Run_15', 'encode_Run_16', 'execute_Run_16']}
+2020-11-26 11:07:30,285: Handling JobStatusReq request from ZMQInterface interface
+2020-11-26 11:07:30,285: sending response: {'code': 0, 'data': {'jobs': {'encode_Run_1': {'status': 0, 'data': {'jobName': 'encode_Run_1', 'status': 'EXECUTING'}}, 'execute_Run_1': {'status': 0, 'data': {'jobName': 'execute_Run_1', 'status': 'QUEUED'}}, 'encode_Run_2': {'status': 0, 'data': {'jobName': 'encode_Run_2', 'status': 'EXECUTING'}}, 'execute_Run_2': {'status': 0, 'data': {'jobName': 'execute_Run_2', 'status': 'QUEUED'}}, 'encode_Run_3': {'status': 0, 'data': {'jobName': 'encode_Run_3', 'status': 'EXECUTING'}}, 'execute_Run_3': {'status': 0, 'data': {'jobName': 'execute_Run_3', 'status': 'QUEUED'}}, 'encode_Run_4': {'status': 0, 'data': {'jobName': 'encode_Run_4', 'status': 'EXECUTING'}}, 'execute_Run_4': {'status': 0, 'data': {'jobName': 'execute_Run_4', 'status': 'QUEUED'}}, 'encode_Run_5': {'status': 0, 'data': {'jobName': 'encode_Run_5', 'status': 'QUEUED'}}, 'execute_Run_5': {'status': 0, 'data': {'jobName': 'execute_Run_5', 'status': 'QUEUED'}}, 'encode_Run_6': {'status': 0, 'data': {'jobName': 'encode_Run_6', 'status': 'QUEUED'}}, 'execute_Run_6': {'status': 0, 'data': {'jobName': 'execute_Run_6', 'status': 'QUEUED'}}, 'encode_Run_7': {'status': 0, 'data': {'jobName': 'encode_Run_7', 'status': 'QUEUED'}}, 'execute_Run_7': {'status': 0, 'data': {'jobName': 'execute_Run_7', 'status': 'QUEUED'}}, 'encode_Run_8': {'status': 0, 'data': {'jobName': 'encode_Run_8', 'status': 'QUEUED'}}, 'execute_Run_8': {'status': 0, 'data': {'jobName': 'execute_Run_8', 'status': 'QUEUED'}}, 'encode_Run_9': {'status': 0, 'data': {'jobName': 'encode_Run_9', 'status': 'QUEUED'}}, 'execute_Run_9': {'status': 0, 'data': {'jobName': 'execute_Run_9', 'status': 'QUEUED'}}, 'encode_Run_10': {'status': 0, 'data': {'jobName': 'encode_Run_10', 'status': 'QUEUED'}}, 'execute_Run_10': {'status': 0, 'data': {'jobName': 'execute_Run_10', 'status': 'QUEUED'}}, 'encode_Run_11': {'status': 0, 'data': {'jobName': 'encode_Run_11', 'status': 'QUEUED'}}, 'execute_Run_11': {'status': 0, 'data': {'jobName': 'execute_Run_11', 'status': 'QUEUED'}}, 'encode_Run_12': {'status': 0, 'data': {'jobName': 'encode_Run_12', 'status': 'QUEUED'}}, 'execute_Run_12': {'status': 0, 'data': {'jobName': 'execute_Run_12', 'status': 'QUEUED'}}, 'encode_Run_13': {'status': 0, 'data': {'jobName': 'encode_Run_13', 'status': 'QUEUED'}}, 'execute_Run_13': {'status': 0, 'data': {'jobName': 'execute_Run_13', 'status': 'QUEUED'}}, 'encode_Run_14': {'status': 0, 'data': {'jobName': 'encode_Run_14', 'status': 'QUEUED'}}, 'execute_Run_14': {'status': 0, 'data': {'jobName': 'execute_Run_14', 'status': 'QUEUED'}}, 'encode_Run_15': {'status': 0, 'data': {'jobName': 'encode_Run_15', 'status': 'QUEUED'}}, 'execute_Run_15': {'status': 0, 'data': {'jobName': 'execute_Run_15', 'status': 'QUEUED'}}, 'encode_Run_16': {'status': 0, 'data': {'jobName': 'encode_Run_16', 'status': 'QUEUED'}}, 'execute_Run_16': {'status': 0, 'data': {'jobName': 'execute_Run_16', 'status': 'QUEUED'}}}}}
+2020-11-26 11:07:30,287: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:31,261: local process for job encode_Run_1 finished
+2020-11-26 11:07:31,262: job encode_Run_1 finished with exit code 0, error message: None
+2020-11-26 11:07:31,262: job encode_Run_1 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:31,262: notifies callbacks about encode_Run_1 job status change JobState.SUCCEED
+2020-11-26 11:07:31,263: scheduling loop with 28 jobs in queue
+2020-11-26 11:07:31,263: #0 dependency (True feasible) jobs after update of job execute_Run_1
+2020-11-26 11:07:31,263: job execute_Run_1 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:31,264: job execute_Run_1 is ready
+2020-11-26 11:07:31,264: iteration execute_Run_1 processed - removing from list
+2020-11-26 11:07:31,264: found resources for job execute_Run_1
+2020-11-26 11:07:31,264: job execute_Run_1 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:31,264: notifies callbacks about execute_Run_1 job status change JobState.SCHEDULED
+2020-11-26 11:07:31,265: tracer - registering job encode_Run_1 finished in state SUCCEED
+2020-11-26 11:07:31,267: updating common environment
+2020-11-26 11:07:31,268: job execute_Run_1 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:31,268: notifies callbacks about execute_Run_1 job status change JobState.EXECUTING
+2020-11-26 11:07:31,270: launching job execute_Run_1: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_1', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:31,327: local process 7084 for job execute_Run_1 launched
+2020-11-26 11:07:31,330: local process for job encode_Run_2 finished
+2020-11-26 11:07:31,331: job encode_Run_2 finished with exit code 0, error message: None
+2020-11-26 11:07:31,331: job encode_Run_2 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:31,332: notifies callbacks about encode_Run_2 job status change JobState.SUCCEED
+2020-11-26 11:07:31,332: scheduling loop with 27 jobs in queue
+2020-11-26 11:07:31,332: #0 dependency (True feasible) jobs after update of job execute_Run_2
+2020-11-26 11:07:31,333: job execute_Run_2 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:31,333: job execute_Run_2 is ready
+2020-11-26 11:07:31,333: iteration execute_Run_2 processed - removing from list
+2020-11-26 11:07:31,333: found resources for job execute_Run_2
+2020-11-26 11:07:31,333: job execute_Run_2 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:31,334: notifies callbacks about execute_Run_2 job status change JobState.SCHEDULED
+2020-11-26 11:07:31,335: tracer - registering job encode_Run_2 finished in state SUCCEED
+2020-11-26 11:07:31,337: updating common environment
+2020-11-26 11:07:31,337: job execute_Run_2 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:31,337: notifies callbacks about execute_Run_2 job status change JobState.EXECUTING
+2020-11-26 11:07:31,339: launching job execute_Run_2: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_2', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:31,391: local process 7086 for job execute_Run_2 launched
+2020-11-26 11:07:31,407: local process for job encode_Run_3 finished
+2020-11-26 11:07:31,408: job encode_Run_3 finished with exit code 0, error message: None
+2020-11-26 11:07:31,408: job encode_Run_3 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:31,408: notifies callbacks about encode_Run_3 job status change JobState.SUCCEED
+2020-11-26 11:07:31,409: scheduling loop with 26 jobs in queue
+2020-11-26 11:07:31,409: #0 dependency (True feasible) jobs after update of job execute_Run_3
+2020-11-26 11:07:31,409: job execute_Run_3 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:31,410: job execute_Run_3 is ready
+2020-11-26 11:07:31,410: iteration execute_Run_3 processed - removing from list
+2020-11-26 11:07:31,410: found resources for job execute_Run_3
+2020-11-26 11:07:31,410: job execute_Run_3 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:31,411: notifies callbacks about execute_Run_3 job status change JobState.SCHEDULED
+2020-11-26 11:07:31,412: tracer - registering job encode_Run_3 finished in state SUCCEED
+2020-11-26 11:07:31,414: updating common environment
+2020-11-26 11:07:31,414: job execute_Run_3 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:31,415: notifies callbacks about execute_Run_3 job status change JobState.EXECUTING
+2020-11-26 11:07:31,416: launching job execute_Run_3: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_3', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:31,468: local process 7088 for job execute_Run_3 launched
+2020-11-26 11:07:31,501: local process for job encode_Run_4 finished
+2020-11-26 11:07:31,502: job encode_Run_4 finished with exit code 0, error message: None
+2020-11-26 11:07:31,502: job encode_Run_4 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:31,502: notifies callbacks about encode_Run_4 job status change JobState.SUCCEED
+2020-11-26 11:07:31,503: scheduling loop with 25 jobs in queue
+2020-11-26 11:07:31,503: #0 dependency (True feasible) jobs after update of job execute_Run_4
+2020-11-26 11:07:31,504: job execute_Run_4 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:31,504: job execute_Run_4 is ready
+2020-11-26 11:07:31,505: iteration execute_Run_4 processed - removing from list
+2020-11-26 11:07:31,505: found resources for job execute_Run_4
+2020-11-26 11:07:31,505: job execute_Run_4 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:31,505: notifies callbacks about execute_Run_4 job status change JobState.SCHEDULED
+2020-11-26 11:07:31,506: tracer - registering job encode_Run_4 finished in state SUCCEED
+2020-11-26 11:07:31,509: updating common environment
+2020-11-26 11:07:31,509: job execute_Run_4 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:31,509: notifies callbacks about execute_Run_4 job status change JobState.EXECUTING
+2020-11-26 11:07:31,520: launching job execute_Run_4: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_4', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:31,569: local process 7090 for job execute_Run_4 launched
+2020-11-26 11:07:32,291: ZMQ interface received request ...
+2020-11-26 11:07:32,291: Interface ZMQInterface received request: {'request': 'jobStatus', 'jobNames': ['encode_Run_1', 'execute_Run_1', 'encode_Run_2', 'execute_Run_2', 'encode_Run_3', 'execute_Run_3', 'encode_Run_4', 'execute_Run_4', 'encode_Run_5', 'execute_Run_5', 'encode_Run_6', 'execute_Run_6', 'encode_Run_7', 'execute_Run_7', 'encode_Run_8', 'execute_Run_8', 'encode_Run_9', 'execute_Run_9', 'encode_Run_10', 'execute_Run_10', 'encode_Run_11', 'execute_Run_11', 'encode_Run_12', 'execute_Run_12', 'encode_Run_13', 'execute_Run_13', 'encode_Run_14', 'execute_Run_14', 'encode_Run_15', 'execute_Run_15', 'encode_Run_16', 'execute_Run_16']}
+2020-11-26 11:07:32,292: Handling JobStatusReq request from ZMQInterface interface
+2020-11-26 11:07:32,293: sending response: {'code': 0, 'data': {'jobs': {'encode_Run_1': {'status': 0, 'data': {'jobName': 'encode_Run_1', 'status': 'SUCCEED'}}, 'execute_Run_1': {'status': 0, 'data': {'jobName': 'execute_Run_1', 'status': 'EXECUTING'}}, 'encode_Run_2': {'status': 0, 'data': {'jobName': 'encode_Run_2', 'status': 'SUCCEED'}}, 'execute_Run_2': {'status': 0, 'data': {'jobName': 'execute_Run_2', 'status': 'EXECUTING'}}, 'encode_Run_3': {'status': 0, 'data': {'jobName': 'encode_Run_3', 'status': 'SUCCEED'}}, 'execute_Run_3': {'status': 0, 'data': {'jobName': 'execute_Run_3', 'status': 'EXECUTING'}}, 'encode_Run_4': {'status': 0, 'data': {'jobName': 'encode_Run_4', 'status': 'SUCCEED'}}, 'execute_Run_4': {'status': 0, 'data': {'jobName': 'execute_Run_4', 'status': 'EXECUTING'}}, 'encode_Run_5': {'status': 0, 'data': {'jobName': 'encode_Run_5', 'status': 'QUEUED'}}, 'execute_Run_5': {'status': 0, 'data': {'jobName': 'execute_Run_5', 'status': 'QUEUED'}}, 'encode_Run_6': {'status': 0, 'data': {'jobName': 'encode_Run_6', 'status': 'QUEUED'}}, 'execute_Run_6': {'status': 0, 'data': {'jobName': 'execute_Run_6', 'status': 'QUEUED'}}, 'encode_Run_7': {'status': 0, 'data': {'jobName': 'encode_Run_7', 'status': 'QUEUED'}}, 'execute_Run_7': {'status': 0, 'data': {'jobName': 'execute_Run_7', 'status': 'QUEUED'}}, 'encode_Run_8': {'status': 0, 'data': {'jobName': 'encode_Run_8', 'status': 'QUEUED'}}, 'execute_Run_8': {'status': 0, 'data': {'jobName': 'execute_Run_8', 'status': 'QUEUED'}}, 'encode_Run_9': {'status': 0, 'data': {'jobName': 'encode_Run_9', 'status': 'QUEUED'}}, 'execute_Run_9': {'status': 0, 'data': {'jobName': 'execute_Run_9', 'status': 'QUEUED'}}, 'encode_Run_10': {'status': 0, 'data': {'jobName': 'encode_Run_10', 'status': 'QUEUED'}}, 'execute_Run_10': {'status': 0, 'data': {'jobName': 'execute_Run_10', 'status': 'QUEUED'}}, 'encode_Run_11': {'status': 0, 'data': {'jobName': 'encode_Run_11', 'status': 'QUEUED'}}, 'execute_Run_11': {'status': 0, 'data': {'jobName': 'execute_Run_11', 'status': 'QUEUED'}}, 'encode_Run_12': {'status': 0, 'data': {'jobName': 'encode_Run_12', 'status': 'QUEUED'}}, 'execute_Run_12': {'status': 0, 'data': {'jobName': 'execute_Run_12', 'status': 'QUEUED'}}, 'encode_Run_13': {'status': 0, 'data': {'jobName': 'encode_Run_13', 'status': 'QUEUED'}}, 'execute_Run_13': {'status': 0, 'data': {'jobName': 'execute_Run_13', 'status': 'QUEUED'}}, 'encode_Run_14': {'status': 0, 'data': {'jobName': 'encode_Run_14', 'status': 'QUEUED'}}, 'execute_Run_14': {'status': 0, 'data': {'jobName': 'execute_Run_14', 'status': 'QUEUED'}}, 'encode_Run_15': {'status': 0, 'data': {'jobName': 'encode_Run_15', 'status': 'QUEUED'}}, 'execute_Run_15': {'status': 0, 'data': {'jobName': 'execute_Run_15', 'status': 'QUEUED'}}, 'encode_Run_16': {'status': 0, 'data': {'jobName': 'encode_Run_16', 'status': 'QUEUED'}}, 'execute_Run_16': {'status': 0, 'data': {'jobName': 'execute_Run_16', 'status': 'QUEUED'}}}}}
+2020-11-26 11:07:32,294: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:34,297: ZMQ interface received request ...
+2020-11-26 11:07:34,297: Interface ZMQInterface received request: {'request': 'jobStatus', 'jobNames': ['execute_Run_1', 'execute_Run_2', 'execute_Run_3', 'execute_Run_4', 'encode_Run_5', 'execute_Run_5', 'encode_Run_6', 'execute_Run_6', 'encode_Run_7', 'execute_Run_7', 'encode_Run_8', 'execute_Run_8', 'encode_Run_9', 'execute_Run_9', 'encode_Run_10', 'execute_Run_10', 'encode_Run_11', 'execute_Run_11', 'encode_Run_12', 'execute_Run_12', 'encode_Run_13', 'execute_Run_13', 'encode_Run_14', 'execute_Run_14', 'encode_Run_15', 'execute_Run_15', 'encode_Run_16', 'execute_Run_16']}
+2020-11-26 11:07:34,297: Handling JobStatusReq request from ZMQInterface interface
+2020-11-26 11:07:34,298: sending response: {'code': 0, 'data': {'jobs': {'execute_Run_1': {'status': 0, 'data': {'jobName': 'execute_Run_1', 'status': 'EXECUTING'}}, 'execute_Run_2': {'status': 0, 'data': {'jobName': 'execute_Run_2', 'status': 'EXECUTING'}}, 'execute_Run_3': {'status': 0, 'data': {'jobName': 'execute_Run_3', 'status': 'EXECUTING'}}, 'execute_Run_4': {'status': 0, 'data': {'jobName': 'execute_Run_4', 'status': 'EXECUTING'}}, 'encode_Run_5': {'status': 0, 'data': {'jobName': 'encode_Run_5', 'status': 'QUEUED'}}, 'execute_Run_5': {'status': 0, 'data': {'jobName': 'execute_Run_5', 'status': 'QUEUED'}}, 'encode_Run_6': {'status': 0, 'data': {'jobName': 'encode_Run_6', 'status': 'QUEUED'}}, 'execute_Run_6': {'status': 0, 'data': {'jobName': 'execute_Run_6', 'status': 'QUEUED'}}, 'encode_Run_7': {'status': 0, 'data': {'jobName': 'encode_Run_7', 'status': 'QUEUED'}}, 'execute_Run_7': {'status': 0, 'data': {'jobName': 'execute_Run_7', 'status': 'QUEUED'}}, 'encode_Run_8': {'status': 0, 'data': {'jobName': 'encode_Run_8', 'status': 'QUEUED'}}, 'execute_Run_8': {'status': 0, 'data': {'jobName': 'execute_Run_8', 'status': 'QUEUED'}}, 'encode_Run_9': {'status': 0, 'data': {'jobName': 'encode_Run_9', 'status': 'QUEUED'}}, 'execute_Run_9': {'status': 0, 'data': {'jobName': 'execute_Run_9', 'status': 'QUEUED'}}, 'encode_Run_10': {'status': 0, 'data': {'jobName': 'encode_Run_10', 'status': 'QUEUED'}}, 'execute_Run_10': {'status': 0, 'data': {'jobName': 'execute_Run_10', 'status': 'QUEUED'}}, 'encode_Run_11': {'status': 0, 'data': {'jobName': 'encode_Run_11', 'status': 'QUEUED'}}, 'execute_Run_11': {'status': 0, 'data': {'jobName': 'execute_Run_11', 'status': 'QUEUED'}}, 'encode_Run_12': {'status': 0, 'data': {'jobName': 'encode_Run_12', 'status': 'QUEUED'}}, 'execute_Run_12': {'status': 0, 'data': {'jobName': 'execute_Run_12', 'status': 'QUEUED'}}, 'encode_Run_13': {'status': 0, 'data': {'jobName': 'encode_Run_13', 'status': 'QUEUED'}}, 'execute_Run_13': {'status': 0, 'data': {'jobName': 'execute_Run_13', 'status': 'QUEUED'}}, 'encode_Run_14': {'status': 0, 'data': {'jobName': 'encode_Run_14', 'status': 'QUEUED'}}, 'execute_Run_14': {'status': 0, 'data': {'jobName': 'execute_Run_14', 'status': 'QUEUED'}}, 'encode_Run_15': {'status': 0, 'data': {'jobName': 'encode_Run_15', 'status': 'QUEUED'}}, 'execute_Run_15': {'status': 0, 'data': {'jobName': 'execute_Run_15', 'status': 'QUEUED'}}, 'encode_Run_16': {'status': 0, 'data': {'jobName': 'encode_Run_16', 'status': 'QUEUED'}}, 'execute_Run_16': {'status': 0, 'data': {'jobName': 'execute_Run_16', 'status': 'QUEUED'}}}}}
+2020-11-26 11:07:34,299: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:35,799: ZMQ interface received request ...
+2020-11-26 11:07:35,799: Interface ZMQInterface received request: {'request': 'finish'}
+2020-11-26 11:07:35,799: Handling FinishReq request from ZMQInterface interface
+2020-11-26 11:07:35,800: sending response: {'code': 0, 'data': {'when': '2s'}}
+2020-11-26 11:07:35,800: ZMQ interface listening for requests with pid 6985...
+2020-11-26 11:07:35,801: finishing in 2 seconds
+2020-11-26 11:07:37,822: local process for job execute_Run_1 finished
+2020-11-26 11:07:37,823: job execute_Run_1 finished with exit code 0, error message: None
+2020-11-26 11:07:37,823: job execute_Run_1 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:37,824: notifies callbacks about execute_Run_1 job status change JobState.SUCCEED
+2020-11-26 11:07:37,824: scheduling loop with 24 jobs in queue
+2020-11-26 11:07:37,824: #0 dependency (True feasible) jobs after update of job encode_Run_5
+2020-11-26 11:07:37,825: job encode_Run_5 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:37,825: job encode_Run_5 is ready
+2020-11-26 11:07:37,825: iteration encode_Run_5 processed - removing from list
+2020-11-26 11:07:37,825: found resources for job encode_Run_5
+2020-11-26 11:07:37,826: job encode_Run_5 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:37,826: notifies callbacks about encode_Run_5 job status change JobState.SCHEDULED
+2020-11-26 11:07:37,827: tracer - registering job execute_Run_1 finished in state SUCCEED
+2020-11-26 11:07:37,829: updating common environment
+2020-11-26 11:07:37,829: job encode_Run_5 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:37,829: notifies callbacks about encode_Run_5 job status change JobState.EXECUTING
+2020-11-26 11:07:37,831: launching job encode_Run_5: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_5']
+2020-11-26 11:07:37,884: local process 7248 for job encode_Run_5 launched
+2020-11-26 11:07:37,886: receiver stopped
+2020-11-26 11:07:37,889: stopping receiver ...
+2020-11-26 11:07:37,890: canceling 1 listener tasks
+2020-11-26 11:07:37,890: canceling listener task
+2020-11-26 11:07:37,891: local process for job execute_Run_2 finished
+2020-11-26 11:07:37,891: job execute_Run_2 finished with exit code 0, error message: None
+2020-11-26 11:07:37,892: job execute_Run_2 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:37,892: notifies callbacks about execute_Run_2 job status change JobState.SUCCEED
+2020-11-26 11:07:37,892: scheduling loop with 23 jobs in queue
+2020-11-26 11:07:37,892: #1 dependency (True feasible) jobs after update of job execute_Run_5
+2020-11-26 11:07:37,893: Job execute_Run_5 preserved in scheduling queue
+2020-11-26 11:07:37,893: #0 dependency (True feasible) jobs after update of job encode_Run_6
+2020-11-26 11:07:37,893: job encode_Run_6 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:37,893: job encode_Run_6 is ready
+2020-11-26 11:07:37,893: iteration encode_Run_6 processed - removing from list
+2020-11-26 11:07:37,893: found resources for job encode_Run_6
+2020-11-26 11:07:37,894: job encode_Run_6 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:37,894: notifies callbacks about encode_Run_6 job status change JobState.SCHEDULED
+2020-11-26 11:07:37,895: Finishing listening on interface ZMQInterface due to interrupt
+2020-11-26 11:07:37,895: receiver - interface ZMQInterface stopped (0 active)
+2020-11-26 11:07:37,895: No more active interfaces - finishing
+2020-11-26 11:07:37,895: tracer - registering job execute_Run_2 finished in state SUCCEED
+2020-11-26 11:07:37,897: updating common environment
+2020-11-26 11:07:37,897: job encode_Run_6 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:37,897: notifies callbacks about encode_Run_6 job status change JobState.EXECUTING
+2020-11-26 11:07:37,898: closing ZMQ socket
+2020-11-26 11:07:37,898: waiting for stopped manager ...
+2020-11-26 11:07:37,900: launching job encode_Run_6: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_6']
+2020-11-26 11:07:37,948: local process 7250 for job encode_Run_6 launched
+2020-11-26 11:07:37,950: local process for job execute_Run_3 finished
+2020-11-26 11:07:37,951: job execute_Run_3 finished with exit code 0, error message: None
+2020-11-26 11:07:37,951: job execute_Run_3 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:37,952: notifies callbacks about execute_Run_3 job status change JobState.SUCCEED
+2020-11-26 11:07:37,952: scheduling loop with 22 jobs in queue
+2020-11-26 11:07:37,953: #1 dependency (True feasible) jobs after update of job execute_Run_5
+2020-11-26 11:07:37,953: Job execute_Run_5 preserved in scheduling queue
+2020-11-26 11:07:37,953: #1 dependency (True feasible) jobs after update of job execute_Run_6
+2020-11-26 11:07:37,954: Job execute_Run_6 preserved in scheduling queue
+2020-11-26 11:07:37,954: #0 dependency (True feasible) jobs after update of job encode_Run_7
+2020-11-26 11:07:37,954: job encode_Run_7 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:37,954: job encode_Run_7 is ready
+2020-11-26 11:07:37,955: iteration encode_Run_7 processed - removing from list
+2020-11-26 11:07:37,955: found resources for job encode_Run_7
+2020-11-26 11:07:37,955: job encode_Run_7 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:37,955: notifies callbacks about encode_Run_7 job status change JobState.SCHEDULED
+2020-11-26 11:07:37,957: tracer - registering job execute_Run_3 finished in state SUCCEED
+2020-11-26 11:07:37,959: updating common environment
+2020-11-26 11:07:37,959: job encode_Run_7 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:37,959: notifies callbacks about encode_Run_7 job status change JobState.EXECUTING
+2020-11-26 11:07:37,962: launching job encode_Run_7: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_7']
+2020-11-26 11:07:38,016: local process 7252 for job encode_Run_7 launched
+2020-11-26 11:07:38,028: local process for job execute_Run_4 finished
+2020-11-26 11:07:38,029: job execute_Run_4 finished with exit code 0, error message: None
+2020-11-26 11:07:38,029: job execute_Run_4 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:38,030: notifies callbacks about execute_Run_4 job status change JobState.SUCCEED
+2020-11-26 11:07:38,030: scheduling loop with 21 jobs in queue
+2020-11-26 11:07:38,031: #1 dependency (True feasible) jobs after update of job execute_Run_5
+2020-11-26 11:07:38,031: Job execute_Run_5 preserved in scheduling queue
+2020-11-26 11:07:38,031: #1 dependency (True feasible) jobs after update of job execute_Run_6
+2020-11-26 11:07:38,031: Job execute_Run_6 preserved in scheduling queue
+2020-11-26 11:07:38,032: #1 dependency (True feasible) jobs after update of job execute_Run_7
+2020-11-26 11:07:38,032: Job execute_Run_7 preserved in scheduling queue
+2020-11-26 11:07:38,032: #0 dependency (True feasible) jobs after update of job encode_Run_8
+2020-11-26 11:07:38,032: job encode_Run_8 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:38,033: job encode_Run_8 is ready
+2020-11-26 11:07:38,033: iteration encode_Run_8 processed - removing from list
+2020-11-26 11:07:38,033: found resources for job encode_Run_8
+2020-11-26 11:07:38,034: job encode_Run_8 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:38,034: notifies callbacks about encode_Run_8 job status change JobState.SCHEDULED
+2020-11-26 11:07:38,035: tracer - registering job execute_Run_4 finished in state SUCCEED
+2020-11-26 11:07:38,037: updating common environment
+2020-11-26 11:07:38,038: job encode_Run_8 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:38,038: notifies callbacks about encode_Run_8 job status change JobState.EXECUTING
+2020-11-26 11:07:38,039: launching job encode_Run_8: easyvvuq_encode ['sql', 'sqlite:////tmp/coolingjzakgf8j/campaign.db', 'FALSE', 'cooling', 'cooling', 'Run_8']
+2020-11-26 11:07:38,093: local process 7254 for job encode_Run_8 launched
+2020-11-26 11:07:43,753: local process for job encode_Run_5 finished
+2020-11-26 11:07:43,754: job encode_Run_5 finished with exit code 0, error message: None
+2020-11-26 11:07:43,754: job encode_Run_5 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:43,755: notifies callbacks about encode_Run_5 job status change JobState.SUCCEED
+2020-11-26 11:07:43,755: scheduling loop with 20 jobs in queue
+2020-11-26 11:07:43,755: #0 dependency (True feasible) jobs after update of job execute_Run_5
+2020-11-26 11:07:43,756: job execute_Run_5 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:43,756: job execute_Run_5 is ready
+2020-11-26 11:07:43,756: iteration execute_Run_5 processed - removing from list
+2020-11-26 11:07:43,756: found resources for job execute_Run_5
+2020-11-26 11:07:43,756: job execute_Run_5 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:43,757: notifies callbacks about execute_Run_5 job status change JobState.SCHEDULED
+2020-11-26 11:07:43,758: tracer - registering job encode_Run_5 finished in state SUCCEED
+2020-11-26 11:07:43,760: updating common environment
+2020-11-26 11:07:43,761: job execute_Run_5 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:43,761: notifies callbacks about execute_Run_5 job status change JobState.EXECUTING
+2020-11-26 11:07:43,763: launching job execute_Run_5: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_5', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:43,819: local process 7340 for job execute_Run_5 launched
+2020-11-26 11:07:43,822: local process for job encode_Run_6 finished
+2020-11-26 11:07:43,822: job encode_Run_6 finished with exit code 0, error message: None
+2020-11-26 11:07:43,823: job encode_Run_6 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:43,823: notifies callbacks about encode_Run_6 job status change JobState.SUCCEED
+2020-11-26 11:07:43,824: scheduling loop with 19 jobs in queue
+2020-11-26 11:07:43,824: #0 dependency (True feasible) jobs after update of job execute_Run_6
+2020-11-26 11:07:43,824: job execute_Run_6 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:43,825: job execute_Run_6 is ready
+2020-11-26 11:07:43,825: iteration execute_Run_6 processed - removing from list
+2020-11-26 11:07:43,825: found resources for job execute_Run_6
+2020-11-26 11:07:43,825: job execute_Run_6 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:43,826: notifies callbacks about execute_Run_6 job status change JobState.SCHEDULED
+2020-11-26 11:07:43,827: tracer - registering job encode_Run_6 finished in state SUCCEED
+2020-11-26 11:07:43,829: updating common environment
+2020-11-26 11:07:43,830: job execute_Run_6 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:43,830: notifies callbacks about execute_Run_6 job status change JobState.EXECUTING
+2020-11-26 11:07:43,832: launching job execute_Run_6: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_6', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:43,908: local process 7342 for job execute_Run_6 launched
+2020-11-26 11:07:43,910: local process for job encode_Run_7 finished
+2020-11-26 11:07:43,911: job encode_Run_7 finished with exit code 0, error message: None
+2020-11-26 11:07:43,911: job encode_Run_7 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:43,911: notifies callbacks about encode_Run_7 job status change JobState.SUCCEED
+2020-11-26 11:07:43,912: scheduling loop with 18 jobs in queue
+2020-11-26 11:07:43,912: #0 dependency (True feasible) jobs after update of job execute_Run_7
+2020-11-26 11:07:43,912: job execute_Run_7 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:43,913: job execute_Run_7 is ready
+2020-11-26 11:07:43,913: iteration execute_Run_7 processed - removing from list
+2020-11-26 11:07:43,913: found resources for job execute_Run_7
+2020-11-26 11:07:43,914: job execute_Run_7 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:43,914: notifies callbacks about execute_Run_7 job status change JobState.SCHEDULED
+2020-11-26 11:07:43,915: tracer - registering job encode_Run_7 finished in state SUCCEED
+2020-11-26 11:07:43,918: updating common environment
+2020-11-26 11:07:43,919: job execute_Run_7 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:43,919: notifies callbacks about execute_Run_7 job status change JobState.EXECUTING
+2020-11-26 11:07:43,931: launching job execute_Run_7: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_7', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:43,989: local process 7344 for job execute_Run_7 launched
+2020-11-26 11:07:43,991: local process for job encode_Run_8 finished
+2020-11-26 11:07:43,992: job encode_Run_8 finished with exit code 0, error message: None
+2020-11-26 11:07:43,992: job encode_Run_8 iteration None status changed to SUCCEED (final ? True)
+2020-11-26 11:07:43,992: notifies callbacks about encode_Run_8 job status change JobState.SUCCEED
+2020-11-26 11:07:43,993: scheduling loop with 17 jobs in queue
+2020-11-26 11:07:43,993: #0 dependency (True feasible) jobs after update of job execute_Run_8
+2020-11-26 11:07:43,994: job execute_Run_8 is ready, looking for next to (None) iteration, start_pos set to 0
+2020-11-26 11:07:43,994: job execute_Run_8 is ready
+2020-11-26 11:07:43,995: iteration execute_Run_8 processed - removing from list
+2020-11-26 11:07:43,995: found resources for job execute_Run_8
+2020-11-26 11:07:43,996: job execute_Run_8 iteration None status changed to SCHEDULED (final ? False)
+2020-11-26 11:07:43,996: notifies callbacks about execute_Run_8 job status change JobState.SCHEDULED
+2020-11-26 11:07:43,997: tracer - registering job encode_Run_8 finished in state SUCCEED
+2020-11-26 11:07:43,999: updating common environment
+2020-11-26 11:07:43,999: job execute_Run_8 iteration None status changed to EXECUTING (final ? False)
+2020-11-26 11:07:43,999: notifies callbacks about execute_Run_8 job status change JobState.EXECUTING
+2020-11-26 11:07:44,001: launching job execute_Run_8: easyvvuq_execute ['/tmp/coolingjzakgf8j/runs/Run_8', 'easyvvuq_app', 'python3 /c/Users/bbosa/PycharmProjects/EasyVVUQ-QCGPJ/tests/APP_COOLING/cooling_model.py cooling_in.json']
+2020-11-26 11:07:44,059: local process 7346 for job execute_Run_8 launched

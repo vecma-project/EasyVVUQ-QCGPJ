@@ -41,7 +41,7 @@ fragments that are common with the standard execution of EasyVVUQ.
    import eqi
 
    from eqi import TaskRequirements
-   from eqi import Task, TaskType, SubmitOrder
+   from eqi import Task, TaskType, ProcessingScheme
 
    jobdir = os.getcwd()
    tmpdir = jobdir
@@ -83,7 +83,7 @@ fragments that are common with the standard execution of EasyVVUQ.
        ))
 
        # Execute the encoding and execution steps of the campaing using Executor
-       qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED)
+       qcgpjexec.run(processing_scheme=ProcessingScheme.SAMPLE_ORIENTED)
 
        # Terminate the created QCG Pilot Job manager
        qcgpjexec.terminate_manager()
@@ -121,7 +121,8 @@ Below we shortly describe particular elements of this process:
    The Executor with the ``add_task()`` method allows to define a set of
    Tasks that will be executed once the ``run()`` method is launched. A
    Task added with the ``add_task()`` method needs to be of some type.
-   Currently EaasyVVUQ-QCGPJ supports three types of Tasks:
+   Currently EaasyVVUQ-QCGPJ supports three types of Tasks that maps to
+   EasyVVUQ steps that should be executed within a Task:
    ``ENCODING``, ``EXECUTION`` and ``ENCODING_AND_EXECUTION``. These
    types are described in section :ref:`Task types`.
 
@@ -131,13 +132,22 @@ Below we shortly describe particular elements of this process:
    The Executor configured with the QCG-PilotJob Manager instance and filled
    with a set of appropriate Tasks is ready to perform parallel
    processing of encoding and execution steps for all Campaign's samples
-   using the ``run()`` method. This method takes ``submit_order`` parameter.
-   The second parameter, ``submit_order`` is used
-   to define a type of the scheme for the submission of Tasks in a
-   specific order. There are four possibile submission schemes /
-   ``submit_order``\ s: ``RUN_ORIENTED``, ``PHASE_ORIENTED``, ``EXEC_ONLY`` and
-   ``RUN_ORIENTED_CONDENSED``. Description of the differences between
-   these types is described in the section :ref:`Submission schemes`.
+   using the ``run()`` method. This method takes ``processing_scheme`` parameter
+   to define a type of the scheme for submission and execution of Tasks
+   by QCG-PilotJob Manager. The available schemes differ in a several aspects:
+
+   - *scope of covered EasyVVUQ steps*: encoding and execution, or just execution,
+
+   - *order of submission: step oriented or sample oriented*,
+
+   - *way of execution of tasks by QCG-PilotJob Manager*:
+     separate tasks for all steps of a run vs a common task for all steps of a run (condensed),
+     separate tasks for each run for a given step vs an iterative task for all runs within the step.
+
+   There is no general rule for the selection of scheme as its applicability and performance
+   depends on many factors. For more demanding use-cases it is worth to analyse which
+   scheme works best. More information about the schemes can be found in
+   the section :ref:`Processing schemes`.
 
 Launching the workfow
 *********************
@@ -150,10 +160,18 @@ The way of starting the defined workflow is typical, e.g.:
 
 .. topic:: Common environment
 
-   Please only be sure that the environment is correct for both, the master
-   script and the tasks. More information on this topic is presented in the
+   Please only be sure that the environment is correct for both, master
+   script and tasks. More information on this topic is presented in the
    section :ref:`Passing the execution environment to QCG-PilotJob tasks`.
 
 .. note::  It is worth noting that the workflow can be started in a common way on
  both local computer and cluster. In case of the batch execution on
  clusters, the above line can be put into the job script.
+
+Resuming the workfow
+********************
+
+EQI is able to resume processing of tasks within QCG-PilotJob Manager if the workflow was not completed
+(for example when it was stopped due to crossing the walltime limit).
+The resume mechanism is enabled by default and it is used whenever Executor is inited with the campaign
+for which EQI processing was already started but not completed.

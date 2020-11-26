@@ -15,7 +15,8 @@ TEMPLATE = "tests/APP_COOLING/cooling.template"
 APPLICATION = "tests/APP_COOLING/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 CAMPAIGN_STATE_FILE = "state_before_eqi"
-UNCOMPLETED_CAMPAIGN_DIR = "cooling64nwm83c"
+CAMPAIGN_INTERRUPTED_DIR = "campaign_interrupted"
+CAMPAIGN_RESUMED_DIR = "campaign_resumed"
 
 if "SCRATCH" in os.environ:
     tmpdir = os.environ["SCRATCH"]
@@ -35,8 +36,10 @@ def test_cooling_pj():
     print("Loading Campaign")
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(
-        state_file=f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}/{CAMPAIGN_STATE_FILE}',
+        state_file=f'{tmpdir}{CAMPAIGN_RESUMED_DIR}/{CAMPAIGN_STATE_FILE}',
         work_dir=tmpdir)
+
+    my_campaign.relocate(f'{tmpdir}{CAMPAIGN_RESUMED_DIR}')
 
     print("Starting execution")
     qcgpjexec = eqi.Executor(my_campaign)
@@ -67,8 +70,8 @@ def test_cooling_pj():
 
 
 def __prepare_data():
-    shutil.rmtree(f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}', ignore_errors=True)
-    shutil.copytree(f'tests/resume/two_phase/uncompleted_data/{UNCOMPLETED_CAMPAIGN_DIR}', f'{tmpdir}/{UNCOMPLETED_CAMPAIGN_DIR}')
+    shutil.rmtree(f'{tmpdir}{CAMPAIGN_RESUMED_DIR}', ignore_errors=True)
+    shutil.copytree(f'tests/resume/two_phase/uncompleted_data/{CAMPAIGN_INTERRUPTED_DIR}', f'{tmpdir}{CAMPAIGN_RESUMED_DIR}')
 
 
 if __name__ == "__main__":

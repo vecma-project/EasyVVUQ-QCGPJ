@@ -63,17 +63,13 @@ def test_cooling_pj():
         target_filename=ENCODED_FILENAME)
 
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
-                                    output_columns=output_columns,
-                                    header=0)
-
-    collater = uq.collate.AggregateSamples(average=False)
+                                    output_columns=output_columns)
 
     # Add the PCE app (automatically set as current app)
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater
+                        decoder=decoder
                         )
 
     vary = {
@@ -111,7 +107,7 @@ def test_cooling_pj():
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
-    qcgpjexec.run(submit_order=eqi.SubmitOrder.RUN_ORIENTED)
+    qcgpjexec.run(processing_scheme=eqi.ProcessingScheme.SAMPLE_ORIENTED)
 
     qcgpjexec.terminate_manager()
 

@@ -5,7 +5,7 @@ import chaospy as cp
 import easyvvuq as uq
 
 from eqi import TaskRequirements, Executor
-from eqi import Task, TaskType, SubmitOrder
+from eqi import Task, TaskType, ProcessingScheme
 
 # author: Jalal Lakhlili / Bartosz Bosak
 __license__ = "LGPL"
@@ -50,9 +50,7 @@ def setup_cooling_app():
         delimiter='$',
         target_filename=ENCODED_FILENAME)
     decoder = uq.decoders.SimpleCSV(target_filename=output_filename,
-                                    output_columns=output_columns,
-                                    header=0)
-    collater = uq.collate.AggregateSamples(average=False)
+                                    output_columns=output_columns)
 
     vary = {
         "kappa": cp.Uniform(0.025, 0.075),
@@ -62,7 +60,7 @@ def setup_cooling_app():
     cooling_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
     cooling_stats = uq.analysis.PCEAnalysis(sampler=cooling_sampler, qoi_cols=output_columns)
 
-    return params, encoder, decoder, collater, cooling_sampler, cooling_stats
+    return params, encoder, decoder, cooling_sampler, cooling_stats
 
 
 def test_iterative_encoding_execution():
@@ -76,13 +74,12 @@ def test_iterative_encoding_execution():
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
-    (params, encoder, decoder, collater, cooling_sampler, cooling_stats) = setup_cooling_app()
+    (params, encoder, decoder, cooling_sampler, cooling_stats) = setup_cooling_app()
 
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater)
+                        decoder=decoder)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(cooling_sampler)
@@ -109,7 +106,7 @@ def test_iterative_encoding_execution():
     ))
 
     print("Starting execution with QCG-PJ")
-    qcgpjexec.run(submit_order=SubmitOrder.PHASE_ORIENTED_ITERATIVE)
+    qcgpjexec.run(processing_scheme=ProcessingScheme.STEP_ORIENTED_ITERATIVE)
 
     qcgpjexec.terminate_manager()
 
@@ -142,13 +139,12 @@ def test_iterative_encoding_execution_condensed():
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
-    (params, encoder, decoder, collater, cooling_sampler, cooling_stats) = setup_cooling_app()
+    (params, encoder, decoder, cooling_sampler, cooling_stats) = setup_cooling_app()
 
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater)
+                        decoder=decoder)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(cooling_sampler)
@@ -166,13 +162,13 @@ def test_iterative_encoding_execution_condensed():
     qcgpjexec.create_manager(resources="4", log_level='debug')
 
     qcgpjexec.add_task(Task(
-        TaskType.EXECUTION,
+        TaskType.ENCODING_AND_EXECUTION,
         TaskRequirements(cores=1),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
     print("Starting execution with QCG-PJ")
-    qcgpjexec.run(submit_order=SubmitOrder.EXEC_ONLY_ITERATIVE)
+    qcgpjexec.run(processing_scheme=ProcessingScheme.SAMPLE_ORIENTED_CONDENSED_ITERATIVE)
 
     qcgpjexec.terminate_manager()
 
@@ -207,13 +203,12 @@ def test_iterative_execution():
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(name='cooling', work_dir=tmpdir)
 
-    (params, encoder, decoder, collater, cooling_sampler, cooling_stats) = setup_cooling_app()
+    (params, encoder, decoder, cooling_sampler, cooling_stats) = setup_cooling_app()
 
     my_campaign.add_app(name="cooling",
                         params=params,
                         encoder=encoder,
-                        decoder=decoder,
-                        collater=collater)
+                        decoder=decoder)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(cooling_sampler)
@@ -231,13 +226,13 @@ def test_iterative_execution():
     qcgpjexec.create_manager(resources="4", log_level='debug')
 
     qcgpjexec.add_task(Task(
-        TaskType.ENCODING_AND_EXECUTION,
+        TaskType.EXECUTION,
         TaskRequirements(cores=1),
         application='python3 ' + jobdir + "/" + APPLICATION + " " + ENCODED_FILENAME
     ))
 
     print("Starting execution with QCG-PJ")
-    qcgpjexec.run(submit_order=SubmitOrder.RUN_ORIENTED_CONDENSED_ITERATIVE)
+    qcgpjexec.run(processing_scheme=ProcessingScheme.EXEC_ONLY_ITERATIVE)
 
     qcgpjexec.terminate_manager()
 

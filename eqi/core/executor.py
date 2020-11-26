@@ -13,7 +13,7 @@ from qcg.pilotjob.api.manager import LocalManager
 
 from eqi.core.task import TaskType
 from eqi.core.tasks_manager import TasksManager
-from eqi.core.submit_order import SubmitOrder
+from eqi.core.processing_scheme import ProcessingScheme
 
 EQI_STATE_FILE_NAME = '.eqi_state.json'
 
@@ -26,7 +26,7 @@ class Executor:
 
     """
 
-    def __init__(self, campaign, config_file=None, resume=True, log_level='debug'):
+    def __init__(self, campaign, config_file=None, resume=True, log_level='info'):
         self._qcgpjm = None
         self._campaign = campaign
         self._eqi_dir = "."
@@ -76,7 +76,7 @@ class Executor:
     def create_manager(self,
                        resources=None,
                        reserve_core=False,
-                       log_level='debug'):
+                       log_level='info'):
         """Creates new QCG-PilotJob Manager and sets is as the Executor's engine.
 
         Parameters
@@ -173,22 +173,22 @@ class Executor:
         self._tasks_manager.add_task(task)
         self.logger.debug(f"New task added: {task.get_name()}")
 
-    def run(self, submit_order=SubmitOrder.RUN_ORIENTED):
+    def run(self, processing_scheme=ProcessingScheme.SAMPLE_ORIENTED):
         """ Executes demanding parts of EasyVVUQ campaign with QCG-PilotJob
 
         A user may choose the preferred execution scheme for the given scenario.
 
         Parameters
         ----------
-        submit_order: SubmitOrder
-            EasyVVUQ tasks submission order
+        processing_scheme: ProcessingScheme
+            Tasks processing scheme
 
         Returns
         -------
         None
         """
         # ---- EXECUTION ---
-        self._submit_jobs(submit_order)
+        self._submit_jobs(processing_scheme)
         self.__wait_and_sync()
 
     def print_resources_info(self):
@@ -254,36 +254,37 @@ class Executor:
             return False
 
         # jobs need to be submitted in order to resume
-        if 'submitted' in self.__get_from_state_file():
+        if 'submitted' in self.__get_from_state_file()\
+                and 'completed' not in self.__get_from_state_file():
             print("Resume directory ready for use")
             return True
         else:
             print("The EQI not in the submitted state - can't resume")
             return False
 
-    def _submit_jobs(self, submit_order):
+    def _submit_jobs(self, processing_scheme):
 
         self.logger.info("Starting submission of tasks to QCG-PilotJob Manager "
-                         "in a submit order: " + submit_order.name)
-        if submit_order.is_iterative():
-            self._submit_iterative_jobs(submit_order)
+                         "in a processing scheme: " + processing_scheme.name)
+        if processing_scheme.is_iterative():
+            self._submit_iterative_jobs(processing_scheme)
         else:
-            self._submit_separate_jobs(submit_order)
+            self._submit_separate_jobs(processing_scheme)
         self.logger.info("Tasks submitted")
 
         # Store information to the state file that the jobs has been already submitted
         self.__write_to_state_file({'submitted': True})
 
-    def _submit_separate_jobs(self, submit_order):
+    def _submit_separate_jobs(self, processing_scheme):
 
         sampler = self._campaign._active_sampler_id
 
-        if submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED:
+        if processing_scheme == ProcessingScheme.SAMPLE_ORIENTED_CONDENSED:
             for run in self._campaign.list_runs(sampler):
                 t = self._tasks_manager.get_task(TaskType.ENCODING_AND_EXECUTION, key=run[0])
                 self._qcgpjm.submit(Jobs().add_std(t))
 
-        elif submit_order == SubmitOrder.RUN_ORIENTED:
+        elif processing_scheme == ProcessingScheme.SAMPLE_ORIENTED:
             for run in self._campaign.list_runs(sampler):
                 t1 = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
                 t2 = self._tasks_manager.get_task(
@@ -291,7 +292,7 @@ class Executor:
                 self._qcgpjm.submit(Jobs().add_std(t1))
                 self._qcgpjm.submit(Jobs().add_std(t2))
 
-        elif submit_order == SubmitOrder.PHASE_ORIENTED:
+        elif processing_scheme == ProcessingScheme.STEP_ORIENTED:
             wait_list = []
             for run in self._campaign.list_runs(sampler):
                 t = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
@@ -305,12 +306,12 @@ class Executor:
                 self._qcgpjm.submit(Jobs().add_std(t))
                 i += 1
 
-        elif submit_order == SubmitOrder.EXEC_ONLY:
+        elif processing_scheme == ProcessingScheme.EXEC_ONLY:
             for run in self._campaign.list_runs(sampler):
                 t = self._tasks_manager.get_task(TaskType.EXECUTION, key=run[0])
                 self._qcgpjm.submit(Jobs().add_std(t))
 
-    def _submit_iterative_jobs(self, submit_order):
+    def _submit_iterative_jobs(self, processing_scheme):
 
         sampler = self._campaign._active_sampler_id
 
@@ -320,9 +321,9 @@ class Executor:
 
         if len(list_runs) != max_run - min_run + 1:
             raise ValueError("Number of runs in a list is not homogeneous with their keys. "
-                             "The iterative SubmitOrder can't be applied")
+                             "The iterative ProcessingScheme can't be applied")
 
-        if submit_order == SubmitOrder.PHASE_ORIENTED_ITERATIVE:
+        if processing_scheme == ProcessingScheme.STEP_ORIENTED_ITERATIVE:
             t1 = self._tasks_manager.get_task(
                 TaskType.ENCODING, key_min=min_run, key_max=max_run)
             t2 = self._tasks_manager.get_task(
@@ -330,12 +331,12 @@ class Executor:
             self._qcgpjm.submit(Jobs().add_std(t1))
             self._qcgpjm.submit(Jobs().add_std(t2))
 
-        elif submit_order == SubmitOrder.RUN_ORIENTED_CONDENSED_ITERATIVE:
+        elif processing_scheme == ProcessingScheme.SAMPLE_ORIENTED_CONDENSED_ITERATIVE:
             t = self._tasks_manager.get_task(
                 TaskType.ENCODING_AND_EXECUTION, key_min=min_run, key_max=max_run)
             self._qcgpjm.submit(Jobs().add_std(t))
 
-        elif submit_order == SubmitOrder.EXEC_ONLY_ITERATIVE:
+        elif processing_scheme == ProcessingScheme.EXEC_ONLY_ITERATIVE:
             t = self._tasks_manager.get_task(
                 TaskType.EXECUTION, key_min=min_run, key_max=max_run)
             self._qcgpjm.submit(Jobs().add_std(t))
