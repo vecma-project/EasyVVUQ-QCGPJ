@@ -20,8 +20,7 @@ class ProcessingScheme(Enum):
         ("Submits an iterative task for execution of specific EasyVVUQ operation "
          "(e.g. encoding) for all samples (a single iteration is here an execution of "
          "the encoding operation for a single sample)"
-         "and then do the same for the next EasyVVUQ operation (e.g. for execution)"
-         , True)
+         "and then do the same for the next EasyVVUQ operation (e.g. for execution)", True)
 
     SAMPLE_ORIENTED = \
         ("Submits a workflow of EasyVVUQ operations as "
