@@ -42,7 +42,7 @@ te = model(t, temp0, kappa, t_env)
 
 # output csv file
 header = 'te'
-np.savetxt(output_filename, te
+np.savetxt(output_filename, te,
            delimiter=",",
            comments='',
            header=header)
