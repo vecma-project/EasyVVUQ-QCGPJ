@@ -15,8 +15,8 @@ __license__ = "LGPL"
 
 jobdir = os.getcwd()
 
-TEMPLATE = "tests/APP_COOLING/cooling.template"
-APPLICATION = "tests/APP_COOLING/cooling_model.py"
+TEMPLATE = "tests/app_cooling/cooling.template"
+APPLICATION = "tests/app_cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 
@@ -53,7 +53,7 @@ def test_cooling_pj(tmpdir):
             "default": "output.csv"}}
 
     output_filename = params["out_file"]["default"]
-    output_columns = ["te", "ti"]
+    output_columns = ["te"]
 
     # Create an encoder, decoder and collation element for PCE test app
     # encoder = uq.encoders.GenericEncoder(

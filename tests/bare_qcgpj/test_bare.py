@@ -52,11 +52,11 @@ def test_cooling_pj():
             "default": "output.csv"}}
 
     output_filename = params["out_file"]["default"]
-    output_columns = ["te", "ti"]
+    output_columns = ["te"]
 
     # Create an encoder, decoder and collation element for PCE test app
     encoder = uq.encoders.GenericEncoder(
-        template_fname=jobdir + '/tests/APP_COOLING/cooling.template',
+        template_fname=jobdir + '/tests/app_cooling/cooling.template',
         delimiter='$',
         target_filename='cooling_in.json')
 
@@ -79,7 +79,7 @@ def test_cooling_pj():
     if uqmethod == 'pce':
         my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
     else:
-        my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
+        my_sampler = uq.sampling.QMCSampler(vary=vary, n_mc_samples=10)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
@@ -133,7 +133,7 @@ def test_cooling_pj():
         exec_args = [
             run_dir,
             'easyvvuq_app',
-            'python3 ' + jobdir + "/tests/APP_COOLING/cooling_model.py", "cooling_in.json"
+            'python3 ' + jobdir + "/tests/app_cooling/cooling_model.py", "cooling_in.json"
         ]
 
         encode_task = {

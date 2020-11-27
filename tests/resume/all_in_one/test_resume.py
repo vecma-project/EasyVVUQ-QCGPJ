@@ -11,8 +11,8 @@ from qcg.pilotjob.api.errors import ConnectionError
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/APP_COOLING/cooling.template"
-APPLICATION = "tests/APP_COOLING/cooling_model.py"
+TEMPLATE = "tests/app_cooling/cooling.template"
+APPLICATION = "tests/app_cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 CAMPAIGN_STATE_FILE = "state_before_eqi"
 
@@ -54,7 +54,7 @@ def _init():
             "default": "output.csv"}}
 
     output_filename = params["out_file"]["default"]
-    output_columns = ["te", "ti"]
+    output_columns = ["te"]
 
     # Create an encoder, decoder and collation element
     encoder = uq.encoders.GenericEncoder(
