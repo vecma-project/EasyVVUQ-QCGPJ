@@ -153,7 +153,7 @@ def test_cooling_pj():
     print("Making analysis")
 
     my_sampler = my_campaign.get_active_sampler()
-    output_columns = ["te", "ti"]
+    output_columns = ["te"]
 
     analysis = uq.analysis.PCEAnalysis(sampler=my_sampler, qoi_cols=output_columns)
 #    analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
