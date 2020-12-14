@@ -1,5 +1,6 @@
 import os
 import time
+from glob import glob
 
 import chaospy as cp
 import easyvvuq as uq
@@ -86,9 +87,6 @@ def _init():
     # Will draw all (of the finite set of samples)
     my_campaign.draw_samples()
 
-    # Safe state of a campaign to state_file
-    my_campaign.save_state(my_campaign.campaign_dir + "/" + CAMPAIGN_STATE_FILE)
-
     global campaign_dir
     campaign_dir = my_campaign.campaign_dir
 
@@ -133,9 +131,15 @@ def test_cooling_pj():
 
     # ---- CAMPAIGN RE-INITIALISATION ---
     print("Loading Campaign")
+
+    eqi_dirs = glob(f'{campaign_dir}/.eqi-*')
+
+    # we get the first eqi-* dir
+    state_file = f'{eqi_dirs[0]}/{eqi.Executor.EQI_CAMPAIGN_STATE_FILE_NAME}'
+
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(
-        state_file=f'{campaign_dir}/{CAMPAIGN_STATE_FILE}',
+        state_file=state_file,
         work_dir=tmpdir)
 
     print("Starting execution")
@@ -162,10 +166,7 @@ def test_cooling_pj():
 
     results = my_campaign.get_last_analysis()
 
-#    data_frame = results.describe()
-#    data_frame.to_pickle("/tmp/qmc.pkl")
-
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
 

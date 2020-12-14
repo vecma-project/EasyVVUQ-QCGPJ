@@ -26,6 +26,8 @@ class Executor:
 
     """
 
+    EQI_CAMPAIGN_STATE_FILE_NAME = '.eqi_campaign_state.json'
+
     def __init__(self, campaign, config_file=None, resume=True, log_level='info'):
         self._qcgpjm = None
         self._campaign = campaign
@@ -44,6 +46,9 @@ class Executor:
         else:
             self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
             print("EQI starting in dir: " + self._eqi_dir)
+
+        # Safe state of a campaign to state_file
+        self._campaign.save_state(self._eqi_dir + "/" + Executor.EQI_CAMPAIGN_STATE_FILE_NAME)
 
         self.logger = self._setup_eqi_logging(log_level)
 
