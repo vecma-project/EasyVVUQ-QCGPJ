@@ -201,8 +201,6 @@ class Executor:
         """
 
         self._qcgpjm.finish()
-        self._qcgpjm.kill_manager_process()
-        self._qcgpjm.cleanup()
 
     def _setup_eqi_logging(self, log_level):
         log_level = log_level.upper()
@@ -266,52 +264,60 @@ class Executor:
 
         self.logger.info("Starting submission of tasks to QCG-PilotJob Manager "
                          "in a processing scheme: " + processing_scheme.name)
+
         if processing_scheme.is_iterative():
-            self._submit_iterative_jobs(processing_scheme)
+            jobs = self._prepare_iterative_jobs(processing_scheme)
         else:
-            self._submit_separate_jobs(processing_scheme)
-        self.logger.info("Tasks submitted")
+            jobs = self._prepare_separate_jobs(processing_scheme)
 
-        # Store information to the state file that the jobs has been already submitted
-        self.__write_to_state_file({'submitted': True})
+        if jobs and jobs.job_names():
+            self._qcgpjm.submit(jobs)
+            self.logger.info("Tasks submitted")
+            # Store information to the state file that the jobs has been already submitted
+            self.__write_to_state_file({'submitted': True})
+        else:
+            self.logger.error("Tasks not submitted")
+            # Store information to the state file that the jobs has been already submitted
+            self.__write_to_state_file({'submitted': False})
 
-    def _submit_separate_jobs(self, processing_scheme):
+    def _prepare_separate_jobs(self, processing_scheme):
 
         sampler = self._campaign._active_sampler_id
 
+        jobs = Jobs()
+
         if processing_scheme == ProcessingScheme.SAMPLE_ORIENTED_CONDENSED:
             for run in self._campaign.list_runs(sampler):
-                t = self._tasks_manager.get_task(TaskType.ENCODING_AND_EXECUTION, key=run[0])
-                self._qcgpjm.submit(Jobs().add_std(t))
+                jobs.add_std(self._tasks_manager.get_task(TaskType.ENCODING_AND_EXECUTION, key=run[0]))
 
         elif processing_scheme == ProcessingScheme.SAMPLE_ORIENTED:
             for run in self._campaign.list_runs(sampler):
                 t1 = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
                 t2 = self._tasks_manager.get_task(
                     TaskType.EXECUTION, key=run[0], after=(t1['name'],))
-                self._qcgpjm.submit(Jobs().add_std(t1))
-                self._qcgpjm.submit(Jobs().add_std(t2))
+                jobs.add_std(t1)
+                jobs.add_std(t2)
 
         elif processing_scheme == ProcessingScheme.STEP_ORIENTED:
             wait_list = []
             for run in self._campaign.list_runs(sampler):
                 t = self._tasks_manager.get_task(TaskType.ENCODING, key=run[0])
-                self._qcgpjm.submit(Jobs().add_std(t))
+                jobs.add_std(t)
                 wait_list.append(t['name'])
 
             i = 0
             for run in self._campaign.list_runs(sampler):
-                t = self._tasks_manager.get_task(
-                    TaskType.EXECUTION, key=run[0], after=(wait_list[i],))
-                self._qcgpjm.submit(Jobs().add_std(t))
+                jobs.add_std(self._tasks_manager.get_task(
+                    TaskType.EXECUTION, key=run[0], after=(wait_list[i],)))
                 i += 1
 
         elif processing_scheme == ProcessingScheme.EXEC_ONLY:
             for run in self._campaign.list_runs(sampler):
-                t = self._tasks_manager.get_task(TaskType.EXECUTION, key=run[0])
-                self._qcgpjm.submit(Jobs().add_std(t))
+                jobs.add_std(self._tasks_manager.get_task(TaskType.EXECUTION, key=run[0]))
 
-    def _submit_iterative_jobs(self, processing_scheme):
+        return jobs
+
+    def _prepare_iterative_jobs(self, processing_scheme):
 
         sampler = self._campaign._active_sampler_id
 
@@ -323,23 +329,25 @@ class Executor:
             raise ValueError("Number of runs in a list is not homogeneous with their keys. "
                              "The iterative ProcessingScheme can't be applied")
 
+        jobs = Jobs()
+
         if processing_scheme == ProcessingScheme.STEP_ORIENTED_ITERATIVE:
             t1 = self._tasks_manager.get_task(
                 TaskType.ENCODING, key_min=min_run, key_max=max_run)
             t2 = self._tasks_manager.get_task(
                 TaskType.EXECUTION, key_min=min_run, key_max=max_run, after=(t1['name'],))
-            self._qcgpjm.submit(Jobs().add_std(t1))
-            self._qcgpjm.submit(Jobs().add_std(t2))
+            jobs.add_std(t1)
+            jobs.add_std(t2)
 
         elif processing_scheme == ProcessingScheme.SAMPLE_ORIENTED_CONDENSED_ITERATIVE:
-            t = self._tasks_manager.get_task(
-                TaskType.ENCODING_AND_EXECUTION, key_min=min_run, key_max=max_run)
-            self._qcgpjm.submit(Jobs().add_std(t))
+            jobs.add_std(self._tasks_manager.get_task(
+                TaskType.ENCODING_AND_EXECUTION, key_min=min_run, key_max=max_run))
 
         elif processing_scheme == ProcessingScheme.EXEC_ONLY_ITERATIVE:
-            t = self._tasks_manager.get_task(
-                TaskType.EXECUTION, key_min=min_run, key_max=max_run)
-            self._qcgpjm.submit(Jobs().add_std(t))
+            jobs.add_std(self._tasks_manager.get_task(
+                TaskType.EXECUTION, key_min=min_run, key_max=max_run))
+
+        return jobs
 
     def __wait_and_sync(self):
 
