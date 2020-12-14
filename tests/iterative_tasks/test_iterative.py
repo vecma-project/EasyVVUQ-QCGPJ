@@ -11,8 +11,8 @@ from eqi import Task, TaskType, ProcessingScheme
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/APP_COOLING/cooling.template"
-APPLICATION = "tests/APP_COOLING/cooling_model.py"
+TEMPLATE = "tests/app_cooling/cooling.template"
+APPLICATION = "tests/app_cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:

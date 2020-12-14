@@ -10,8 +10,8 @@ import eqi
 __license__ = "LGPL"
 
 
-TEMPLATE = "tests/APP_COOLING/cooling.template"
-APPLICATION = "tests/APP_COOLING/cooling_model.py"
+TEMPLATE = "tests/app_cooling/cooling.template"
+APPLICATION = "tests/app_cooling/cooling_model.py"
 ENCODED_FILENAME = "cooling_in.json"
 
 if "SCRATCH" in os.environ:
@@ -54,7 +54,7 @@ def test_cooling_pj():
             "default": "output.csv"}}
 
     output_filename = params["out_file"]["default"]
-    output_columns = ["te", "ti"]
+    output_columns = ["te"]
 
     # Create an encoder, decoder and collation element
     encoder = uq.encoders.GenericEncoder(
