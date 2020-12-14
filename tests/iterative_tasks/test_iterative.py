@@ -119,7 +119,7 @@ def test_iterative_encoding_execution():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     end_time = time.time()
@@ -181,7 +181,7 @@ def test_iterative_encoding_execution_condensed():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
 
@@ -245,7 +245,7 @@ def test_iterative_execution():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
 

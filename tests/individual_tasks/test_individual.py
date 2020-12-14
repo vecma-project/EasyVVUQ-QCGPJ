@@ -119,7 +119,7 @@ def test_encoding_execution_step_oriented():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     end_time = time.time()
@@ -183,7 +183,7 @@ def test_encoding_execution_sample_oriented():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     end_time = time.time()
@@ -245,7 +245,7 @@ def test_encoding_execution_sample_oriented_condensed():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
 
@@ -309,7 +309,7 @@ def test_execution():
 
     results = my_campaign.get_last_analysis()
 
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
 

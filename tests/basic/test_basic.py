@@ -81,7 +81,7 @@ def test_cooling_pj():
     if uqmethod == 'pce':
         my_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=2)
     if uqmethod == 'qmc':
-        my_sampler = uq.sampling.QMCSampler(vary=vary, n_samples=10)
+        my_sampler = uq.sampling.QMCSampler(vary=vary, n_mc_samples=10)
 
     # Associate the sampler with the campaign
     my_campaign.set_sampler(my_sampler)
@@ -124,7 +124,7 @@ def test_cooling_pj():
     my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     return stats

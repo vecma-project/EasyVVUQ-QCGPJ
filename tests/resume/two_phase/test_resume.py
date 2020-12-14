@@ -37,9 +37,12 @@ def test_cooling_pj():
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(
         state_file=f'{tmpdir}{CAMPAIGN_RESUMED_DIR}/{CAMPAIGN_STATE_FILE}',
-        work_dir=tmpdir)
-
-    my_campaign.relocate(f'{tmpdir}{CAMPAIGN_RESUMED_DIR}')
+        work_dir=tmpdir,
+        relocate={
+            'work_dir': tmpdir,
+            'campaign_dir': CAMPAIGN_RESUMED_DIR,
+            'db_location': f'sqlite:////{tmpdir}{CAMPAIGN_RESUMED_DIR}/campaign.db'
+        })
 
     print("Starting execution")
     qcgpjexec = eqi.Executor(my_campaign)
@@ -58,12 +61,12 @@ def test_cooling_pj():
     my_sampler = my_campaign.get_active_sampler()
     output_columns = ["te", "ti"]
 
-    analysis = uq.analysis.QMCAnalysis(sampler=my_sampler, qoi_cols=output_columns)
+    analysis = uq.analysis.PCEAnalysis(sampler=my_sampler, qoi_cols=output_columns)
 
     my_campaign.apply_analysis(analysis)
 
     results = my_campaign.get_last_analysis()
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     return stats

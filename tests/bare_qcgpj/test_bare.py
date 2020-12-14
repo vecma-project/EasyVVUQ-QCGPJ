@@ -202,7 +202,7 @@ def test_cooling_pj():
     results = my_campaign.get_last_analysis()
 
     # Get Descriptive Statistics
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     return stats

@@ -118,7 +118,8 @@ def test_cooling_pj(tmpdir):
     my_campaign.apply_analysis(pce_analysis)
 
     results = my_campaign.get_last_analysis()
-    stats = results.describe()['te']['mean'], results.describe()['te']['std']
+
+    stats = results.describe()['te'].loc['mean'], results.describe()['te'].loc['std']
 
     print("Processing completed")
     return stats
