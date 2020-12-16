@@ -132,10 +132,9 @@ def test_cooling_pj():
     # ---- CAMPAIGN RE-INITIALISATION ---
     print("Loading Campaign")
 
-    eqi_dirs = glob(f'{campaign_dir}/.eqi-*')
-
     # we get the first eqi-* dir
-    state_file = f'{eqi_dirs[0]}/{eqi.Executor.EQI_CAMPAIGN_STATE_FILE_NAME}'
+    eqi_dirs = glob(f'{campaign_dir}/.eqi-*')
+    state_file = f'{eqi_dirs[0]}/{eqi.StateKeeper.EQI_CAMPAIGN_STATE_FILE_NAME}'
 
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(

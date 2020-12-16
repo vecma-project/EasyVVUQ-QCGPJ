@@ -1,4 +1,0 @@
-2020-11-26 11:07:25,629: Starting QCG-PJ Manager with arguments: ['--log', 'debug', '--wd', '/tmp/coolingjzakgf8j/.eqi-ch5lopof', '--nodes', '4']
-2020-11-26 11:07:25,797: QCG-PJ Manager created - available resources: {'total_nodes': 1, 'total_cores': 4, 'used_cores': 0, 'free_cores': 4}
-2020-11-26 11:07:25,798: Starting submission of tasks to QCG-PilotJob Manager in a processing scheme: SAMPLE_ORIENTED
-2020-11-26 11:07:26,264: Tasks submitted

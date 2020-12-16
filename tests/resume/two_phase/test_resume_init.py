@@ -86,9 +86,6 @@ def _init():
     # Will draw all (of the finite set of samples)
     my_campaign.draw_samples()
 
-    # Safe state of a campaign to state_file
-    my_campaign.save_state(my_campaign.campaign_dir + "/" + CAMPAIGN_STATE_FILE)
-
     global campaign_dir
     campaign_dir = my_campaign.campaign_dir
 

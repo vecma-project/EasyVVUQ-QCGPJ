@@ -50,12 +50,7 @@ class TasksManager:
         model = task.get_model()
 
         enc_args = [
-            self._campaign.db_type,
-            self._campaign.db_location,
-            'FALSE',
-            self._campaign.campaign_name,
-            self._campaign._active_app_name,
-            key
+            key,
         ]
 
         encode_task = {
@@ -79,12 +74,7 @@ class TasksManager:
         key = "Run_${it}"
 
         enc_args = [
-            self._campaign.db_type,
-            self._campaign.db_location,
-            'FALSE',
-            self._campaign.campaign_name,
-            self._campaign._active_app_name,
-            key
+            key,
         ]
 
         encode_task = {
@@ -107,7 +97,7 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         exec_args = [
             run_dir,
@@ -135,7 +125,7 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         exec_args = [
             run_dir,
@@ -163,14 +153,9 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         args = [
-            self._campaign.db_type,
-            self._campaign.db_location,
-            'FALSE',
-            self._campaign.campaign_name,
-            self._campaign._active_app_name,
             key,
 
             run_dir,
@@ -198,14 +183,9 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         args = [
-            self._campaign.db_type,
-            self._campaign.db_location,
-            'FALSE',
-            self._campaign.campaign_name,
-            self._campaign._active_app_name,
             key,
 
             run_dir,
@@ -233,7 +213,7 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         exec_args = [
             run_dir,
@@ -261,7 +241,7 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"{self._campaign.campaign_dir}/runs/{key}"
+        run_dir = f"runs/{key}"
 
         exec_args = [
             run_dir,

@@ -1,6 +1,7 @@
 import os
 import time
 import shutil
+from glob import glob
 
 import chaospy as cp
 import easyvvuq as uq
@@ -34,9 +35,14 @@ def test_cooling_pj():
 
     # ---- CAMPAIGN RE-INITIALISATION ---
     print("Loading Campaign")
+
+    # we get the first eqi-* dir
+    eqi_dirs = glob(f'{tmpdir}{CAMPAIGN_RESUMED_DIR}/.eqi-*')
+    state_file = f'{eqi_dirs[0]}/{eqi.StateKeeper.EQI_CAMPAIGN_STATE_FILE_NAME}'
+
     # Set up a fresh campaign called "cooling"
     my_campaign = uq.Campaign(
-        state_file=f'{tmpdir}{CAMPAIGN_RESUMED_DIR}/{CAMPAIGN_STATE_FILE}',
+        state_file=state_file,
         work_dir=tmpdir,
         relocate={
             'work_dir': tmpdir,

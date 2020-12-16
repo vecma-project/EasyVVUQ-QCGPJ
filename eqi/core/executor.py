@@ -1,11 +1,10 @@
 import logging
+import os
+
 from enum import Enum
 from os.path import exists, dirname, abspath
 from tempfile import mkdtemp
 from glob import glob
-
-import json
-import os
 
 import easyvvuq as uq
 from qcg.pilotjob.api.job import Jobs
@@ -14,8 +13,7 @@ from qcg.pilotjob.api.manager import LocalManager
 from eqi.core.task import TaskType
 from eqi.core.tasks_manager import TasksManager
 from eqi.core.processing_scheme import ProcessingScheme
-
-EQI_STATE_FILE_NAME = '.eqi_state.json'
+from eqi.utils.state_keeper import StateKeeper
 
 
 class Executor:
@@ -25,8 +23,6 @@ class Executor:
     using QCG-PilotJob.
 
     """
-
-    EQI_CAMPAIGN_STATE_FILE_NAME = '.eqi_campaign_state.json'
 
     def __init__(self, campaign, config_file=None, resume=True, log_level='info'):
         self._qcgpjm = None
@@ -38,17 +34,7 @@ class Executor:
 
         print("EQI initialisation for the campaign: " + self._campaign.campaign_dir)
 
-        if resume:
-            self._resume = self._try_to_prepare_resume()
-
-        if self._resume:
-            print("EQI resuming in dir: " + self._eqi_dir)
-        else:
-            self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
-            print("EQI starting in dir: " + self._eqi_dir)
-
-        # Safe state of a campaign to state_file
-        self._campaign.save_state(self._eqi_dir + "/" + Executor.EQI_CAMPAIGN_STATE_FILE_NAME)
+        self._setup_eqi_dir(resume)
 
         self.logger = self._setup_eqi_logging(log_level)
 
@@ -245,25 +231,34 @@ class Executor:
 
         return service_log_level, client_log_level
 
-    def _try_to_prepare_resume(self):
-        eqi_dirs = glob(f'{self._campaign.campaign_dir}/.eqi-*')
+    def _setup_eqi_dir(self, resume):
 
-        if eqi_dirs.__len__() > 0:
-            resume_dir = eqi_dirs[0]    # we get the first eqi-* dir, TODO: get specific one
-            self._eqi_dir = resume_dir
-            print("Existing EQI directory found: ", resume_dir)
-        else:
-            print("No EQI directory found - can't resume")
-            return False
+        self._resume = False
+
+        if resume:
+            eqi_dirs = glob(f'{self._campaign.campaign_dir}/.eqi-*')
+
+            if eqi_dirs.__len__() > 0:
+                resume_dir = eqi_dirs[0]    # we get the first eqi-* dir, TODO: get specific one
+                print("Existing EQI directory found: ", resume_dir)
+                self._eqi_dir = resume_dir
+                self._state_keeper = StateKeeper(self._eqi_dir)
+                self._state_keeper.setup(self._campaign)
+                _dict = self._state_keeper.get_from_state_file()
+                if 'submitted' in _dict and 'completed' not in _dict:
+                    print("EQI resuming in dir: " + self._eqi_dir)
+                    self._resume = True
+                else:
+                    print("The EQI not in the submitted state - can't resume")
+            else:
+                print("No EQI directory found - can't resume")
 
         # jobs need to be submitted in order to resume
-        if 'submitted' in self.__get_from_state_file()\
-                and 'completed' not in self.__get_from_state_file():
-            print("Resume directory ready for use")
-            return True
-        else:
-            print("The EQI not in the submitted state - can't resume")
-            return False
+        if self._resume is False:
+            self._eqi_dir = mkdtemp(None, ".eqi-", self._campaign.campaign_dir)
+            print("EQI starting in dir: " + self._eqi_dir)
+            self._state_keeper = StateKeeper(self._eqi_dir)
+            self._state_keeper.setup(self._campaign)
 
     def _submit_jobs(self, processing_scheme):
 
@@ -279,11 +274,11 @@ class Executor:
             self._qcgpjm.submit(jobs)
             self.logger.info("Tasks submitted")
             # Store information to the state file that the jobs has been already submitted
-            self.__write_to_state_file({'submitted': True})
+            self._state_keeper.write_to_state_file({'submitted': True})
         else:
             self.logger.error("Tasks not submitted")
             # Store information to the state file that the jobs has been already submitted
-            self.__write_to_state_file({'submitted': False})
+            self._state_keeper.write_to_state_file({'submitted': False})
 
     def _prepare_separate_jobs(self, processing_scheme):
 
@@ -366,33 +361,9 @@ class Executor:
             self._campaign.campaign_db.set_run_statuses([run_id], uq.constants.Status.ENCODED)
 
         self._campaign.call_for_each_run(update_status, status=uq.constants.Status.NEW)
-        self.__write_to_state_file({'completed': True})
+        self._state_keeper.write_to_state_file({'completed': True})
         self.logger.info("Campaign synced")
 
-    def __write_to_state_file(self, data):
-
-        eqi_file_loc = f'{self._eqi_dir}/{EQI_STATE_FILE_NAME}'
-
-        if os.path.exists(eqi_file_loc):
-            with open(eqi_file_loc, 'r') as eqi_file:
-                state_dict = json.load(eqi_file)
-                state_dict.update(data)
-        else:
-            state_dict = data
-
-        with open(eqi_file_loc, 'w') as eqi_file:
-            json.dump(state_dict, eqi_file)
-
-    def __get_from_state_file(self):
-
-        eqi_file_loc = f'{self._eqi_dir}/{EQI_STATE_FILE_NAME}'
-        if os.path.exists(eqi_file_loc):
-            with open(eqi_file_loc, 'r') as eqi_file:
-                state_dict = json.load(eqi_file)
-        else:
-            state_dict = {}
-
-        return state_dict
 
 
 class ServiceLogLevel(Enum):

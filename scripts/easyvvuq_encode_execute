@@ -8,8 +8,8 @@ then
 fi
 
 #python3 -m eqi.easyvvuq_encode $@
-enc_args=${@:1:6}
-exec_args=${@:7}
+enc_args=${@:1:1}
+exec_args=${@:2}
 
 echo ${enc_args}
 echo ${exec_args}
