@@ -15,7 +15,7 @@ class StateKeeper:
     directory : string
         the root directory where the information will be stored
     campaign : Campaign
-        the EasyVVUQ Campaign object from which the StateKeeper will be inited 
+        the EasyVVUQ Campaign object from which the StateKeeper will be inited
 
     """
     def __init__(self, directory):

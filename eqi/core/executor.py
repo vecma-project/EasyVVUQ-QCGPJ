@@ -365,7 +365,6 @@ class Executor:
         self.logger.info("Campaign synced")
 
 
-
 class ServiceLogLevel(Enum):
     CRITICAL = "critical"
     ERROR = "error"
