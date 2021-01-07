@@ -130,8 +130,11 @@ def test_cooling_pj():
         print("Code interrupted")
 
     # ---- CAMPAIGN RE-INITIALISATION ---
-    print("Loading Campaign")
 
+    print("Sleeping to allow fs syncing")
+    time.sleep(30)
+
+    print("Loading Campaign")
     # we get the first eqi-* dir
     eqi_dirs = glob(f'{campaign_dir}/.eqi-*')
     state_file = f'{eqi_dirs[0]}/{eqi.StateKeeper.EQI_CAMPAIGN_STATE_FILE_NAME}'

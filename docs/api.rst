@@ -16,10 +16,7 @@ in the section :ref:`Passing the execution environment to QCG-PilotJob tasks`
 
 The next parameter is ``resume``. By default it is set to True, which
 means that EQI will try to resume not completed workflow of tasks submitted to QCG-PilotJob Manager.
-(for example terminated because of the walltime crossing).
-The resume mechanism can be activated when Executor is inited with the campaign
-for which EQI processing was already started but not yet completed.
-If this behaviour is not intended, the ``resume`` should be set to False.
+ More on this topic is discussed in the section :ref:`Resume mechanism`
 
 The last (optional) parameter is ``log_level`` that allows to set
 specific level of logging just for the EasyVVUQ-QCGPJ part of processing.
@@ -267,6 +264,41 @@ prior of its actual execution. Very basic example of the
     The alternate option to provide the configuration file is to specify
     its location by the ``config_file`` parameter
     provided into the constructor of the ``Executor`` object.
+
+Resume mechanism
+****************
+EQI is able to resume not completed workflow of tasks submitted to QCG-PilotJob Manager.
+(for example terminated because of the walltime crossing).
+By default the resume mechanism is activated automatically when Executor is inited with the campaign
+for which EQI processing was already started (working directory exists) but it is not not yet completed.
+If this behaviour is not intended, the resume mechanism can be disabled with providing
+``resume=False`` parameter to the ``Executor's`` constructor.
+
+The resumed workflow will start in a working directory of the previous, not-completed execution.
+This is fully expected behaviour, but since the partially generated output or intermediate files can exists,
+they need to be carefully handled. EQI tries to help in this matter by providing
+mechanisms for automatic recovery of individual tasks.
+
+How much the automatism can interfere with the resume logic, depends on a use case, and therefore
+EQI provides a few ``ResumeLevels`` of automatic recovery. The levels can be set in the ``Task``'s
+constructor with the ``resume_level`` parameter. There are the following options available:
+
+``DISABLED``
+    Automatic resume is fully disabled for a task.
+``BASIC``
+    For the task types creating run directories (``ENCODING``, ``ENCODING_AND_EXECUTION``), the resume checks
+    if an unfinished task created run directory. If such directory is available, this directory is recursively
+    removed before the start of the resumed task.
+``MODERATE``
+    This level processes all operations offered by the ``BASIC`` level, and adds the following features.
+    At the beginning of a task's execution, the list of directories and files in a run directory
+    is generated and stored. The resumed task checks for the differences and remove new files and directories
+    in order to resurrect the initial state.
+
+Please note that this functionality may be not sufficient for more advanced scenarios
+(for example if input files are updated during an execution) and those for which the overhead
+of the mechanism is not acceptable.
+In such cases, the more optimal logic of resume may need to be provided on a level of the actual code of a task.
 
 External Encoders
 *****************

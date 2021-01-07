@@ -80,7 +80,10 @@ def test_cooling_pj():
 
 def __prepare_data():
     shutil.rmtree(f'{tmpdir}{CAMPAIGN_RESUMED_DIR}', ignore_errors=True)
-    shutil.copytree(f'tests/resume/two_phase/uncompleted_data/{CAMPAIGN_INTERRUPTED_DIR}', f'{tmpdir}{CAMPAIGN_RESUMED_DIR}')
+    shutil.copytree(f'tests/resume/two_phase/uncompleted_data/{CAMPAIGN_INTERRUPTED_DIR}',
+                    f'{tmpdir}{CAMPAIGN_RESUMED_DIR}')
+
+    print(f"Test data prepared in '{tmpdir}{CAMPAIGN_RESUMED_DIR}")
 
 
 if __name__ == "__main__":

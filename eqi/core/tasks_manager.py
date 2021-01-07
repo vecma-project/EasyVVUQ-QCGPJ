@@ -41,7 +41,7 @@ class TasksManager:
             task_method = switcher.get(task_type)
             ready_task = task_method(task, key_max, key_min)
 
-        self._fill_task_with_common_params(ready_task, task.get_requirements(), after)
+        self._fill_task_with_common_params(ready_task, task.get_resume_level(), task.get_requirements(), after)
 
         return ready_task
 
@@ -50,7 +50,7 @@ class TasksManager:
         model = task.get_model()
 
         enc_args = [
-            key,
+            key
         ]
 
         encode_task = {
@@ -59,9 +59,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/encode_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/encode_' + key + '.stderr'
+                "stdout": f"encode_{key}.stdout",
+                "stderr": f"encode_{key}.stderr"
             }
         }
 
@@ -84,9 +83,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_encode',
                 "args": enc_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/encode_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/encode_{key}.stderr"
+                "stdout": f"encode_{key}.stdout",
+                "stderr": f"encode_{key}.stderr"
             }
         }
 
@@ -97,11 +95,8 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"runs/{key}"
-
         exec_args = [
-            run_dir,
-            'easyvvuq_app',
+            key,
             application
         ]
 
@@ -111,9 +106,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/execute_' + key + '.stderr'
+                "stdout": f"execute_{key}.stdout",
+                "stderr": f"execute_{key}.stderr"
             }
         }
 
@@ -125,11 +119,9 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"runs/{key}"
 
         exec_args = [
-            run_dir,
-            'easyvvuq_app',
+            key,
             application
         ]
 
@@ -140,9 +132,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/execute_{key}.stderr"
+                "stdout": f"execute_{key}.stdout",
+                "stderr": f"execute_{key}.stderr"
             }
         }
 
@@ -153,13 +144,8 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"runs/{key}"
-
         args = [
             key,
-
-            run_dir,
-            'easyvvuq_app',
             application
         ]
 
@@ -169,9 +155,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/encode_execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/encode_execute_' + key + '.stderr'
+                "stdout": f"encode_execute_{key}.stdout",
+                "stderr": f"encode_execute_{key}.stderr"
             }
         }
 
@@ -183,13 +168,9 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"runs/{key}"
 
         args = [
             key,
-
-            run_dir,
-            'easyvvuq_app',
             application
         ]
 
@@ -200,9 +181,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_encode_execute',
                 "args": args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/encode_execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/encode_execute_{key}.stderr"
+                "stdout": f"encode_execute_{key}.stdout",
+                "stderr": f"encode_execute_{key}.stderr"
             }
         }
 
@@ -213,11 +193,8 @@ class TasksManager:
         application = task.get_params().get("application")
         model = task.get_model()
 
-        run_dir = f"runs/{key}"
-
         exec_args = [
-            run_dir,
-            'easyvvuq_app',
+            key,
             application
         ]
 
@@ -227,9 +204,8 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": self._eqi_dir + '/execute_' + key + '.stdout',
-                "stderr": self._eqi_dir + '/execute_' + key + '.stderr'
+                "stdout": f"execute_{key}.stdout",
+                "stderr": f"execute_{key}.stderr"
             }
         }
 
@@ -241,11 +217,9 @@ class TasksManager:
         model = task.get_model()
 
         key = "Run_${it}"
-        run_dir = f"runs/{key}"
 
         exec_args = [
-            run_dir,
-            'easyvvuq_app',
+            key,
             application
         ]
 
@@ -256,15 +230,14 @@ class TasksManager:
                 "model": model,
                 "exec": 'easyvvuq_execute',
                 "args": exec_args,
-                "wd": self._eqi_dir,
-                "stdout": f"{self._eqi_dir}/execute_{key}.stdout",
-                "stderr": f"{self._eqi_dir}/execute_{key}.stderr"
+                "stdout": f"execute_{key}.stdout",
+                "stderr": f"execute_{key}.stderr"
             }
         }
 
         return execute_task
 
-    def _fill_task_with_common_params(self, task, requirements=None, after=None):
+    def _fill_task_with_common_params(self, task, resume_level, requirements=None, after=None,):
 
         if requirements:
             task.update(requirements.get_resources())
@@ -273,6 +246,8 @@ class TasksManager:
                 'dependencies': {
                     'after': after
                 }})
+
+        task["execution"].update({"env": {"EQI_RESUME_LEVEL": resume_level.name}})
 
         if self._config_file:
             task["execution"].update({"env": {"EQI_CONFIG": self._config_file}})
