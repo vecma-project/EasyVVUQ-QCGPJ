@@ -6,7 +6,7 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/vecma-project/EasyVVUQ-QCGPJ.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vecma-project/EasyVVUQ-QCGPJ/alerts/)
 
 EasyVVUQ-QCGPJ (EQI) is a lightweight plugin for parallelization of [EasyVVUQ](https://github.com/UCL-CCS/EasyVVUQ)
-with the [QCG-PilotJob mechanism](https://github.com/vecma-project/QCG-PilotJob).
+with [QCG-PilotJob](https://github.com/vecma-project/QCG-PilotJob).
 
 It is a part of the [VECMA Toolkit](http://www.vecma-toolkit.eu).
 
