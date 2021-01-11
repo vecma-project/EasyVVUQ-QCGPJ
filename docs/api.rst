@@ -267,10 +267,10 @@ prior of its actual execution. Very basic example of the
 
 Resume mechanism
 ****************
-EQI is able to resume not completed workflow of tasks submitted to QCG-PilotJob Manager.
+EQI is able to resume not completed workflow of tasks submitted to QCG-PilotJob Manager
 (for example terminated because of the walltime crossing).
 By default the resume mechanism is activated automatically when Executor is inited with the campaign
-for which EQI processing was already started (working directory exists) but it is not not yet completed.
+for which EQI processing was already started (working directory exists) but it is not yet completed.
 If this behaviour is not intended, the resume mechanism can be disabled with providing
 ``resume=False`` parameter to the ``Executor's`` constructor.
 
@@ -279,7 +279,7 @@ This is fully expected behaviour, but since the partially generated output or in
 they need to be carefully handled. EQI tries to help in this matter by providing
 mechanisms for automatic recovery of individual tasks.
 
-How much the automatism can interfere with the resume logic, depends on a use case, and therefore
+How much the automatism can interfere with the resume logic depends on a use case and therefore
 EQI provides a few ``ResumeLevels`` of automatic recovery. The levels can be set in the ``Task``'s
 constructor with the ``resume_level`` parameter. There are the following options available:
 
@@ -297,7 +297,7 @@ constructor with the ``resume_level`` parameter. There are the following options
 
 Please note that this functionality may be not sufficient for more advanced scenarios
 (for example if input files are updated during an execution) and those for which the overhead
-of the mechanism is not acceptable.
+of the built-in mechanism is not acceptable.
 In such cases, the more optimal logic of resume may need to be provided on a level of the actual code of a task.
 
 External Encoders
@@ -335,3 +335,40 @@ full test case please look in ``tests/custom_encoder``):
    export ENCODER_MODULES
 
    export EQI_CONFIG=$this_dir/$this_file
+
+Performance optimisation hints
+******************************
+There are many factors that influence on the performance of EQI.
+This section presents some guidance on optimisation of EQI. However, since the scenarios are very different
+the presented information should be considered only as hints that can help in optimisation, but they are not
+a ready-to-use recipes.
+
+Firstly, the performance of EQI is naturally limited by the performance of QCG-PilotJob.
+At this level, the usage of ``ITERATIVE`` versions of tasks is preferred
+as it minimises communication overhead related to interaction with QCG-PilotJob Manager.
+However, in general, it should be noted that the QCG-PilotJob performance may cause a problem only for extremely
+demanding scenarios. For the typical use cases, there are other aspects that possibly play more important role.
+
+The critical element for good performance of EQI is to ensure good fitting of the tasks
+to the size of allocation so there are no empty slots during the execution. For example,
+it would be very inefficient to have 10 cores in allocation and execute only tasks requiring 6 cores. Then 4 cores
+would be empty all the time. Much more optimal would be to execute tasks that require 5 cores so
+two task could be executed in parallel. Please note that there are different types of tasks and different processing
+schemes that may use these tasks available in EQI, so the allocation of tasks may be not so obvious
+as in the given example. Thus both the allocation size, tasks sizes and processing scheme selection are all variables
+that need to be determined through scenario analysis and pre-production tests.
+
+The basic way of usage of EQI goes down to modification of few lines in a typical EasyVVUQ workflow
+and execution of the modified workflow on a computing cluster. This is easy, but it should be noted that the
+whole workflow will be executed in an allocation that can consist of many computing nodes. Likely not all
+steps of EasyVVUQ require HPC power or may be done in parallel (e.g. sampling and analysis are typically
+done serially) and therefore in some use cases it may be more optimal to split the workflow
+into parts executed on HPC machines and those executed locally (or in different, smaller allocation).
+EasyVVUQ provides the save / load mechanism for the Campaign based on a state file,
+that can be used to resurrect the workflow when some calculations have been already made in a different
+location. In particular, this optimisation should be considered when there is a large allocation
+and relatively long processing time of sampling / analysis
+
+Going forward with this issue, also encoding tasks can be extracted from the processing in a large allocation.
+Please note however that possible inefficiency is here relatively small since encoding tasks can be executed
+in parallel over the whole allocation (unless the ``EXECUTION_ONLY`` processing scheme is not selected).

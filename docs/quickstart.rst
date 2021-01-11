@@ -174,4 +174,5 @@ Resuming the workfow
 EQI is able to resume processing of tasks within QCG-PilotJob Manager if the workflow was not completed
 (for example when it was stopped due to crossing the walltime limit).
 The resume mechanism is enabled by default and it is used whenever Executor is inited with the campaign
-for which EQI processing was already started but not completed.
+for which EQI processing was already started but not yet completed. For more information see :ref:`Resume mechanism`
+
