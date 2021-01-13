@@ -113,7 +113,7 @@ def _init():
         qcgpjexec.terminate_manager()
 
     # terminate executor in 10 seconds
-    t = Timer(10.0, terminate_run)
+    t = Timer(8.0, terminate_run)
     t.start()
 
     qcgpjexec.run(processing_scheme=eqi.ProcessingScheme.SAMPLE_ORIENTED)

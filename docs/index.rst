@@ -27,6 +27,10 @@ the serial execution of EasyVVUQ is no longer sufficient.
    quickstart
    api
 
+.. toctree::
+   :caption: Further reading
+
+   performance_optimisation
 
 .. toctree::
    :maxdepth: 1
@@ -34,7 +38,6 @@ the serial execution of EasyVVUQ is no longer sufficient.
 
    tutorials/cooling_cup/guide/tutorial
    tutorials/interactive_tutorial
-
 
 .. toctree::
    :maxdepth: 1

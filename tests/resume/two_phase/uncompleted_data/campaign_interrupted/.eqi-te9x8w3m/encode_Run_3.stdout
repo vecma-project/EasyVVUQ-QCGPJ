@@ -1,7 +1,0 @@
-Initialisation of data for resume  in BASIC level
-Cleaning old task
-Checking for previously uncompleted execution
-Fresh startup, nothing to clean
-Storing initial state of a task
-{'campaign_db_location': 'sqlite:////tmp/coolingh21ftrvr/campaign.db', 'campaign_db_type': 'sql', 'campaign_write_to_db': 'FALSE', 'campaign_name': 'cooling', 'campaign_active_app_name': 'cooling', 'submitted': True}
-Marking completion of task
