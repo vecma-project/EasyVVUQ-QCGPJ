@@ -30,7 +30,7 @@ jobs:
       server: https://test.pypi.org/legacy/
       edge: true
       on:
-        branch: dev
+        tags: true
   
   - stage: deploy to PyPi  
     if: tag ~= /[0-9]+\.[0-9]+\.?[0-9]*$/
