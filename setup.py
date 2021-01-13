@@ -11,6 +11,7 @@ setup(
     name='easyvvuq-qcgpj',
 
     version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
 
     description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',

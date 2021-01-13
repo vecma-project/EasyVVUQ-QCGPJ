@@ -7,3 +7,7 @@ from .utils.state_keeper import StateKeeper
 
 __all__ = ['Executor', 'Task', 'TaskType', 'ProcessingScheme', 'TaskRequirements', 'Resources', 'ResumeLevel',
            'StateKeeper']
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions

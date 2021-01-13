@@ -1,0 +1,2 @@
+include versioneer.py
+include eqi/_version.py
