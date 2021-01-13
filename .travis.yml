@@ -1,23 +1,25 @@
 language: python
 python:
   - "3.6.7"
+  
+before_install:
+#  - pip install easyvvuq
+- pip install --force-reinstall git+https://github.com/UCL-CCS/EasyVVUQ.git@relocate-updates
+#  - pip install qcg-pilotjob
+- pip install git+https://github.com/vecma-project/QCG-PilotJob@issue_82
+
+install:
+- pip install .
 
 jobs:
   include: 
-  - stage: install dependencies
-    install:
-#  - pip install easyvvuq
-    - pip install --force-reinstall git+https://github.com/UCL-CCS/EasyVVUQ.git@relocate-updates
-#  - pip install qcg-pilotjob
-    - pip install git+https://github.com/vecma-project/QCG-PilotJob@issue_82
-  - stage: install eqi
-    install:
-    - pip install .
+  
   - stage: test
     script:
     - py.test --flake8 eqi/
     - py.test -s --flake8 tests
     - source tests/custom_encoder/eqi_sample_config.sh && py.test --flake8 tests/custom_encoder
+  
   - stage: deploy to TestPyPi
     if: tag ~= /[0-9]+\.[0-9]+\.?[0-9]*rc[0-9]*$/
     deploy:
@@ -27,7 +29,8 @@ jobs:
       server: https://test.pypi.org/legacy/
       edge: true
       on:
-        tags: true
+        branch: dev
+  
   - stage: deploy to PyPi  
     if: tag ~= /[0-9]+\.[0-9]+\.?[0-9]*$/
     deploy:
