@@ -1,3 +1,5 @@
+import versioneer
+
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
@@ -8,7 +10,7 @@ long_description = readme.split("\n", 2)[2]
 setup(
     name='easyvvuq-qcgpj',
 
-    version='0.5rc6',
+    version=versioneer.get_version(),
 
     description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',
