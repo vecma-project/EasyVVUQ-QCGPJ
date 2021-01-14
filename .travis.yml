@@ -3,10 +3,8 @@ python:
   - "3.6.7"
   
 before_install:
-#  - pip install easyvvuq
-- pip install --force-reinstall git+https://github.com/UCL-CCS/EasyVVUQ.git@relocate-updates
-#  - pip install qcg-pilotjob
-- pip install git+https://github.com/vecma-project/QCG-PilotJob@issue_82
+- pip install easyvvuq
+- pip install qcg-pilotjob
 
 install:
 - pip install .
