@@ -1,3 +1,5 @@
+import versioneer
+
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
@@ -8,7 +10,8 @@ long_description = readme.split("\n", 2)[2]
 setup(
     name='easyvvuq-qcgpj',
 
-    version='0.4.1',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
 
     description='A lightweight plugin for EasyVVUQ enabling the execution of demanding VVUQ procedures '
                 'using the QCG-PilotJob mechanism.',
@@ -28,10 +31,10 @@ setup(
     packages=find_packages(),
 
     scripts=[
-        'scripts/easyvvuq_app',
         'scripts/easyvvuq_encode',
         'scripts/easyvvuq_execute',
-        'scripts/easyvvuq_encode_execute'
+        'scripts/easyvvuq_encode_execute',
+        'scripts/eqi_utils.sh'
     ],
 
     include_package_data=True

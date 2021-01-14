@@ -14,6 +14,12 @@ The second (optional) parameter of the ``Executor``'s constructor is
 of tasks started by QCG-PilotJob. More information on this topic is presented
 in the section :ref:`Passing the execution environment to QCG-PilotJob tasks`
 
+The next parameter is ``resume``. By default it is set to True, which
+means that EQI will try to resume not completed workflow of tasks submitted to QCG-PilotJob Manager.
+ More on this topic is discussed in the section :ref:`Resume mechanism`
+
+The last (optional) parameter is ``log_level`` that allows to set
+specific level of logging just for the EasyVVUQ-QCGPJ part of processing.
 
 QCG-PilotJob Manager initialisation
 ***********************************
@@ -23,7 +29,7 @@ Manager service. It is possible to do this in two ways:
 
 -  The first and simpler option is to use ``create_manager()`` method
    that creates QCG-PilotJob Manager in a basic configuration. The method
-   takes three optional parameters:
+   takes four optional parameters:
 
    -  ``dir`` to customise a working directory of the manager (by
       default current directory)
@@ -38,11 +44,14 @@ Manager service. It is possible to do this in two ways:
       ``[NODE_NAME]:CORES[,[NODE_NAME]:CORES]...``
    -  ``reserve_core`` to specify if the manager service should run on a
       separate, reserved core (by default ``False``, which means that
-      the manager's core will be shared with executed tasks).
+      the manager's core will be shared with executed tasks)
+    - ``log_level`` to set logging level for QCG-PilotJob Manager service and
+      client parts.
 
 -  The second and more advanced option is to use ``set_manager()``
    method. This methods takes a single parameter, which is an instance
-   of externally created QCG-PilotJob Manager instance.
+   of externally created QCG-PilotJob Manager instance. Don't try to use
+   this method unless you have very specific needs.
 
    For the reference go to: `QCG-PilotJob
    documentation <https://github.com/vecma-project/QCG-PilotJob>`__.
@@ -68,7 +77,7 @@ PJ Manager:
    the application.
 
 The addition of a Task to Executor does not condition its later use -
-this if the Task is actually used depends on a specific submission
+this if the Task is actually used depends on a specific processing
 scheme that is selected for the execution in the ``run()`` method of
 Executor. In order to keep consistency of the environment only a single
 Task of a given type should be kept in the Executor.
@@ -138,57 +147,90 @@ Since this option comes directly from QCG-PilotJob, the detailed description of 
 in the `QCG Pilot Job documentation <https://github.com/vecma-project/QCG-PilotJob>`__
 
 
-Submission schemes
-******************
+Processing schemes
+*******************
 
-EasyVVUQ-QCGPJ allows to submit tasks in a few predefined order schemes. The
-submission may be ``RUN_ORIENTED``, ``PHASE_ORIENTED``, ``EXECUTION_ONLY`` or
-``RUN_ORIENTED_CONDENSED``. Depending on a specific usecase the
-efficiency of these schemes may significantly differ.
+EasyVVUQ-QCGPJ allows to process tasks in a few predefined schemes which differ
+in both the scope of covered EasyVVUQ steps as well as the order of submission
+and the way of processing of tasks by QCG-PilotJob.
 
-Below we shortly describe the four currently supported schemes of
-submission, making the use of some kind of visual representation.
+Below we shortly describe the seven currently supported schemes,
+making the use of some kind of visual representation.
 Firstly, let's assume that we have a set of EasyVVUQ samples marked as
 s1, s2, ..., sN. Then:
 
-``RUN_ORIENTED``
-   means that the tasks are submitted in a priority
-   of RUN (aka sample); in other words we want to complete whole
+``STEP_ORIENTED``
+   in this scheme tasks are submitted in a priority
+   of STEP; we want to complete encoding step for all samples and then
+   go to the execution step for all samples. This scheme is as follows:
+
+   ``encoding(s1)->encoding(s2)->...->encoding(sN)->execution(s1)->execution(s2)->...->execution(sN)``
+
+``STEP_ORIENTED_ITERATIVE``
+   this scheme is similar to ``STEP_ORIENTED`` in a sense that the tasks
+   are submitted in a priority of STEP, but here we make use of iterative
+   tasks of QCG-PilotJob to execute all operation within a STEP in a single
+   iterative task (internally consisted of many iterations).
+   This scheme can be expressed as follows:
+
+   ``encoding_iterative(s1, s2, ..., sN)->execution_iterative(s1, s2, ..., sN)``
+
+
+``SAMPLE_ORIENTED``
+   in this scheme the tasks are submitted in a priority
+   of SAMPLE; in other words we want to complete whole
    processing (encoding and execution) for a given sample as soon as
-   possible and then go to the next sample. This order can be written as
+   possible and then go to the next sample. This scheme can be written as
    follows:
 
    ``encoding(s1)->execution(s1)->encoding(s2)->execution(s2)->...->encoding(sN)->execution(sN)``
 
-``PHASE_ORIENTED``
-   means that the tasks are submitted in a priority
-   of PHASE; we want to complete encoding phase for all samples and then
-   go to the execution phase for all samples. This order is as follows:
 
-   ``encoding(s1)->encoding(s2)->...->encoding(sN)->execution(s1)->execution(s2)->...->execution(sN)``
-
-
-``EXECUTION_ONLY``
-   instructs to submit only the ``EXECUTION`` tasks assuming that the encoding phase is executed outside
-   QCG-PilotJob. It could be written as follows:
-
-   ``execution(s1)->execution(s2)->...->execution(sN)``
-
-
-``RUN_ORIENTED_CONDENSED``
-   it is similar order to ``RUN_ORIENTED``,
+``SAMPLE_ORIENTED_CONDENSED``
+   it is similar scheme to ``SAMPLE_ORIENTED``,
    but the encoding and execution are *condensed* into a single PJ task.
    It could be expressed as:
 
    ``encoding&execution(s1)->encoding&execution(s2)->...->encoding&execution(sN)``
 
-The schemes use different task types that need to be added to Executor to execute:
 
--  The ``RUN_ORIENTED`` and ``PHASE_ORIENTED`` schemes require
+``SAMPLE_ORIENTED_CONDENSED_ITERATIVE``
+   this type employs iterative tasks to run *condensed* encoding and execution.
+   This is similar to ``SAMPLE_ORIENTED_CONDENSED``, but here encoding&execution tasks are
+   a part of iterative task. It could be expressed as:
+
+   ``encoding&execution_iterative(s1, s2, ..., sN)``
+
+
+``EXECUTION_ONLY``
+   instructs to submit only the ``EXECUTION`` tasks assuming that the encoding step
+   is executed outside QCG-PilotJob. It could be written as follows:
+
+   ``execution(s1)->execution(s2)->...->execution(sN)``
+
+
+``EXECUTION_ONLY_ITERATIVE``
+   the variation of scheme to submit only the ``EXECUTION`` tasks, but in contrast to
+   the ``EXECUTION_ONLY`` scheme, here an iterative QCG-PilotJob task is used to run all tasks.
+   It could be written as follows:
+
+   ``execution_iterative(s1, s2,... sN)``
+
+
+The schemes use different task types that need to be added to Executor in order to allow processing:
+
+-  The ``SAMPLE_ORIENTED``, ``STEP_ORIENTED``and ``STEP_ORIENTED_ITERATIVE`` schemes require
    ``ENCODING`` and ``EXECUTION`` tasks.
--  The ``EXECUTION_ONLY`` scheme requires ``EXECUTION`` task.
--  The ``RUN_ORIENTED_CONDENSED`` requires ``ENCODING_AND_EXECUTION``
+-  The ``EXECUTION_ONLY`` and ``EXECUTION_ONLY_ITERATIVE`` schemes require ``EXECUTION`` task.
+-  The ``SAMPLE_ORIENTED_CONDENSED`` and ``SAMPLE_ORIENTED_CONDENSED_ITERATIVE`` require ``ENCODING_AND_EXECUTION``
    task.
+
+The efficiency of the schemes may significantly differ depending on use case
+and resource requirements defined for execution of both the whole PilotJob
+and the individual task types.
+For many scenarios the iterative schemes could run a bit better,
+but there is no general rule of thumb that says so, and therefore we encourage you
+to test different schemes when the efficiency is priority.
 
 Passing the execution environment to QCG-PilotJob tasks
 *******************************************************
@@ -222,6 +264,41 @@ prior of its actual execution. Very basic example of the
     The alternate option to provide the configuration file is to specify
     its location by the ``config_file`` parameter
     provided into the constructor of the ``Executor`` object.
+
+Resume mechanism
+****************
+EQI is able to resume not completed workflow of tasks submitted to QCG-PilotJob Manager
+(for example terminated because of the walltime crossing).
+By default the resume mechanism is activated automatically when Executor is inited with the campaign
+for which EQI processing was already started (working directory exists) but it is not yet completed.
+If this behaviour is not intended, the resume mechanism can be disabled with providing
+``resume=False`` parameter to the ``Executor's`` constructor.
+
+The resumed workflow will start in a working directory of the previous, not-completed execution.
+This is fully expected behaviour, but since the partially generated output or intermediate files can exists,
+they need to be carefully handled. EQI tries to help in this matter by providing
+mechanisms for automatic recovery of individual tasks.
+
+How much the automatism can interfere with the resume logic depends on a use case and therefore
+EQI provides a few ``ResumeLevels`` of automatic recovery. The levels can be set in the ``Task``'s
+constructor with the ``resume_level`` parameter. There are the following options available:
+
+``DISABLED``
+    Automatic resume is fully disabled for a task.
+``BASIC``
+    For the task types creating run directories (``ENCODING``, ``ENCODING_AND_EXECUTION``), the resume checks
+    if an unfinished task created run directory. If such directory is available, this directory is recursively
+    removed before the start of the resumed task.
+``MODERATE``
+    This level processes all operations offered by the ``BASIC`` level, and adds the following features.
+    At the beginning of a task's execution, the list of directories and files in a run directory
+    is generated and stored. The resumed task checks for the differences and remove new files and directories
+    in order to resurrect the initial state.
+
+Please note that this functionality may be not sufficient for more advanced scenarios
+(for example if input files are updated during an execution) and those for which the overhead
+of the built-in mechanism is not acceptable.
+In such cases, the more optimal logic of resume may need to be provided on a level of the actual code of a task.
 
 External Encoders
 *****************

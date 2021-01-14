@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. eqi_utils.sh
+
 # Source the site-specific configuration file
 if [[ -f $EQI_CONFIG ]]
 then
@@ -7,5 +9,11 @@ then
   . $EQI_CONFIG
 fi
 
-#python3 -m eqi.easyvvuq_encode $@
+run="$1"
+
+eqi_resume_init "$run" "encode"
+(( $? == $RET_COMPLETED )) && exit 0
+
 python3 -m eqi.external_encoder $@
+
+eqi_resume_finish "$run" "encode"

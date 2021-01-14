@@ -8,17 +8,17 @@ EasyVVUQ-QCGPJ
 **Python API for HPC execution of EasyVVUQ**
 
 EasyVVUQ-QCGPJ (EQI) is a lightweight
-plugin for parallelization of EasyVVUQ (https://github.com/UCL-CCS/EasyVVUQ)
-with the QCG-PilotJob mechanism (https://github.com/vecma-project/QCG-PilotJob).
+plugin for parallelization of `EasyVVUQ <https://github.com/UCL-CCS/EasyVVUQ>`_
+with the `QCG-PilotJob <https://github.com/vecma-project/QCG-PilotJob>`_
 
-It is a part of the VECMA Toolkit (http://www.vecma-toolkit.eu).
+It is a part of the `VECMA Toolkit <http://www.vecma-toolkit.eu>`_
 
-The tool provides API that can be effortlessly integrated into typical EasyVVUQ workflows to enable parallel processing
-of demanding operations, in particular the simulation model's executions and encodings.
-It works regardless if you run your use-case on multi-core laptop or on large HPC machine.
+The tool provides API that can be effortlessly integrated into typical EasyVVUQ workflows
+to enable parallel processing of demanding operations on HPC machines.
 
-You can start using it whenever you want: from the beginning of your work with EasyVVUQ or
-once you realise that the serial execution of EasyVVUQ is no longer sufficient.
+It can work also on your laptop so you can start using it whenever you want:
+from the beginning of your work with EasyVVUQ or once you realise that
+the serial execution of EasyVVUQ is no longer sufficient.
 
 .. toctree::
    :caption: Basics
@@ -27,6 +27,10 @@ once you realise that the serial execution of EasyVVUQ is no longer sufficient.
    quickstart
    api
 
+.. toctree::
+   :caption: Further reading
+
+   performance_optimisation
 
 .. toctree::
    :maxdepth: 1
@@ -34,7 +38,6 @@ once you realise that the serial execution of EasyVVUQ is no longer sufficient.
 
    tutorials/cooling_cup/guide/tutorial
    tutorials/interactive_tutorial
-
 
 .. toctree::
    :maxdepth: 1

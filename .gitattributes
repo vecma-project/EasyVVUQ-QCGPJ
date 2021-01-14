@@ -2,3 +2,4 @@
 scripts/* text eol=lf
 tests/*.sh test eol=lf
 *.png binary
+eqi/_version.py export-subst

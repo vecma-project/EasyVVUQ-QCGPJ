@@ -10,3 +10,4 @@ dist/*
 eqi/__pycache__/*
 eqi/executor/__pycache__/*
 tests/custom_encoder/__pycache__/*
+#tests/resume/two_phase/uncompleted_data/campaign_interrupted/*

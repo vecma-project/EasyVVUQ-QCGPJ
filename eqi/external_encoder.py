@@ -3,6 +3,8 @@ import sys
 import easyvvuq as uq
 import importlib
 
+from eqi import StateKeeper
+
 __copyright__ = """
     Copyright 2018 Robin A. Richardson, David W. Wright
     This file is part of EasyVVUQ
@@ -21,12 +23,16 @@ __license__ = "LGPL"
 
 
 def encode(params):
-    db_type = params[1]
-    db_location = params[2]
-    write_to_db = params[3]
-    campaign_name = params[4]
-    app_name = params[5]
-    run_id_list = params[6].split(',')
+    run_id_list = params[1].split(',')
+
+    state_keeper = StateKeeper(os.getcwd())
+    state_params = state_keeper.get_from_state_file()
+
+    write_to_db = state_params["campaign_write_to_db"]
+    db_type = state_params["campaign_db_type"]
+    db_location = state_params["campaign_db_location"]
+    campaign_name = state_params["campaign_name"]
+    app_name = state_params["campaign_active_app_name"]
 
     if write_to_db == 'TRUE':
         write_to_db_bool = True
@@ -60,10 +66,9 @@ if __name__ == "__main__":
                 {k: v for (k, v) in module.__dict__.items() if not k.startswith('_')
                  })
 
-    if len(sys.argv) != 7:
+    if len(sys.argv) != 2:
         sys.exit(
-            ("Usage: python3 external_encoder.py db_type db_location "
-             "write_to_db{'TRUE' or 'FALSE'} campaign_name app_name comma_separated_run_id_list")
+            "Usage: python3 comma_separated_run_id_list"
         )
 
     encode(sys.argv)

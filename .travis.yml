@@ -1,26 +1,42 @@
 language: python
 python:
   - "3.6.7"
-install:
-  - pip install easyvvuq
-  - pip install qcg-pilotjob
-  - pip install .
-script:
-  - py.test --flake8 eqi/
-  - py.test --flake8 tests
-  - source tests/custom_encoder/eqi_sample_config.sh && py.test --flake8 tests/custom_encoder
+  
+before_install:
+- pip install easyvvuq
+- pip install qcg-pilotjob
 
-deploy:
-  - provider: pypi
-    username: $TEST_PYPI_USER
-    password: $TEST_PYPI_PASSWORD
-    server: https://test.pypi.org/legacy/
-    edge: true
-    on:
-      branch: dev
-  - provider: pypi
-    username: $PYPI_USER
-    password: $PYPI_PASSWORD
-    edge: true
-    on:
-      tags: true
+install:
+- pip install .
+
+jobs:
+  include: 
+  
+  - stage: test
+    script:
+    - py.test --flake8 eqi/
+    - py.test -s --flake8 tests
+    - source tests/custom_encoder/eqi_sample_config.sh && py.test --flake8 tests/custom_encoder
+  
+  - stage: deploy to TestPyPi
+    if: tag ~= /[0-9]+\.[0-9]+\.?[0-9]*rc[0-9]*$/
+    script: skip
+    deploy:
+    - provider: pypi
+      username: $TEST_PYPI_USER
+      password: $TEST_PYPI_PASSWORD
+      server: https://test.pypi.org/legacy/
+      edge: true
+      on:
+        tags: true
+  
+  - stage: deploy to PyPi  
+    if: tag ~= /[0-9]+\.[0-9]+\.?[0-9]*$/
+    script: skip
+    deploy:
+    - provider: pypi
+      username: $PYPI_USER
+      password: $PYPI_PASSWORD
+      edge: true
+      on:
+        tags: true

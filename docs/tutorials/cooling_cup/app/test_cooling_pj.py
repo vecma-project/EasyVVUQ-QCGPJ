@@ -5,7 +5,7 @@ import chaospy as cp
 import easyvvuq as uq
 
 from eqi import TaskRequirements, Executor
-from eqi import Task, TaskType, SubmitOrder
+from eqi import Task, TaskType, ProcessingScheme
 
 # author: Jalal Lakhlili / Bartosz Bosak
 
@@ -125,7 +125,7 @@ def test_cooling_pj():
     print("Starting the execution of QCG-PilotJob tasks")
     # Execute encodings and executions for all generated samples
     qcgpjexec.run(
-        submit_order=SubmitOrder.RUN_ORIENTED)
+        processing_scheme=ProcessingScheme.SAMPLE_ORIENTED)
 
     # Terminate QCG-PilotJob Manager
     print("Completing the execution")
