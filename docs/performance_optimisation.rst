@@ -22,11 +22,14 @@ The critical element for good performance of EQI is to ensure good fitting of th
 to the size of allocation so there are no empty slots during the execution. For example,
 it would be very inefficient to have 10 cores in allocation and execute only tasks requiring 6 cores. Then 4 cores
 would be empty all the time. Much more optimal would be to execute tasks that require 5 cores so
-two task could be executed in parallel. Please note that there are different types of tasks and different processing
-schemes that may use these tasks available in EQI, so the allocation of tasks may be not so obvious
-as in the given example. Thus both the allocation size, tasks sizes and processing scheme selection are all variables
-that need to be determined through scenario analysis and pre-production tests. Please by also aware
-that reservation of a core for QCG-PilotJob Manager naturally reduces a number of available cores for tasks,
+two task could be executed in parallel.
+Thus the starting point in the process of fitting may be just setting of each task's size
+to be a divider of the allocation size. In the advanced scenarios however, this may be not sufficient.
+Please note that in EQI there are different types of tasks and different processing schemes that submit these tasks in
+specific orders, so the allocation of tasks may be more challenging to ensure good results.
+In consequence both the allocation size, tasks sizes and processing scheme selection are all variables
+that need to be determined through scenario analysis and pre-production tests. Please be also aware
+that optional reservation of a core for QCG-PilotJob Manager naturally reduces a number of available cores for tasks,
 thus it should be taken into account during the analysis.
 
 Workflow splitting
