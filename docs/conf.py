@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'EasyVVUQ-QCGPJ'
-copyright = '2020, Bartosz Bosak & Jalal Lakhlili'
-author = 'Bartosz Bosak & Jalal Lakhlili'
+copyright = '2021, Bartosz Bosak, Piotr Kopta, Tomasz Piontek & Jalal Lakhlili'
+author = 'Bartosz Bosak, Piotr Kopta, Tomasz Piontek & Jalal Lakhlili'
 html_logo = 'images/eqi-logo.png'
 master_doc = 'index'
 

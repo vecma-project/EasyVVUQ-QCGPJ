@@ -20,6 +20,7 @@ It can work also on your laptop so you can start using it whenever you want:
 from the beginning of your work with EasyVVUQ or once you realise that
 the serial execution of EasyVVUQ is no longer sufficient.
 
+
 .. toctree::
    :caption: Basics
 
@@ -50,3 +51,8 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
+
+Authors
+-------
+| Bartosz Bosak, Piotr Kopta, Tomasz Piontek (PSNC)
+| Jalal Lakhilli (IPP)
