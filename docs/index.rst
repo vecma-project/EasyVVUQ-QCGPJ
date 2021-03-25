@@ -54,5 +54,7 @@ Indices and tables
 
 Authors
 -------
-| Bartosz Bosak, Piotr Kopta, Tomasz Piontek (PSNC)
-| Jalal Lakhilli (IPP)
+| Bartosz Bosak <bbosak@man.poznan.pl> (PSNC)
+| Piotr Kopta <pkopta@man.poznan.pl> (PSNC)
+| Tomasz Piontek <pkopta@man.poznan.pl> (PSNC)
+| Jalal Lakhlili <jalal.lakhlili@ipp.mpg.de> (IPP)
