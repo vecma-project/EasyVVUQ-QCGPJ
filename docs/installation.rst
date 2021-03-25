@@ -31,7 +31,7 @@ The software could be easily installed from the PyPi repository:
 Manual installation
 -------------------
 
-If you prefer manual installation or you wont to install specific branch of the software
+If you prefer manual installation or you want to install specific branch of the software
 you can get it from the the github repository. The procedure is quite typical, e.g.:
 
 ::
