@@ -15,7 +15,7 @@ install them in the following way:
 ::
 
     $ pip3 install --force-reinstall easyvvuq==0.8
-    $ pip3 install --force-reinstall qcg-pilotjob==0.10.0
+    $ pip3 install --force-reinstall qcg-pilotjob==0.11.0
 
 
 Automatic installation

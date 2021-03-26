@@ -3,8 +3,8 @@ python:
   - "3.6.7"
   
 before_install:
-- pip install easyvvuq
-- pip install qcg-pilotjob
+- pip install --force-reinstall easyvvuq==0.8
+- pip install --force-reinstall qcg-pilotjob==0.11.0
 
 install:
 - pip install .
