@@ -21,7 +21,7 @@ The software requires Python 3.6+ for usage.
 
 Moreover, since EasyVVUQ-QCGPJ is a wrapper over EasyVVUQ and QCG-PilotJob, you need to have
 both these packages available in your environment. This version of the library is compatible with 
-EasyVVUQ v0.8 and QCG-PilotJob v0.10.0. Compatibility with other versions is not confirmed.
+EasyVVUQ v0.8 and QCG-PilotJob v0.11.0. Compatibility with other versions is not confirmed.
 Thus, if you want to be sure that correct versions of required packages are available, 
 install them in the following way:
 ```
