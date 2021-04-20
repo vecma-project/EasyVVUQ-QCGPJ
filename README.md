@@ -2,7 +2,7 @@
 
 # EasyVVUQ-QCGPJ - Python API for HPC execution of EasyVVUQ (EQI)
 
-[![Build Status](https://travis-ci.com/vecma-project/EasyVVUQ-QCGPJ.svg?branch=master)](https://travis-ci.com/vecma-project/EasyVVUQ-QCGPJ)
+[![Build status](https://github.com/vecma-project/EasyVVUQ-QCGPJ/actions/workflows/python-package.yml/badge.svg)](https://github.com/vecma-project/EasyVVUQ-QCGPJ/actions/workflows/python-package.yml)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/vecma-project/EasyVVUQ-QCGPJ.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vecma-project/EasyVVUQ-QCGPJ/alerts/)
 
 EasyVVUQ-QCGPJ (EQI) is a lightweight plugin for parallelization of [EasyVVUQ](https://github.com/UCL-CCS/EasyVVUQ)
