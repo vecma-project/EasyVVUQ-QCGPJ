@@ -5,7 +5,7 @@ name: Upload Python Package to Test PyPi
 
 on:
   release:
-    types: [prereleased]
+    types: [prereleased,edited]
 
 #  push:
 #    tags:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy:
-
+    if: "github.event.release.prerelease"
     runs-on: ubuntu-latest
 
     steps:
