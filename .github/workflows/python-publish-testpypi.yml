@@ -5,7 +5,7 @@ name: Upload Python Package to Test PyPi
 
 on:
   release:
-    types: [published, released]
+    types: [created]
 
 #  push:
 #    tags:
