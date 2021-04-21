@@ -29,7 +29,7 @@ Manager service. It is possible to do this in two ways:
 
 -  The first and simpler option is to use ``create_manager()`` method
    that creates QCG-PilotJob Manager in a basic configuration. The method
-   takes four optional parameters:
+   takes the following optional parameters:
 
    -  ``dir`` to customise a working directory of the manager (by
       default current directory)
@@ -42,6 +42,10 @@ Manager service. It is possible to do this in two ways:
       Local mode of `QCG-PilotJob
       manager <https://github.com/vecma-project/QCG-PilotJob>`__, i.e.
       ``[NODE_NAME]:CORES[,[NODE_NAME]:CORES]...``
+   -  ``enable_rt_stats`` to enable collection of QCG-PilotJob Manager runtime statistics
+   -  ``wrapper_rt_stats`` when ``enable_rt_stats`` is set to ``True``, this parameter
+      should point to the location of a QCG-PilotJob tasks wrapper program, used for collection
+      of statistic for executed tasks.
    -  ``reserve_core`` to specify if the manager service should run on a
       separate, reserved core (by default ``False``, which means that
       the manager's core will be shared with executed tasks)

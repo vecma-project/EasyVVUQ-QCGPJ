@@ -67,6 +67,8 @@ class Executor:
     def create_manager(self,
                        resources=None,
                        reserve_core=False,
+                       enable_rt_stats=False,
+                       wrapper_rt_stats=None,
                        log_level='info'):
         """Creates new QCG-PilotJob Manager and sets is as the Executor's engine.
 
@@ -82,6 +84,10 @@ class Executor:
             If True reserves a core for QCG-PilotJob Manager instance,
             by default QCG-PilotJob Manager shares a core with computing tasks
             Parameters.
+        enable_rt_stats : bool, optional
+            If True, QCG-PilotJob Manager will collect its runtime statistics
+        wrapper_rt_stats : str, optional
+            The path to the QCG-PilotJob Manager tasks wrapper program used for collection of statistics
         log_level : str, optional
             Logging level for QCG-PilotJob Manager (for both service and client part).
 
@@ -110,6 +116,13 @@ class Executor:
 
         if reserve_core:
             args.append('--system-core')
+
+        if enable_rt_stats:
+            args.append('--enable-rt-stats')
+
+        if wrapper_rt_stats:
+            args.append('--wrapper-rt-stats')
+            args.append(wrapper_rt_stats)
 
         if self._resume:
             args.append('--resume')
